@@ -1,12 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import {
-    View,
-    Text,
-    ScrollView,
-    StyleSheet,
-    FlatList,
-    Dimensions,
-} from "react-native";
+import React, { useRef, useEffect, useState } from "react";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 import { generateNumbers } from "../utils/generateNumbers";
@@ -14,22 +7,28 @@ import { generateStyles } from "./DurationPicker.styles";
 
 interface DurationScrollProps {
     numberOfItems: number;
+    label?: string;
+    initialIndex?: number;
     setState: React.Dispatch<React.SetStateAction<number>>;
+    padNumbersWithZero?: boolean;
     styles: ReturnType<typeof generateStyles>;
 }
 
-const { height: screenHeight } = Dimensions.get("window");
-
 const DurationScroll = ({
     numberOfItems,
+    label,
+    initialIndex = 0,
     setState,
+    padNumbersWithZero,
     styles,
 }: DurationScrollProps): React.ReactElement => {
     const flatListRef = useRef<FlatList | null>(null);
 
-    const data = generateNumbers(numberOfItems);
+    const data = generateNumbers(numberOfItems, {
+        padWithZero: padNumbersWithZero,
+    });
 
-    const renderItem = ({ item }: { item: number }) => (
+    const renderItem = ({ item }: { item: string }) => (
         <View key={item} style={styles.item}>
             <Text style={styles.number}>{item}</Text>
         </View>
@@ -40,20 +39,38 @@ const DurationScroll = ({
             <FlatList
                 ref={flatListRef}
                 data={[...data, ...data, ...data]}
+                pagingEnabled
+                getItemLayout={(_, index) => ({
+                    length: styles.item.height,
+                    offset: styles.item.height * index,
+                    index,
+                })}
+                initialScrollIndex={initialIndex}
                 renderItem={renderItem}
                 keyExtractor={(_, index) => index.toString()}
                 showsVerticalScrollIndicator={false}
                 decelerationRate="fast"
+                scrollEventThrottle={16}
                 snapToInterval={styles.item.height}
+                onMomentumScrollEnd={(e) => {
+                    const newIndex = Math.round(
+                        (e.nativeEvent.contentOffset.y) /
+                            styles.item.height
+                    );
+                    setState(newIndex);
+                }}
             />
+            <Text style={styles.label}>{label}</Text>
             <LinearGradient
-                colors={["white", "transparent"]}
+                colors={[styles.container.backgroundColor, "transparent"]}
                 start={{ x: 1, y: 0.3 }}
                 end={{ x: 1, y: 1 }}
                 style={[overlayStyles.overlay, { top: 0 }]}
             />
             <LinearGradient
-                colors={["transparent", "white"]}
+                colors={["transparent", styles.container.backgroundColor]}
+                start={{ x: 1, y: 0 }}
+                end={{ x: 1, y: 0.7 }}
                 style={[overlayStyles.overlay, { bottom: 0 }]}
             />
         </View>

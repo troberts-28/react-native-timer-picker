@@ -14,18 +14,31 @@ export const generateStyles = (customStyles?: CustomDurationPickerStyles) =>
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            position: "absolute"
+            position: "absolute",
         },
         container: {
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            margin: 50,
+            marginHorizontal: "10%",
+            marginVertical: "70%",
+            backgroundColor: "white",
+            borderRadius: 20,
             ...customStyles?.container,
         },
         pickerContainer: {
             flexDirection: "row",
+            marginRight: 24,
             ...customStyles?.pickerContainer,
+        },
+        label: {
+            position: "absolute",
+            right: 4,
+            top: 0,
+            bottom: 0,
+            textAlignVertical: "center",
+            fontSize: 18,
+            fontWeight: "bold",
         },
         item: {
             height: 50,
@@ -42,13 +55,19 @@ export const generateStyles = (customStyles?: CustomDurationPickerStyles) =>
         button: {
             marginHorizontal: 10,
             padding: 10,
-            borderColor: "gray",
             borderWidth: 1,
-            borderRadius: 5,
-            color: "blue",
+            borderRadius: 10,
             ...customStyles?.button,
+        },
+        cancelButton: {
+            borderColor: "gray",
+            color: "gray",
+        },
+        confirmButton: {
+            borderColor: "green",
+            color: "green"
         },
         number: {
             fontSize: 25,
-        }
+        },
     });

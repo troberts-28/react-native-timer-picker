@@ -28,6 +28,7 @@ export default function App() {
                     setShowPicker(false);
                 }}
                 onCancel={() => setShowPicker(false)}
+                closeOnOverlayPress
             />
         </View>
     );
