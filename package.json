@@ -1,15 +1,60 @@
 {
     "name": "react-native-duration-picker",
-    "description": "A simple, flexible, performant duration picker for React Native apps (including those built with Expo).",
-    "author": "Tim Roberts",
+    "description": "A simple, flexible, performant duration picker for Expo React Native apps 🔥 Great for duration, timers and alarms ⏰🕰️⏳",
+    "author": {
+        "name": "Tim Roberts",
+        "url": "https://github.com/troberts-28"
+    },
     "license": "MIT",
     "version": "1.0.0",
     "main": "index.ts",
+    "homepage": "https://github.com/troberts-28/react-native-duration-picker",
+    "bugs": {
+        "url": "https://github.com/troberts-28/react-native-duration-picker/issues"
+    },
+    "files": [
+        "index.ts",
+        "dist",
+        "package.json",
+        "README.md",
+        "LICENSE"
+    ],
     "repository": {
         "name": "GitHub",
         "type": "git",
         "url": "git+https://github.com/troberts-28/react-native-duration-picker.git"
     },
+    "keywords": [
+        "react",
+        "react-native",
+        "expo",
+        "duration",
+        "picker",
+        "time",
+        "timer",
+        "alarm",
+        "durationpicker",
+        "duration-picker",
+        "timepicker",
+        "time-picker",
+        "alarmpicker",
+        "alarm-picker",
+        "timerpicker",
+        "timer-picker",
+        "expo-duration-picker",
+        "expo-time-picker",
+        "expo-timepicker",
+        "expo-durationpicker",
+        "expo-duration-picker",
+        "expo-time-picker",
+        "expo-timepicker",
+        "expo-durationpicker"
+    ],
+    "engines": {
+        "node": ">=16.0.0"
+    },
+    "private": false,
+    "typings": "./dist/index.d.ts",
     "peerDependencies": {
         "expo-linear-gradient": "^12.3.0",
         "react": "^18.2.0",

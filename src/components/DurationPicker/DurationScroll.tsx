@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { generateNumbers } from "../utils/generateNumbers";
+import { generateNumbers } from "../../utils/generateNumbers";
 import { generateStyles } from "./DurationPicker.styles";
 
 interface DurationScrollProps {
