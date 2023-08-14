@@ -15,19 +15,20 @@ interface ModalProps {
     onOverlayPress?: () => void;
     onHide?: () => void;
     isVisible?: boolean;
+    animationDuration?: number;
+    overlayOpacity?: number;
     modalProps?: any;
     contentStyle?: any;
     overlayStyle?: any;
 }
-
-const MODAL_ANIM_DURATION = 300;
-const MODAL_BACKDROP_OPACITY = 0.4;
 
 export const Modal = ({
     children,
     onOverlayPress,
     onHide,
     isVisible = false,
+    animationDuration = 300,
+    overlayOpacity = 0.4,
     modalProps,
     contentStyle,
     overlayStyle,
@@ -73,7 +74,7 @@ export const Modal = ({
     const backdropAnimatedStyle = {
         opacity: animatedOpacity.current.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, MODAL_BACKDROP_OPACITY],
+            outputRange: [0, overlayOpacity],
         }),
     };
     const contentAnimatedStyle = {
@@ -93,7 +94,7 @@ export const Modal = ({
             easing: Easing.inOut(Easing.quad),
             // Using native driver in the modal makes the content flash
             useNativeDriver: false,
-            duration: MODAL_ANIM_DURATION,
+            duration: animationDuration,
             toValue: 1,
         }).start();
     }, []);
@@ -103,7 +104,7 @@ export const Modal = ({
             easing: Easing.inOut(Easing.quad),
             // Using native driver in the modal makes the content flash
             useNativeDriver: false,
-            duration: MODAL_ANIM_DURATION,
+            duration: animationDuration,
             toValue: 0,
         }).start(() => {
             if (isMounted.current) {
@@ -123,7 +124,7 @@ export const Modal = ({
     return (
         <ReactNativeModal
             transparent
-            animationType="none"
+            animationType="fade"
             visible={isVisible}
             {...modalProps}>
             <TouchableWithoutFeedback onPress={onOverlayPress}>
@@ -136,13 +137,11 @@ export const Modal = ({
                     ]}
                 />
             </TouchableWithoutFeedback>
-            {isVisible && (
-                <Animated.View
-                    style={[styles.content, contentAnimatedStyle, contentStyle]}
-                    pointerEvents="box-none">
-                    {children}
-                </Animated.View>
-            )}
+            <Animated.View
+                style={[styles.content, contentAnimatedStyle, contentStyle]}
+                pointerEvents="box-none">
+                {children}
+            </Animated.View>
         </ReactNativeModal>
     );
 };

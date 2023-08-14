@@ -11,14 +11,17 @@
         "url": "git+https://github.com/troberts-28/react-native-duration-picker.git"
     },
     "peerDependencies": {
+        "expo-linear-gradient": "^12.3.0",
         "react": "^18.2.0",
-        "react-native": "^0.72.3",
-        "expo-linear-gradient": "^12.3.0"
+        "react-native": "^0.72.3"
     },
     "devDependencies": {
         "@types/react": "^18.2.20",
         "react": "^18.2.0",
         "react-native": "^0.72.3",
         "typescript": "^5.1.6"
+    },
+    "dependencies": {
+        "expo-linear-gradient": "^12.3.0"
     }
 }

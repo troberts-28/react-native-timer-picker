@@ -1,12 +1,26 @@
 import { StyleSheet } from "react-native";
 
 export interface CustomDurationPickerStyles {
-    container?: object;
-    pickerContainer?: object;
-    item?: object;
-    buttonContainer?: object;
-    button?: object;
-};
+    theme?: "light" | "dark";
+    backgroundColor?: string;
+    textColor?: string;
+    container?: any;
+    contentContainer?: any;
+    pickerContainer?: any;
+    pickerLabels?: any;
+    pickerItemContainer?: any;
+    pickerItem?: any;
+    buttonContainer?: any;
+    button?: any;
+    cancelButton?: any;
+    confirmButton?: any;
+    modalTitle?: any;
+}
+
+const DARK_MODE_BACKGROUND_COLOR = "#232323";
+const DARK_MODE_TEXT_COLOR = "#E9E9E9";
+const LIGHT_MODE_BACKGROUND_COLOR = "#F1F1F1";
+const LIGHT_MODE_TEXT_COLOR = "#1B1B1B";
 
 export const generateStyles = (customStyles?: CustomDurationPickerStyles) =>
     StyleSheet.create({
@@ -16,32 +30,100 @@ export const generateStyles = (customStyles?: CustomDurationPickerStyles) =>
             alignItems: "center",
             ...customStyles?.container,
         },
+        contentContainer: {
+            backgroundColor:
+                customStyles?.backgroundColor ?? customStyles?.theme === "dark"
+                    ? DARK_MODE_BACKGROUND_COLOR
+                    : LIGHT_MODE_BACKGROUND_COLOR,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 20,
+            padding: 20,
+            ...customStyles?.contentContainer,
+        },
         pickerContainer: {
             flexDirection: "row",
-            borderColor: "gray",
-            borderWidth: 1,
-            borderRadius: 10,
+            marginRight: "8%",
             ...customStyles?.pickerContainer,
         },
-        item: {
+        pickerLabels: {
+            position: "absolute",
+            right: 4,
+            top: (customStyles?.pickerItem?.fontSize ?? 25) / 4,
+            bottom: 0,
+            textAlignVertical: "center",
+            fontSize: 18,
+            fontWeight: "bold",
+            color:
+                customStyles?.textColor ?? customStyles?.theme === "dark"
+                    ? DARK_MODE_TEXT_COLOR
+                    : LIGHT_MODE_TEXT_COLOR,
+            ...customStyles?.pickerLabels,
+        },
+        pickerItemContainer: {
             height: 50,
             justifyContent: "center",
             alignItems: "center",
-            width: 100,
-            ...customStyles?.item,
+            width: 90,
+            ...customStyles?.pickerItemContainer,
+        },
+        pickerItem: {
+            textAlignVertical: "center",
+            fontSize: 25,
+            color:
+                customStyles?.textColor ?? customStyles?.theme === "dark"
+                    ? DARK_MODE_TEXT_COLOR
+                    : LIGHT_MODE_TEXT_COLOR,
+            ...customStyles?.pickerItem,
+        },
+        pickerGradientOverlays: {
+            position: "absolute",
+            left: 0,
+            right: 0,
+            height: "30%",
         },
         buttonContainer: {
             flexDirection: "row",
-            marginTop: 20,
+            marginTop: 25,
             ...customStyles?.buttonContainer,
         },
         button: {
-            marginHorizontal: 10,
-            padding: 10,
-            borderColor: "gray",
+            marginHorizontal: 12,
+            paddingVertical: 10,
+            paddingHorizontal: 20,
             borderWidth: 1,
-            borderRadius: 5,
-            color: "blue",
+            borderRadius: 10,
+            fontSize: 16,
             ...customStyles?.button,
+        },
+        cancelButton: {
+            borderColor: "gray",
+            color:
+                customStyles?.textColor ?? customStyles?.theme === "dark"
+                    ? DARK_MODE_TEXT_COLOR
+                    : "gray",
+            backgroundColor:
+                customStyles?.theme === "dark" ? "gray" : undefined,
+            ...customStyles?.cancelButton,
+        },
+        confirmButton: {
+            borderColor: "green",
+            color:
+                customStyles?.textColor ?? customStyles?.theme === "dark"
+                    ? DARK_MODE_TEXT_COLOR
+                    : "green",
+            backgroundColor:
+                customStyles?.theme === "dark" ? "green" : undefined,
+            ...customStyles?.confirmButton,
+        },
+        modalTitle: {
+            fontSize: 24,
+            fontWeight: "bold",
+            marginBottom: 15,
+            color:
+                customStyles?.textColor ?? customStyles?.theme === "dark"
+                    ? DARK_MODE_TEXT_COLOR
+                    : LIGHT_MODE_TEXT_COLOR,
+            ...customStyles?.modalTitle,
         },
     });

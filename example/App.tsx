@@ -12,23 +12,39 @@ export default function App() {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>
-                {alarmString !== null
-                    ? `Alarm set for: ${alarmString}`
-                    : "No alarm set"}
+                {alarmString !== null ? "Alarm set for" : "No alarm set"}
             </Text>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={() => setShowPicker(true)}>
-                    <Text style={styles.button}>Set Alarm</Text>
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => setShowPicker(true)}>
+                <View style={styles.touchableContainer}>
+                    {alarmString !== null ? (
+                        <Text style={styles.alarmText}>{alarmString}</Text>
+                    ) : null}
+                    <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => setShowPicker(true)}>
+                        <View style={styles.buttonContainer}>
+                            <Text style={styles.button}>Set Alarm 🔔</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </TouchableOpacity>
             <DurationPicker
                 visible={showPicker}
                 onConfirm={(pickedDuration) => {
                     setAlarmString(formatTime(pickedDuration));
                     setShowPicker(false);
                 }}
+                modalTitle="Set Alarm"
                 onCancel={() => setShowPicker(false)}
                 closeOnOverlayPress
+                styles={{
+                    theme: "dark",
+                }}
+                modalProps={{
+                    overlayOpacity: 0.2,
+                }}
             />
         </View>
     );
@@ -37,23 +53,32 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#514242",
         alignItems: "center",
         justifyContent: "center",
     },
     text: {
         fontSize: 18,
+        color: "#F1F1F1"
+    },
+    alarmText: {
+        fontSize: 48,
+        color: "#F1F1F1"
+    },
+    touchableContainer: {
+        alignItems: "center",
     },
     button: {
-        marginHorizontal: 10,
-        padding: 10,
-        borderColor: "gray",
+        paddingVertical: 10,
+        paddingHorizontal: 18,
+        borderColor: "#C2C2C2",
         borderWidth: 1,
-        borderRadius: 5,
-        color: "blue",
+        borderRadius: 10,
+        color: "#C2C2C2",
+        fontSize: 16,
     },
     buttonContainer: {
         flexDirection: "row",
-        marginTop: 20,
+        marginTop: 30,
     },
 });
