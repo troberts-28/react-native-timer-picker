@@ -123,7 +123,7 @@ export const Modal = ({
     return (
         <ReactNativeModal
             transparent
-            animationType="fade"
+            animationType="none"
             visible={isVisible}
             {...modalProps}>
             <TouchableWithoutFeedback onPress={onOverlayPress}>

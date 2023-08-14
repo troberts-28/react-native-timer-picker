@@ -34,10 +34,11 @@ export default function App() {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>
-                {alarmString !== null
-                    ? `Alarm set for: ${alarmString}`
-                    : "No alarm set"}
+                {alarmString !== null ? "Alarm set for" : "No alarm set"}
             </Text>
+            {alarmString !== null ? (
+                <Text style={styles.text}>{alarmString}</Text>
+            ) : null}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={() => setShowPicker(true)}>
                     <Text style={styles.button}>Set Alarm</Text>

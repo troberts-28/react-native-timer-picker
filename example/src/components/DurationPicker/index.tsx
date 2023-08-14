@@ -51,37 +51,61 @@ const DurationPicker = ({
     const [selectedHours, setSelectedHours] = useState(initialHours);
     const [selectedMinutes, setSelectedMinutes] = useState(initialMinutes);
     const [selectedSeconds, setSelectedSeconds] = useState(initialSeconds);
+    const [confirmedDuration, setConfirmedDuration] = useState({
+        hours: initialHours,
+        minutes: initialMinutes,
+        seconds: initialSeconds,
+    });
+
+    const hideModal = () => {
+        setSelectedHours(confirmedDuration.hours);
+        setSelectedMinutes(confirmedDuration.minutes);
+        setSelectedSeconds(confirmedDuration.seconds);
+        onCancel?.();
+    };
+
+    const confirm = () => {
+        const duration = {
+            hours: selectedHours,
+            minutes: selectedMinutes,
+            seconds: selectedSeconds,
+        };
+        onConfirm(duration);
+        setConfirmedDuration(duration);
+    };
 
     return (
-        <View style={styles.outerContainer}>
-            <Modal
-                isVisible={visible}
-                onOverlayPress={closeOnOverlayPress ? onCancel : undefined}
-                {...modalProps}>
-                <View {...containerProps} style={styles.container}>
+        <Modal
+            isVisible={visible}
+            onOverlayPress={closeOnOverlayPress ? hideModal : undefined}
+            {...modalProps}>
+            <View {...containerProps} style={styles.container}>
+                <View
+                    // {...contentContainerProps}
+                    style={styles.contentContainer}>
                     <View
                         {...pickerContainerProps}
                         style={styles.pickerContainer}>
                         <DurationScroll
                             numberOfItems={23}
                             label="h"
-                            initialIndex={selectedHours}
-                            setState={setSelectedHours}
+                            initialIndex={confirmedDuration.hours}
+                            onValueChange={setSelectedHours}
                             styles={styles}
                         />
                         <DurationScroll
                             numberOfItems={59}
                             label="m"
-                            initialIndex={selectedMinutes}
-                            setState={setSelectedMinutes}
+                            initialIndex={confirmedDuration.minutes}
+                            onValueChange={setSelectedMinutes}
                             padNumbersWithZero
                             styles={styles}
                         />
                         <DurationScroll
                             numberOfItems={59}
                             label="s"
-                            initialIndex={selectedSeconds}
-                            setState={setSelectedSeconds}
+                            initialIndex={confirmedDuration.seconds}
+                            onValueChange={setSelectedSeconds}
                             padNumbersWithZero
                             styles={styles}
                         />
@@ -89,27 +113,20 @@ const DurationPicker = ({
                     <View
                         {...buttonContainerProps}
                         style={styles.buttonContainer}>
-                        <TouchableOpacity onPress={onCancel}>
+                        <TouchableOpacity onPress={hideModal}>
                             <Text style={[styles.cancelButton, styles.button]}>
                                 Cancel
                             </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() =>
-                                onConfirm({
-                                    hours: selectedHours,
-                                    minutes: selectedMinutes,
-                                    seconds: selectedSeconds,
-                                })
-                            }>
+                        <TouchableOpacity onPress={confirm}>
                             <Text style={[styles.confirmButton, styles.button]}>
                                 Confirm
                             </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
-            </Modal>
-        </View>
+            </View>
+        </Modal>
     );
 };
 

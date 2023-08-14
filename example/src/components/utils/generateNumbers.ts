@@ -2,9 +2,9 @@ import { padWithZero } from "./padWithZero";
 
 export const generateNumbers = (
     max: number,
-    options?: { padWithZero?: boolean }
+    options?: { repeatNTimes?: number; padWithZero?: boolean }
 ) => {
-    const numbers = [""];
+    let numbers: string[] = [];
     if (options?.padWithZero) {
         for (let i = 0; i <= max; i++) {
             numbers.push(padWithZero(i));
@@ -14,6 +14,10 @@ export const generateNumbers = (
             numbers.push(String(i));
         }
     }
+    if ((options?.repeatNTimes ?? 1) > 1) {
+        numbers = Array(options?.repeatNTimes).fill(numbers).flat();
+    }
+    numbers.unshift("");
     numbers.push("");
     return numbers;
 };

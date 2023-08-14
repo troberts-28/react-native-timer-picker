@@ -10,25 +10,21 @@ export interface CustomDurationPickerStyles {
 
 export const generateStyles = (customStyles?: CustomDurationPickerStyles) =>
     StyleSheet.create({
-        outerContainer: {
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-        },
         container: {
             flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            marginHorizontal: "10%",
-            marginVertical: "70%",
-            backgroundColor: "white",
-            borderRadius: 20,
             ...customStyles?.container,
+        },
+        contentContainer: {
+            backgroundColor: "white",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 20,
+            padding: 20,
         },
         pickerContainer: {
             flexDirection: "row",
-            marginRight: 24,
             ...customStyles?.pickerContainer,
         },
         label: {
@@ -46,6 +42,10 @@ export const generateStyles = (customStyles?: CustomDurationPickerStyles) =>
             alignItems: "center",
             width: 100,
             ...customStyles?.item,
+        },
+        number: {
+            textAlignVertical: "center",
+            fontSize: 25,
         },
         buttonContainer: {
             flexDirection: "row",
@@ -65,9 +65,6 @@ export const generateStyles = (customStyles?: CustomDurationPickerStyles) =>
         },
         confirmButton: {
             borderColor: "green",
-            color: "green"
-        },
-        number: {
-            fontSize: 25,
+            color: "green",
         },
     });
