@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "jsx": "react-native",
+        "strict": true,
+        "esModuleInterop": true,
+        "strictPropertyInitialization": false,
+        "useDefineForClassFields": true,
+        "skipLibCheck": true
+    }
+}

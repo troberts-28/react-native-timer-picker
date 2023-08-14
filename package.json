@@ -1,0 +1,24 @@
+{
+    "name": "react-native-duration-picker",
+    "description": "A simple, flexible, performant duration picker for React Native apps (including those built with Expo).",
+    "author": "Tim Roberts",
+    "license": "MIT",
+    "version": "1.0.0",
+    "main": "index.ts",
+    "repository": {
+        "name": "GitHub",
+        "type": "git",
+        "url": "git+https://github.com/troberts-28/react-native-duration-picker.git"
+    },
+    "peerDependencies": {
+        "react": "^18.2.0",
+        "react-native": "^0.72.3",
+        "expo-linear-gradient": "^12.3.0"
+    },
+    "devDependencies": {
+        "@types/react": "^18.2.20",
+        "react": "^18.2.0",
+        "react-native": "^0.72.3",
+        "typescript": "^5.1.6"
+    }
+}
