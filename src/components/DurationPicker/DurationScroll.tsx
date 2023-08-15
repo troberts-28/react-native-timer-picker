@@ -6,6 +6,7 @@ import {
     FlatList,
     ViewabilityConfigCallbackPairs,
     ViewToken,
+    Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -99,8 +100,8 @@ const DurationScroll = ({
                 renderItem={renderItem}
                 keyExtractor={(_, index) => index.toString()}
                 showsVerticalScrollIndicator={false}
-                decelerationRate={0.9}
-                scrollEventThrottle={16}
+                decelerationRate="fast"
+                scrollEventThrottle={10}
                 snapToAlignment="start"
                 // used in place of snapToOffset due to bug on Android
                 snapToOffsets={[...Array(data.length)].map(
@@ -116,7 +117,7 @@ const DurationScroll = ({
                         e.nativeEvent.contentOffset.y /
                             styles.pickerItemContainer.height
                     );
-                    onValueChange(newIndex % numberOfItems);
+                    onValueChange((newIndex + 1) % (numberOfItems + 1));
                 }}
             />
             <View style={styles.pickerLabelContainers}>
@@ -124,10 +125,10 @@ const DurationScroll = ({
             </View>
             <LinearGradient
                 colors={[
-                    styles.contentContainer.backgroundColor ?? "white",
+                    styles.pickerContainer.backgroundColor ?? "white",
                     colorToRgba({
                         color:
-                            styles.contentContainer.backgroundColor ?? "white",
+                            styles.pickerContainer.backgroundColor ?? "white",
                         opacity: 0,
                     }),
                 ]}
@@ -140,10 +141,10 @@ const DurationScroll = ({
                 colors={[
                     colorToRgba({
                         color:
-                            styles.contentContainer.backgroundColor ?? "white",
+                            styles.pickerContainer.backgroundColor ?? "white",
                         opacity: 0,
                     }),
-                    styles.contentContainer.backgroundColor ?? "white",
+                    styles.pickerContainer.backgroundColor ?? "white",
                 ]}
                 start={{ x: 1, y: 0 }}
                 end={{ x: 1, y: 0.7 }}

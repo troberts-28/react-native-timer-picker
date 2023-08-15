@@ -4,8 +4,6 @@ export interface CustomDurationPickerStyles {
     theme?: "light" | "dark";
     backgroundColor?: string;
     textColor?: string;
-    container?: any;
-    contentContainer?: any;
     pickerContainer?: any;
     pickerLabel?: any;
     pickerItemContainer?: any;
@@ -24,26 +22,13 @@ const LIGHT_MODE_TEXT_COLOR = "#1B1B1B";
 
 export const generateStyles = (customStyles?: CustomDurationPickerStyles) =>
     StyleSheet.create({
-        container: {
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            ...customStyles?.container,
-        },
-        contentContainer: {
+        pickerContainer: {
+            flexDirection: "row",
+            marginRight: "8%",
             backgroundColor:
                 customStyles?.backgroundColor ?? customStyles?.theme === "dark"
                     ? DARK_MODE_BACKGROUND_COLOR
                     : LIGHT_MODE_BACKGROUND_COLOR,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 20,
-            padding: 20,
-            ...customStyles?.contentContainer,
-        },
-        pickerContainer: {
-            flexDirection: "row",
-            marginRight: "8%",
             ...customStyles?.pickerContainer,
         },
         pickerLabelContainers: {
@@ -84,50 +69,5 @@ export const generateStyles = (customStyles?: CustomDurationPickerStyles) =>
             left: 0,
             right: 0,
             height: "30%",
-        },
-        buttonContainer: {
-            flexDirection: "row",
-            marginTop: 25,
-            ...customStyles?.buttonContainer,
-        },
-        button: {
-            marginHorizontal: 12,
-            paddingVertical: 10,
-            paddingHorizontal: 20,
-            borderWidth: 1,
-            borderRadius: 10,
-            fontSize: 16,
-            overflow: "hidden",
-            ...customStyles?.button,
-        },
-        cancelButton: {
-            borderColor: "gray",
-            color:
-                customStyles?.textColor ?? customStyles?.theme === "dark"
-                    ? DARK_MODE_TEXT_COLOR
-                    : "gray",
-            backgroundColor:
-                customStyles?.theme === "dark" ? "gray" : undefined,
-            ...customStyles?.cancelButton,
-        },
-        confirmButton: {
-            borderColor: "green",
-            color:
-                customStyles?.textColor ?? customStyles?.theme === "dark"
-                    ? DARK_MODE_TEXT_COLOR
-                    : "green",
-            backgroundColor:
-                customStyles?.theme === "dark" ? "green" : undefined,
-            ...customStyles?.confirmButton,
-        },
-        modalTitle: {
-            fontSize: 24,
-            fontWeight: "bold",
-            marginBottom: 15,
-            color:
-                customStyles?.textColor ?? customStyles?.theme === "dark"
-                    ? DARK_MODE_TEXT_COLOR
-                    : LIGHT_MODE_TEXT_COLOR,
-            ...customStyles?.modalTitle,
         },
     });

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import { DurationPicker } from "./src";
+import { DurationPickerModal } from "./src";
 
 import { formatTime } from "./utils/formatTime";
 
@@ -30,8 +30,9 @@ export default function App() {
                     </TouchableOpacity>
                 </View>
             </TouchableOpacity>
-            <DurationPicker
+            <DurationPickerModal
                 visible={showPicker}
+                setIsVisible={setShowPicker}
                 onConfirm={(pickedDuration) => {
                     setAlarmString(formatTime(pickedDuration));
                     setShowPicker(false);
@@ -59,11 +60,11 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 18,
-        color: "#F1F1F1"
+        color: "#F1F1F1",
     },
     alarmText: {
         fontSize: 48,
-        color: "#F1F1F1"
+        color: "#F1F1F1",
     },
     touchableContainer: {
         alignItems: "center",

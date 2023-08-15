@@ -6,6 +6,7 @@ import {
     Easing,
     Modal as ReactNativeModal,
     TouchableWithoutFeedback,
+    View,
 } from "react-native";
 
 import { styles } from "./Modal.styles";
