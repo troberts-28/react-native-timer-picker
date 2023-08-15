@@ -10,6 +10,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 
 import { generateNumbers } from "../../utils/generateNumbers";
+import { colorToRgba } from "../../utils/colorToRgba";
 import { generateStyles } from "./DurationPicker.styles";
 
 interface DurationScrollProps {
@@ -78,7 +79,11 @@ const DurationScroll = ({
         ]);
 
     return (
-        <View style={{ height: styles.pickerItemContainer.height * 3, overflow: "hidden" }}>
+        <View
+            style={{
+                height: styles.pickerItemContainer.height * 3,
+                overflow: "hidden",
+            }}>
             <FlatList
                 ref={flatListRef}
                 data={data}
@@ -108,21 +113,38 @@ const DurationScroll = ({
                 }
                 onMomentumScrollEnd={(e) => {
                     const newIndex = Math.round(
-                        e.nativeEvent.contentOffset.y / styles.pickerItemContainer.height
+                        e.nativeEvent.contentOffset.y /
+                            styles.pickerItemContainer.height
                     );
-                    onValueChange((newIndex % numberOfItems));
+                    onValueChange(newIndex % numberOfItems);
                 }}
             />
-            <Text style={styles.pickerLabels}>{label}</Text>
+            <View style={styles.pickerLabelContainers}>
+                <Text style={styles.pickerLabel}>{label}</Text>
+            </View>
             <LinearGradient
-                colors={[styles.contentContainer.backgroundColor ?? "white", "transparent"]}
+                colors={[
+                    styles.contentContainer.backgroundColor ?? "white",
+                    colorToRgba({
+                        color:
+                            styles.contentContainer.backgroundColor ?? "white",
+                        opacity: 0,
+                    }),
+                ]}
                 start={{ x: 1, y: 0.3 }}
                 end={{ x: 1, y: 1 }}
                 {...pickerGradientOverlayProps}
                 style={[styles.pickerGradientOverlays, { top: 0 }]}
             />
             <LinearGradient
-                colors={["transparent", styles.contentContainer.backgroundColor ?? "white"]}
+                colors={[
+                    colorToRgba({
+                        color:
+                            styles.contentContainer.backgroundColor ?? "white",
+                        opacity: 0,
+                    }),
+                    styles.contentContainer.backgroundColor ?? "white",
+                ]}
                 start={{ x: 1, y: 0 }}
                 end={{ x: 1, y: 0.7 }}
                 {...pickerGradientOverlayProps}

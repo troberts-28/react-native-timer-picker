@@ -7,7 +7,7 @@ export interface CustomDurationPickerStyles {
     container?: any;
     contentContainer?: any;
     pickerContainer?: any;
-    pickerLabels?: any;
+    pickerLabel?: any;
     pickerItemContainer?: any;
     pickerItem?: any;
     buttonContainer?: any;
@@ -46,19 +46,22 @@ export const generateStyles = (customStyles?: CustomDurationPickerStyles) =>
             marginRight: "8%",
             ...customStyles?.pickerContainer,
         },
-        pickerLabels: {
+        pickerLabelContainers: {
             position: "absolute",
             right: 4,
-            top: (customStyles?.pickerItem?.fontSize ?? 25) / 4,
+            top: 0,
             bottom: 0,
-            textAlignVertical: "center",
+            justifyContent: "center",
+        },
+        pickerLabel: {
             fontSize: 18,
             fontWeight: "bold",
+            marginTop: (customStyles?.pickerItem?.fontSize ?? 25) / 6,
             color:
                 customStyles?.textColor ?? customStyles?.theme === "dark"
                     ? DARK_MODE_TEXT_COLOR
                     : LIGHT_MODE_TEXT_COLOR,
-            ...customStyles?.pickerLabels,
+            ...customStyles?.pickerLabel,
         },
         pickerItemContainer: {
             height: 50,
@@ -94,6 +97,7 @@ export const generateStyles = (customStyles?: CustomDurationPickerStyles) =>
             borderWidth: 1,
             borderRadius: 10,
             fontSize: 16,
+            overflow: "hidden",
             ...customStyles?.button,
         },
         cancelButton: {

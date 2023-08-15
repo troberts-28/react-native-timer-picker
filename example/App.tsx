@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-import { DurationPicker } from "./index";
+import { DurationPicker } from "./src";
 
 import { formatTime } from "./utils/formatTime";
 
@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         color: "#C2C2C2",
         fontSize: 16,
+        overflow: "hidden",
     },
     buttonContainer: {
         flexDirection: "row",
