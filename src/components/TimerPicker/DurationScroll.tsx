@@ -1,18 +1,16 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useCallback } from "react";
 import {
     View,
     Text,
-    StyleSheet,
     FlatList,
     ViewabilityConfigCallbackPairs,
     ViewToken,
-    Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 import { generateNumbers } from "../../utils/generateNumbers";
 import { colorToRgba } from "../../utils/colorToRgba";
-import { generateStyles } from "./DurationPicker.styles";
+import { generateStyles } from "./TimerPicker.styles";
 
 interface DurationScrollProps {
     numberOfItems: number;
@@ -74,7 +72,7 @@ const DurationScroll = ({
                 });
             }
         },
-        []
+        [numberOfItems]
     );
 
     const viewabilityConfigCallbackPairs =
@@ -122,7 +120,7 @@ const DurationScroll = ({
                         : undefined
                 }
                 onMomentumScrollEnd={(e) => {
-                    let newIndex = Math.round(
+                    const newIndex = Math.round(
                         e.nativeEvent.contentOffset.y /
                             styles.pickerItemContainer.height
                     );

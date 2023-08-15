@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StyleSheet } from "react-native";
 
-export interface CustomDurationPickerStyles {
+export interface CustomTimerPickerStyles {
     theme?: "light" | "dark";
     backgroundColor?: string;
     textColor?: string;
@@ -23,7 +24,7 @@ const LIGHT_MODE_BACKGROUND_COLOR = "#F1F1F1";
 const LIGHT_MODE_TEXT_COLOR = "#1B1B1B";
 
 export const generateStyles = (
-    customStyles: CustomDurationPickerStyles | undefined,
+    customStyles: CustomTimerPickerStyles | undefined,
     options: { padWithNItems: number }
 ) =>
     StyleSheet.create({

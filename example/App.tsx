@@ -8,7 +8,7 @@ import {
     View,
 } from "react-native";
 
-import { DurationPicker, DurationPickerModal } from "./src";
+import { TimerPicker, TimerPickerModal } from "./src";
 
 import { formatTime } from "./utils/formatTime";
 
@@ -53,7 +53,7 @@ export default function App() {
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
-                <DurationPickerModal
+                <TimerPickerModal
                     visible={showPickerExample1}
                     setIsVisible={setShowPickerExample1}
                     onConfirm={(pickedDuration) => {
@@ -104,7 +104,7 @@ export default function App() {
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
-                <DurationPickerModal
+                <TimerPickerModal
                     visible={showPickerExample2}
                     setIsVisible={setShowPickerExample2}
                     onConfirm={(pickedDuration) => {
@@ -129,7 +129,7 @@ export default function App() {
     const renderExample3 = useMemo(() => {
         return (
             <View style={[styles.container, styles.page3Container]}>
-                <DurationPicker
+                <TimerPicker
                     padWithNItems={2}
                     hourLabel=":"
                     minuteLabel=":"
@@ -156,7 +156,7 @@ export default function App() {
     const renderExample4 = useMemo(() => {
         return (
             <View style={[styles.container, styles.page4Container]}>
-                <DurationPicker
+                <TimerPicker
                     padWithNItems={3}
                     hideHours
                     minuteLabel="min"

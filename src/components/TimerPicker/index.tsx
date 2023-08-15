@@ -4,12 +4,9 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import DurationScroll from "./DurationScroll";
 
-import {
-    generateStyles,
-    CustomDurationPickerStyles,
-} from "./DurationPicker.styles";
+import { generateStyles, CustomTimerPickerStyles } from "./TimerPicker.styles";
 
-export interface DurationPickerProps {
+export interface TimerPickerProps {
     onDurationChange?: (duration: {
         hours: number;
         minutes: number;
@@ -28,10 +25,10 @@ export interface DurationPickerProps {
     disableInfiniteScroll?: boolean;
     pickerContainerProps?: React.ComponentProps<typeof View>;
     pickerGradientOverlayProps?: React.ComponentProps<typeof LinearGradient>;
-    styles?: CustomDurationPickerStyles;
+    styles?: CustomTimerPickerStyles;
 }
 
-const DurationPicker = ({
+const TimerPicker = ({
     onDurationChange,
     initialHours = 0,
     initialMinutes = 0,
@@ -47,8 +44,8 @@ const DurationPicker = ({
     pickerContainerProps,
     pickerGradientOverlayProps,
     styles: customStyles,
-}: DurationPickerProps): React.ReactElement => {
-    let checkedPadWithNItems =
+}: TimerPickerProps): React.ReactElement => {
+    const checkedPadWithNItems =
         padWithNItems >= 0 ? Math.round(padWithNItems) : 0;
 
     const styles = generateStyles(customStyles, {
@@ -65,6 +62,7 @@ const DurationPicker = ({
             minutes: selectedMinutes,
             seconds: selectedSeconds,
         });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedHours, selectedMinutes, selectedSeconds]);
 
     return (
@@ -111,4 +109,4 @@ const DurationPicker = ({
     );
 };
 
-export default DurationPicker;
+export default TimerPicker;

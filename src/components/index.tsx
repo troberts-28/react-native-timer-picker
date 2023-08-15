@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
-import DurationPicker, { DurationPickerProps } from "./DurationPicker";
+import TimerPicker, { TimerPickerProps } from "./TimerPicker";
 import Modal from "./Modal";
 
 import {
     generateStyles,
-    CustomDurationPickerModalStyles,
-} from "./DurationPickerModal.styles";
+    CustomTimerPickerModalStyles,
+} from "./TimerPickerModal.styles";
 
-export interface DurationPickerModalProps
-    extends Omit<DurationPickerProps, "onDurationChange"> {
+export interface TimerPickerModalProps
+    extends Omit<TimerPickerProps, "onDurationChange"> {
     visible: boolean;
     setIsVisible: (isVisible: boolean) => void;
     onConfirm: ({
@@ -33,10 +33,10 @@ export interface DurationPickerModalProps
     contentContainerProps?: React.ComponentProps<typeof View>;
     buttonContainerProps?: React.ComponentProps<typeof View>;
     modalTitleProps?: React.ComponentProps<typeof Text>;
-    styles?: CustomDurationPickerModalStyles;
+    styles?: CustomTimerPickerModalStyles;
 }
 
-const DurationPickerModal = ({
+const TimerPickerModal = ({
     visible,
     setIsVisible,
     onConfirm,
@@ -65,7 +65,7 @@ const DurationPickerModal = ({
     modalTitleProps,
     pickerGradientOverlayProps,
     styles: customStyles,
-}: DurationPickerModalProps): React.ReactElement => {
+}: TimerPickerModalProps): React.ReactElement => {
     const styles = generateStyles(customStyles);
 
     const [selectedDuration, setSelectedDuration] = useState({
@@ -107,7 +107,7 @@ const DurationPickerModal = ({
                             {modalTitle}
                         </Text>
                     ) : null}
-                    <DurationPicker
+                    <TimerPicker
                         onDurationChange={(duration) =>
                             setSelectedDuration(duration)
                         }
@@ -152,4 +152,4 @@ const DurationPickerModal = ({
     );
 };
 
-export default DurationPickerModal;
+export default TimerPickerModal;

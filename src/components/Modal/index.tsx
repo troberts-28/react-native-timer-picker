@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
     Animated,
@@ -6,7 +7,6 @@ import {
     Easing,
     Modal as ReactNativeModal,
     TouchableWithoutFeedback,
-    View,
 } from "react-native";
 
 import { styles } from "./Modal.styles";
@@ -70,6 +70,7 @@ export const Modal = ({
             deviceEventEmitter.remove();
             isMounted.current = false;
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const backdropAnimatedStyle = {
@@ -98,7 +99,7 @@ export const Modal = ({
             duration: animationDuration,
             toValue: 1,
         }).start();
-    }, []);
+    }, [animationDuration]);
 
     const hide = useCallback(() => {
         Animated.timing(animatedOpacity.current, {
@@ -112,7 +113,7 @@ export const Modal = ({
                 onHide?.();
             }
         });
-    }, []);
+    }, [animationDuration, onHide]);
 
     useEffect(() => {
         if (isVisible) {
@@ -120,6 +121,7 @@ export const Modal = ({
         } else {
             hide();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isVisible]);
 
     return (

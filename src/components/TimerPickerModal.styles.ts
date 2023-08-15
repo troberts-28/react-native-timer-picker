@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StyleSheet } from "react-native";
 
-import type { CustomDurationPickerStyles } from "./DurationPicker/DurationPicker.styles";
+import type { CustomTimerPickerStyles } from "./TimerPicker/TimerPicker.styles";
 
-export interface CustomDurationPickerModalStyles
-    extends CustomDurationPickerStyles {
+export interface CustomTimerPickerModalStyles
+    extends CustomTimerPickerStyles {
     container?: any;
     contentContainer?: any;
     pickerContainer?: any;
@@ -23,7 +24,7 @@ const LIGHT_MODE_BACKGROUND_COLOR = "#F1F1F1";
 const LIGHT_MODE_TEXT_COLOR = "#1B1B1B";
 
 export const generateStyles = (
-    customStyles: CustomDurationPickerModalStyles | undefined
+    customStyles: CustomTimerPickerModalStyles | undefined
 ) =>
     StyleSheet.create({
         container: {
