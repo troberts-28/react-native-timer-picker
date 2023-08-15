@@ -10,7 +10,7 @@ import {
 } from "./DurationPicker.styles";
 
 export interface DurationPickerProps {
-    onValueChange: (value: {
+    onDurationChange?: (duration: {
         hours: number;
         minutes: number;
         seconds: number;
@@ -21,31 +21,46 @@ export interface DurationPickerProps {
     hideHours?: boolean;
     hideMinutes?: boolean;
     hideSeconds?: boolean;
+    hourLabel?: string;
+    minuteLabel?: string;
+    secondLabel?: string;
+    padWithNItems?: number;
+    disableInfiniteScroll?: boolean;
     pickerContainerProps?: React.ComponentProps<typeof View>;
     pickerGradientOverlayProps?: React.ComponentProps<typeof LinearGradient>;
     styles?: CustomDurationPickerStyles;
 }
 
 const DurationPicker = ({
-    onValueChange,
+    onDurationChange,
     initialHours = 0,
     initialMinutes = 0,
     initialSeconds = 0,
     hideHours = false,
     hideMinutes = false,
     hideSeconds = false,
+    hourLabel = "h",
+    minuteLabel = "m",
+    secondLabel = "s",
+    padWithNItems = 1,
+    disableInfiniteScroll = false,
     pickerContainerProps,
     pickerGradientOverlayProps,
     styles: customStyles,
 }: DurationPickerProps): React.ReactElement => {
-    const styles = generateStyles(customStyles);
+    let checkedPadWithNItems =
+        padWithNItems >= 0 ? Math.round(padWithNItems) : 0;
+
+    const styles = generateStyles(customStyles, {
+        padWithNItems: checkedPadWithNItems,
+    });
 
     const [selectedHours, setSelectedHours] = useState(initialHours);
     const [selectedMinutes, setSelectedMinutes] = useState(initialMinutes);
     const [selectedSeconds, setSelectedSeconds] = useState(initialSeconds);
 
     useEffect(() => {
-        onValueChange({
+        onDurationChange?.({
             hours: selectedHours,
             minutes: selectedMinutes,
             seconds: selectedSeconds,
@@ -57,32 +72,38 @@ const DurationPicker = ({
             {!hideHours ? (
                 <DurationScroll
                     numberOfItems={23}
-                    label="h"
+                    label={hourLabel}
                     initialIndex={initialHours}
-                    onValueChange={setSelectedHours}
+                    onDurationChange={setSelectedHours}
                     pickerGradientOverlayProps={pickerGradientOverlayProps}
+                    disableInfiniteScroll={disableInfiniteScroll}
+                    padWithNItems={checkedPadWithNItems}
                     styles={styles}
                 />
             ) : null}
             {!hideMinutes ? (
                 <DurationScroll
                     numberOfItems={59}
-                    label="m"
+                    label={minuteLabel}
                     initialIndex={initialMinutes}
-                    onValueChange={setSelectedMinutes}
+                    onDurationChange={setSelectedMinutes}
                     padNumbersWithZero
                     pickerGradientOverlayProps={pickerGradientOverlayProps}
+                    disableInfiniteScroll={disableInfiniteScroll}
+                    padWithNItems={checkedPadWithNItems}
                     styles={styles}
                 />
             ) : null}
             {!hideSeconds ? (
                 <DurationScroll
                     numberOfItems={59}
-                    label="s"
+                    label={secondLabel}
                     initialIndex={initialSeconds}
-                    onValueChange={setSelectedSeconds}
+                    onDurationChange={setSelectedSeconds}
                     padNumbersWithZero
                     pickerGradientOverlayProps={pickerGradientOverlayProps}
+                    disableInfiniteScroll={disableInfiniteScroll}
+                    padWithNItems={checkedPadWithNItems}
                     styles={styles}
                 />
             ) : null}

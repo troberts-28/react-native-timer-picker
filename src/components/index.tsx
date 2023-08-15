@@ -10,7 +10,7 @@ import {
 } from "./DurationPickerModal.styles";
 
 export interface DurationPickerModalProps
-    extends Omit<DurationPickerProps, "onValueChange"> {
+    extends Omit<DurationPickerProps, "onDurationChange"> {
     visible: boolean;
     setIsVisible: (isVisible: boolean) => void;
     onConfirm: ({
@@ -48,6 +48,11 @@ const DurationPickerModal = ({
     hideHours = false,
     hideMinutes = false,
     hideSeconds = false,
+    hourLabel = "h",
+    minuteLabel = "m",
+    secondLabel = "s",
+    padWithNItems = 1,
+    disableInfiniteScroll = false,
     hideCancelButton = false,
     confirmButtonText = "Confirm",
     cancelButtonText = "Cancel",
@@ -103,13 +108,20 @@ const DurationPickerModal = ({
                         </Text>
                     ) : null}
                     <DurationPicker
-                        onValueChange={(value) => setSelectedDuration(value)}
+                        onDurationChange={(duration) =>
+                            setSelectedDuration(duration)
+                        }
                         initialHours={confirmedDuration.hours}
                         initialMinutes={confirmedDuration.minutes}
                         initialSeconds={confirmedDuration.seconds}
                         hideHours={hideHours}
                         hideMinutes={hideMinutes}
                         hideSeconds={hideSeconds}
+                        hourLabel={hourLabel}
+                        minuteLabel={minuteLabel}
+                        secondLabel={secondLabel}
+                        padWithNItems={padWithNItems}
+                        disableInfiniteScroll={disableInfiniteScroll}
                         pickerContainerProps={pickerContainerProps}
                         pickerGradientOverlayProps={pickerGradientOverlayProps}
                         styles={customStyles}

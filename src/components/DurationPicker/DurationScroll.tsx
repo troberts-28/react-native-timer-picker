@@ -18,9 +18,10 @@ interface DurationScrollProps {
     numberOfItems: number;
     label?: string;
     initialIndex?: number;
-    onValueChange: (value: number) => void;
+    onDurationChange: (duration: number) => void;
     padNumbersWithZero?: boolean;
-    enableInfiniteScroll?: boolean;
+    disableInfiniteScroll?: boolean;
+    padWithNItems: number;
     pickerGradientOverlayProps?: React.ComponentProps<typeof LinearGradient>;
     styles: ReturnType<typeof generateStyles>;
 }
@@ -29,9 +30,10 @@ const DurationScroll = ({
     numberOfItems,
     label,
     initialIndex = 0,
-    onValueChange,
-    padNumbersWithZero,
-    enableInfiniteScroll = true,
+    onDurationChange,
+    padNumbersWithZero = false,
+    disableInfiniteScroll = false,
+    padWithNItems,
     pickerGradientOverlayProps,
     styles,
 }: DurationScrollProps): React.ReactElement => {
@@ -40,7 +42,11 @@ const DurationScroll = ({
     const data = generateNumbers(numberOfItems, {
         padWithZero: padNumbersWithZero,
         repeatNTimes: 3,
+        disableInfiniteScroll,
+        padWithNItems: padWithNItems,
     });
+
+    const numberOfItemsToShow = 1 + padWithNItems * 2;
 
     const renderItem = ({ item }: { item: string }) => (
         <View key={item} style={styles.pickerItemContainer}>
@@ -82,7 +88,7 @@ const DurationScroll = ({
     return (
         <View
             style={{
-                height: styles.pickerItemContainer.height * 3,
+                height: styles.pickerItemContainer.height * numberOfItemsToShow,
                 overflow: "hidden",
             }}>
             <FlatList
@@ -94,9 +100,12 @@ const DurationScroll = ({
                     index,
                 })}
                 initialScrollIndex={
-                    (initialIndex % numberOfItems) + numberOfItems
+                    (initialIndex % numberOfItems) +
+                    numberOfItems +
+                    (disableInfiniteScroll ? padWithNItems : 0) -
+                    (padWithNItems - 1)
                 }
-                windowSize={3}
+                windowSize={numberOfItemsToShow}
                 renderItem={renderItem}
                 keyExtractor={(_, index) => index.toString()}
                 showsVerticalScrollIndicator={false}
@@ -108,19 +117,22 @@ const DurationScroll = ({
                     (_, i) => i * styles.pickerItemContainer.height
                 )}
                 viewabilityConfigCallbackPairs={
-                    enableInfiniteScroll
+                    !disableInfiniteScroll
                         ? viewabilityConfigCallbackPairs?.current
                         : undefined
                 }
                 onMomentumScrollEnd={(e) => {
-                    const newIndex = Math.round(
+                    let newIndex = Math.round(
                         e.nativeEvent.contentOffset.y /
                             styles.pickerItemContainer.height
                     );
-                    onValueChange((newIndex + 1) % (numberOfItems + 1));
+                    onDurationChange(
+                        (disableInfiniteScroll ? newIndex : newIndex) %
+                            (numberOfItems + 1)
+                    );
                 }}
             />
-            <View style={styles.pickerLabelContainers}>
+            <View style={styles.pickerLabelContainer}>
                 <Text style={styles.pickerLabel}>{label}</Text>
             </View>
             <LinearGradient
@@ -135,7 +147,7 @@ const DurationScroll = ({
                 start={{ x: 1, y: 0.3 }}
                 end={{ x: 1, y: 1 }}
                 {...pickerGradientOverlayProps}
-                style={[styles.pickerGradientOverlays, { top: 0 }]}
+                style={[styles.pickerGradientOverlay, { top: 0 }]}
             />
             <LinearGradient
                 colors={[
@@ -149,7 +161,7 @@ const DurationScroll = ({
                 start={{ x: 1, y: 0 }}
                 end={{ x: 1, y: 0.7 }}
                 {...pickerGradientOverlayProps}
-                style={[styles.pickerGradientOverlays, { bottom: 0 }]}
+                style={[styles.pickerGradientOverlay, { bottom: -1 }]}
             />
         </View>
     );
