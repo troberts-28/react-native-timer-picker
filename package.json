@@ -1,16 +1,31 @@
 {
-    "name": "react-native-duration-picker",
-    "description": "A simple, flexible, performant duration picker for Expo React Native apps 🔥 Great for duration, timers and alarms ⏰🕰️⏳",
+    "name": "react-native-timer-picker",
+    "description": "A simple, flexible, performant duration picker for Expo React Native apps 🔥 Great for timers, alarms and duration inputs ⏰🕰️⏳",
     "author": {
         "name": "Tim Roberts",
         "url": "https://github.com/troberts-28"
     },
     "license": "MIT",
     "version": "1.0.0",
-    "main": "index.ts",
-    "homepage": "https://github.com/troberts-28/react-native-duration-picker",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "build:dev": "tsc --noEmit",
+        "clean": "rm yarn.lock && rm -rf ./node_modules && yarn install",
+        "start": "cp -Rf src example && cd example && yarn install && npx expo start"
+    },
+    "homepage": "https://github.com/troberts-28/react-native-timer-picker",
     "bugs": {
-        "url": "https://github.com/troberts-28/react-native-duration-picker/issues"
+        "url": "https://github.com/troberts-28/react-native-timer-picker/issues"
+    },
+    "repository": {
+        "name": "GitHub",
+        "type": "git",
+        "url": "git+https://github.com/troberts-28/react-native-timer-picker.git"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org/"
     },
     "files": [
         "index.ts",
@@ -19,11 +34,6 @@
         "README.md",
         "LICENSE"
     ],
-    "repository": {
-        "name": "GitHub",
-        "type": "git",
-        "url": "git+https://github.com/troberts-28/react-native-duration-picker.git"
-    },
     "keywords": [
         "react",
         "react-native",
@@ -35,10 +45,12 @@
         "alarm",
         "durationpicker",
         "duration-picker",
+        "react-native-duration-picker",
         "timepicker",
         "time-picker",
         "alarmpicker",
         "alarm-picker",
+        "reacct-native-alarm-picker",
         "timerpicker",
         "timer-picker",
         "expo-duration-picker",
@@ -62,11 +74,13 @@
     },
     "devDependencies": {
         "@types/react": "^18.2.20",
+        "@typescript-eslint/eslint-plugin": "^5.49.0",
+        "@typescript-eslint/parser": "^5.49.0",
+        "eslint": "8.44.0",
+        "eslint-plugin-react": "^7.33.1",
+        "eslint-plugin-react-hooks": "4.6.0",
         "react": "^18.2.0",
         "react-native": "^0.72.3",
         "typescript": "^5.1.6"
-    },
-    "dependencies": {
-        "expo-linear-gradient": "^12.3.0"
     }
 }

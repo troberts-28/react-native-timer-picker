@@ -1,2 +1,2 @@
-# react-native-duration-picker
-A simple, flexible, performant duration picker for React Native apps (including those built with Expo).
+# React Native Timer Picker
+"A simple, flexible, performant duration picker for Expo React Native apps 🔥 Great for timers, alarms and duration inputs ⏰🕰️⏳
