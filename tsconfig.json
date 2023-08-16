@@ -12,5 +12,6 @@
     "exclude": [
         "example/*",
         "dist/*",
+        "src/tests*"
     ]
 }
