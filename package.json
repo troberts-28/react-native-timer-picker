@@ -6,7 +6,7 @@
         "url": "https://github.com/troberts-28"
     },
     "license": "MIT",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
@@ -31,7 +31,6 @@
         "registry": "https://registry.npmjs.org/"
     },
     "files": [
-        "index.ts",
         "dist",
         "package.json",
         "README.md",
