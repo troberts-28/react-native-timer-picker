@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 
 import DurationScroll from "./DurationScroll";
 
 import { generateStyles, CustomTimerPickerStyles } from "./TimerPicker.styles";
+import { LinearGradientProps } from "./DurationScroll";
 
 export interface TimerPickerProps {
     onDurationChange?: (duration: {
@@ -23,8 +23,10 @@ export interface TimerPickerProps {
     secondLabel?: string;
     padWithNItems?: number;
     disableInfiniteScroll?: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    LinearGradient?: any;
     pickerContainerProps?: React.ComponentProps<typeof View>;
-    pickerGradientOverlayProps?: React.ComponentProps<typeof LinearGradient>;
+    pickerGradientOverlayProps?: LinearGradientProps;
     styles?: CustomTimerPickerStyles;
 }
 
@@ -41,6 +43,7 @@ const TimerPicker = ({
     secondLabel = "s",
     padWithNItems = 1,
     disableInfiniteScroll = false,
+    LinearGradient,
     pickerContainerProps,
     pickerGradientOverlayProps,
     styles: customStyles,
@@ -62,11 +65,14 @@ const TimerPicker = ({
             minutes: selectedMinutes,
             seconds: selectedSeconds,
         });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedHours, selectedMinutes, selectedSeconds]);
 
     return (
-        <View {...pickerContainerProps} style={styles.pickerContainer}>
+        <View
+            {...pickerContainerProps}
+            style={styles.pickerContainer}
+            testID="timer-picker">
             {!hideHours ? (
                 <DurationScroll
                     numberOfItems={23}
@@ -76,7 +82,9 @@ const TimerPicker = ({
                     pickerGradientOverlayProps={pickerGradientOverlayProps}
                     disableInfiniteScroll={disableInfiniteScroll}
                     padWithNItems={checkedPadWithNItems}
+                    LinearGradient={LinearGradient}
                     styles={styles}
+                    testID="duration-scroll-hour"
                 />
             ) : null}
             {!hideMinutes ? (
@@ -89,7 +97,9 @@ const TimerPicker = ({
                     pickerGradientOverlayProps={pickerGradientOverlayProps}
                     disableInfiniteScroll={disableInfiniteScroll}
                     padWithNItems={checkedPadWithNItems}
+                    LinearGradient={LinearGradient}
                     styles={styles}
+                    testID="duration-scroll-minute"
                 />
             ) : null}
             {!hideSeconds ? (
@@ -102,7 +112,9 @@ const TimerPicker = ({
                     pickerGradientOverlayProps={pickerGradientOverlayProps}
                     disableInfiniteScroll={disableInfiniteScroll}
                     padWithNItems={checkedPadWithNItems}
+                    LinearGradient={LinearGradient}
                     styles={styles}
+                    testID="duration-scroll-second"
                 />
             ) : null}
         </View>

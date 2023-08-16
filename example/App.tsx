@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 import { TimerPicker, TimerPickerModal } from "./src";
 
@@ -63,7 +64,7 @@ export default function App() {
                     modalTitle="Set Alarm"
                     onCancel={() => setShowPickerExample1(false)}
                     closeOnOverlayPress
-                    disableInfiniteScroll
+                    LinearGradient={LinearGradient}
                     styles={{
                         theme: "dark",
                     }}
@@ -114,12 +115,9 @@ export default function App() {
                     modalTitle="Set Alarm"
                     onCancel={() => setShowPickerExample2(false)}
                     closeOnOverlayPress
-                    disableInfiniteScroll
+                    LinearGradient={LinearGradient}
                     styles={{
                         theme: "light",
-                    }}
-                    modalProps={{
-                        overlayOpacity: 0.2,
                     }}
                 />
             </View>
@@ -134,6 +132,7 @@ export default function App() {
                     hourLabel=":"
                     minuteLabel=":"
                     secondLabel=""
+                    LinearGradient={LinearGradient}
                     styles={{
                         theme: "dark",
                         backgroundColor: "#202020",
@@ -161,6 +160,7 @@ export default function App() {
                     hideHours
                     minuteLabel="min"
                     secondLabel="sec"
+                    LinearGradient={LinearGradient}
                     styles={{
                         theme: "light",
                         pickerItem: {
@@ -194,7 +194,6 @@ export default function App() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#514242",
         alignItems: "center",
         justifyContent: "center",
         width: screenWidth,
@@ -244,7 +243,6 @@ const styles = StyleSheet.create({
     },
     buttonLight: { borderColor: "#8C8C8C", color: "#8C8C8C" },
     buttonContainer: {
-        flexDirection: "row",
         marginTop: 30,
     },
 });
