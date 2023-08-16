@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { forwardRef, useImperativeHandle, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 import TimerPicker, { TimerPickerProps } from "./TimerPicker";
@@ -9,8 +9,11 @@ import {
     CustomTimerPickerModalStyles,
 } from "./TimerPickerModal.styles";
 
-export interface TimerPickerModalProps
-    extends Omit<TimerPickerProps, "onDurationChange"> {
+interface TimePickerModalRef {
+    reset: () => void;
+}
+
+export interface TimerPickerModalProps extends TimerPickerProps {
     visible: boolean;
     setIsVisible: (isVisible: boolean) => void;
     onConfirm: ({
@@ -22,7 +25,7 @@ export interface TimerPickerModalProps
         minutes: number;
         seconds: number;
     }) => void;
-    onCancel: () => void;
+    onCancel?: () => void;
     closeOnOverlayPress?: boolean;
     hideCancelButton?: boolean;
     confirmButtonText?: string;
@@ -36,120 +39,157 @@ export interface TimerPickerModalProps
     styles?: CustomTimerPickerModalStyles;
 }
 
-const TimerPickerModal = ({
-    visible,
-    setIsVisible,
-    onConfirm,
-    onCancel,
-    closeOnOverlayPress,
-    initialHours = 0,
-    initialMinutes = 0,
-    initialSeconds = 0,
-    hideHours = false,
-    hideMinutes = false,
-    hideSeconds = false,
-    hourLabel = "h",
-    minuteLabel = "m",
-    secondLabel = "s",
-    padWithNItems = 1,
-    disableInfiniteScroll = false,
-    hideCancelButton = false,
-    confirmButtonText = "Confirm",
-    cancelButtonText = "Cancel",
-    modalTitle,
-    modalProps,
-    containerProps,
-    contentContainerProps,
-    pickerContainerProps,
-    buttonContainerProps,
-    modalTitleProps,
-    pickerGradientOverlayProps,
-    styles: customStyles,
-}: TimerPickerModalProps): React.ReactElement => {
-    const styles = generateStyles(customStyles);
+const TimerPickerModal = forwardRef<TimePickerModalRef, TimerPickerModalProps>(
+    (
+        {
+            visible,
+            setIsVisible,
+            onConfirm,
+            onCancel,
+            onDurationChange,
+            closeOnOverlayPress,
+            initialHours = 0,
+            initialMinutes = 0,
+            initialSeconds = 0,
+            hideHours = false,
+            hideMinutes = false,
+            hideSeconds = false,
+            hourLabel = "h",
+            minuteLabel = "m",
+            secondLabel = "s",
+            padWithNItems = 1,
+            disableInfiniteScroll = false,
+            hideCancelButton = false,
+            confirmButtonText = "Confirm",
+            cancelButtonText = "Cancel",
+            modalTitle,
+            LinearGradient,
+            modalProps,
+            containerProps,
+            contentContainerProps,
+            pickerContainerProps,
+            buttonContainerProps,
+            modalTitleProps,
+            pickerGradientOverlayProps,
+            styles: customStyles,
+        },
+        ref
+    ): React.ReactElement => {
+        const styles = generateStyles(customStyles);
 
-    const [selectedDuration, setSelectedDuration] = useState({
-        hours: initialHours,
-        minutes: initialMinutes,
-        seconds: initialSeconds,
-    });
-    const [confirmedDuration, setConfirmedDuration] = useState({
-        hours: initialHours,
-        minutes: initialMinutes,
-        seconds: initialSeconds,
-    });
-
-    const hideModal = () => {
-        setSelectedDuration({
-            hours: confirmedDuration.hours,
-            minutes: confirmedDuration.minutes,
-            seconds: confirmedDuration.seconds,
+        const [selectedDuration, setSelectedDuration] = useState({
+            hours: initialHours,
+            minutes: initialMinutes,
+            seconds: initialSeconds,
         });
-        setIsVisible(false);
-    };
+        const [confirmedDuration, setConfirmedDuration] = useState({
+            hours: initialHours,
+            minutes: initialMinutes,
+            seconds: initialSeconds,
+        });
 
-    const confirm = () => {
-        onConfirm(selectedDuration);
-        setConfirmedDuration(selectedDuration);
-    };
+        const hideModal = () => {
+            setSelectedDuration({
+                hours: confirmedDuration.hours,
+                minutes: confirmedDuration.minutes,
+                seconds: confirmedDuration.seconds,
+            });
+            setIsVisible(false);
+        };
 
-    return (
-        <Modal
-            isVisible={visible}
-            onOverlayPress={closeOnOverlayPress ? hideModal : undefined}
-            {...modalProps}>
-            <View {...containerProps} style={styles.container}>
-                <View
-                    {...contentContainerProps}
-                    style={styles.contentContainer}>
-                    {modalTitle ? (
-                        <Text {...modalTitleProps} style={styles.modalTitle}>
-                            {modalTitle}
-                        </Text>
-                    ) : null}
-                    <TimerPicker
-                        onDurationChange={(duration) =>
-                            setSelectedDuration(duration)
-                        }
-                        initialHours={confirmedDuration.hours}
-                        initialMinutes={confirmedDuration.minutes}
-                        initialSeconds={confirmedDuration.seconds}
-                        hideHours={hideHours}
-                        hideMinutes={hideMinutes}
-                        hideSeconds={hideSeconds}
-                        hourLabel={hourLabel}
-                        minuteLabel={minuteLabel}
-                        secondLabel={secondLabel}
-                        padWithNItems={padWithNItems}
-                        disableInfiniteScroll={disableInfiniteScroll}
-                        pickerContainerProps={pickerContainerProps}
-                        pickerGradientOverlayProps={pickerGradientOverlayProps}
-                        styles={customStyles}
-                    />
+        const confirm = () => {
+            setConfirmedDuration(selectedDuration);
+            onConfirm(selectedDuration);
+        };
+
+        const cancel = () => {
+            setIsVisible(false);
+            setSelectedDuration(confirmedDuration);
+            onCancel?.();
+        };
+
+        useImperativeHandle(ref, () => ({
+            reset: () => {
+                const initialDuration = {
+                    hours: initialHours,
+                    minutes: initialMinutes,
+                    seconds: initialSeconds,
+                };
+                setSelectedDuration(initialDuration);
+                setConfirmedDuration(initialDuration);
+                setIsVisible(false);
+            },
+        }));
+
+        return (
+            <Modal
+                isVisible={visible}
+                onOverlayPress={closeOnOverlayPress ? hideModal : undefined}
+                {...modalProps}
+                testID="timer-picker-modal">
+                <View {...containerProps} style={styles.container}>
                     <View
-                        {...buttonContainerProps}
-                        style={styles.buttonContainer}>
-                        {!hideCancelButton ? (
-                            <TouchableOpacity onPress={onCancel}>
+                        {...contentContainerProps}
+                        style={styles.contentContainer}>
+                        {modalTitle ? (
+                            <Text
+                                {...modalTitleProps}
+                                style={styles.modalTitle}>
+                                {modalTitle}
+                            </Text>
+                        ) : null}
+                        <TimerPicker
+                            onDurationChange={(duration) => {
+                                setSelectedDuration(duration);
+                                onDurationChange?.(duration);
+                            }}
+                            initialHours={confirmedDuration.hours}
+                            initialMinutes={confirmedDuration.minutes}
+                            initialSeconds={confirmedDuration.seconds}
+                            hideHours={hideHours}
+                            hideMinutes={hideMinutes}
+                            hideSeconds={hideSeconds}
+                            hourLabel={hourLabel}
+                            minuteLabel={minuteLabel}
+                            secondLabel={secondLabel}
+                            padWithNItems={padWithNItems}
+                            disableInfiniteScroll={disableInfiniteScroll}
+                            LinearGradient={LinearGradient}
+                            pickerContainerProps={pickerContainerProps}
+                            pickerGradientOverlayProps={
+                                pickerGradientOverlayProps
+                            }
+                            styles={customStyles}
+                        />
+                        <View
+                            {...buttonContainerProps}
+                            style={styles.buttonContainer}>
+                            {!hideCancelButton ? (
+                                <TouchableOpacity onPress={cancel}>
+                                    <Text
+                                        style={[
+                                            styles.cancelButton,
+                                            styles.button,
+                                        ]}>
+                                        {cancelButtonText}
+                                    </Text>
+                                </TouchableOpacity>
+                            ) : null}
+                            <TouchableOpacity onPress={confirm}>
                                 <Text
                                     style={[
-                                        styles.cancelButton,
+                                        styles.confirmButton,
                                         styles.button,
                                     ]}>
-                                    {cancelButtonText}
+                                    {confirmButtonText}
                                 </Text>
                             </TouchableOpacity>
-                        ) : null}
-                        <TouchableOpacity onPress={confirm}>
-                            <Text style={[styles.confirmButton, styles.button]}>
-                                {confirmButtonText}
-                            </Text>
-                        </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
-        </Modal>
-    );
-};
+            </Modal>
+        );
+    }
+);
 
 export default TimerPickerModal;

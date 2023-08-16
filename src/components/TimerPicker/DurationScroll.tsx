@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import React, { useRef, useCallback } from "react";
 import {
     View,
@@ -6,11 +7,22 @@ import {
     ViewabilityConfigCallbackPairs,
     ViewToken,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 
 import { generateNumbers } from "../../utils/generateNumbers";
 import { colorToRgba } from "../../utils/colorToRgba";
 import { generateStyles } from "./TimerPicker.styles";
+
+type LinearGradientPoint = {
+    x: number;
+    y: number;
+};
+
+export type LinearGradientProps = React.ComponentProps<typeof View> & {
+    colors: string[];
+    locations?: number[] | null;
+    start?: LinearGradientPoint | null;
+    end?: LinearGradientPoint | null;
+};
 
 interface DurationScrollProps {
     numberOfItems: number;
@@ -20,7 +32,10 @@ interface DurationScrollProps {
     padNumbersWithZero?: boolean;
     disableInfiniteScroll?: boolean;
     padWithNItems: number;
-    pickerGradientOverlayProps?: React.ComponentProps<typeof LinearGradient>;
+    pickerGradientOverlayProps?: LinearGradientProps;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    LinearGradient?: any;
+    testID?: string;
     styles: ReturnType<typeof generateStyles>;
 }
 
@@ -33,6 +48,8 @@ const DurationScroll = ({
     disableInfiniteScroll = false,
     padWithNItems,
     pickerGradientOverlayProps,
+    LinearGradient,
+    testID,
     styles,
 }: DurationScrollProps): React.ReactElement => {
     const flatListRef = useRef<FlatList | null>(null);
@@ -47,7 +64,10 @@ const DurationScroll = ({
     const numberOfItemsToShow = 1 + padWithNItems * 2;
 
     const renderItem = ({ item }: { item: string }) => (
-        <View key={item} style={styles.pickerItemContainer}>
+        <View
+            key={item}
+            style={styles.pickerItemContainer}
+            testID="picker-item">
             <Text style={styles.pickerItem}>{item}</Text>
         </View>
     );
@@ -85,6 +105,7 @@ const DurationScroll = ({
 
     return (
         <View
+            testID={testID}
             style={{
                 height: styles.pickerItemContainer.height * numberOfItemsToShow,
                 overflow: "hidden",
@@ -108,7 +129,7 @@ const DurationScroll = ({
                 keyExtractor={(_, index) => index.toString()}
                 showsVerticalScrollIndicator={false}
                 decelerationRate="fast"
-                scrollEventThrottle={10}
+                scrollEventThrottle={16}
                 snapToAlignment="start"
                 // used in place of snapToOffset due to bug on Android
                 snapToOffsets={[...Array(data.length)].map(
@@ -125,42 +146,49 @@ const DurationScroll = ({
                             styles.pickerItemContainer.height
                     );
                     onDurationChange(
-                        (disableInfiniteScroll ? newIndex : newIndex) %
+                        (disableInfiniteScroll ? newIndex : newIndex + padWithNItems) %
                             (numberOfItems + 1)
                     );
                 }}
+                testID="duration-scroll-flatlist"
             />
             <View style={styles.pickerLabelContainer}>
                 <Text style={styles.pickerLabel}>{label}</Text>
             </View>
-            <LinearGradient
-                colors={[
-                    styles.pickerContainer.backgroundColor ?? "white",
-                    colorToRgba({
-                        color:
+            {LinearGradient ? (
+                <>
+                    <LinearGradient
+                        colors={[
                             styles.pickerContainer.backgroundColor ?? "white",
-                        opacity: 0,
-                    }),
-                ]}
-                start={{ x: 1, y: 0.3 }}
-                end={{ x: 1, y: 1 }}
-                {...pickerGradientOverlayProps}
-                style={[styles.pickerGradientOverlay, { top: 0 }]}
-            />
-            <LinearGradient
-                colors={[
-                    colorToRgba({
-                        color:
+                            colorToRgba({
+                                color:
+                                    styles.pickerContainer.backgroundColor ??
+                                    "white",
+                                opacity: 0,
+                            }),
+                        ]}
+                        start={{ x: 1, y: 0.3 }}
+                        end={{ x: 1, y: 1 }}
+                        {...pickerGradientOverlayProps}
+                        style={[styles.pickerGradientOverlay, { top: 0 }]}
+                    />
+                    <LinearGradient
+                        colors={[
+                            colorToRgba({
+                                color:
+                                    styles.pickerContainer.backgroundColor ??
+                                    "white",
+                                opacity: 0,
+                            }),
                             styles.pickerContainer.backgroundColor ?? "white",
-                        opacity: 0,
-                    }),
-                    styles.pickerContainer.backgroundColor ?? "white",
-                ]}
-                start={{ x: 1, y: 0 }}
-                end={{ x: 1, y: 0.7 }}
-                {...pickerGradientOverlayProps}
-                style={[styles.pickerGradientOverlay, { bottom: -1 }]}
-            />
+                        ]}
+                        start={{ x: 1, y: 0 }}
+                        end={{ x: 1, y: 0.7 }}
+                        {...pickerGradientOverlayProps}
+                        style={[styles.pickerGradientOverlay, { bottom: -1 }]}
+                    />
+                </>
+            ) : null}
         </View>
     );
 };

@@ -7,10 +7,6 @@ export interface CustomTimerPickerModalStyles
     extends CustomTimerPickerStyles {
     container?: any;
     contentContainer?: any;
-    pickerContainer?: any;
-    pickerLabel?: any;
-    pickerItemContainer?: any;
-    pickerItem?: any;
     buttonContainer?: any;
     button?: any;
     cancelButton?: any;

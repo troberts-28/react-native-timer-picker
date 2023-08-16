@@ -1,24 +1,29 @@
 {
-  "name": "example",
-  "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
-  "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
-  },
-  "dependencies": {
-    "expo": ">=47.0.0",
-    "expo-linear-gradient": ">=12.0.1",
-    "react": ">=18.1.0",
-    "react-native": ">=0.70.8"
-  },
-  "devDependencies": {
-    "@babel/core": ">=7.20.0",
-    "@types/react": ">=18.0.27",
-    "@types/react-native": ">=0.70.6",
-    "typescript": ">=4.9.4"
-  },
-  "private": true
+    "name": "example",
+    "version": "1.0.0",
+    "main": "node_modules/expo/AppEntry.js",
+    "scripts": {
+        "start": "npx expo start",
+        "android": "npx expo start --android",
+        "ios": "npx expo start --ios",
+        "web": "npx expo start --web"
+    },
+    "dependencies": {
+        "expo": "^49.0.7",
+        "expo-linear-gradient": ">=12.0.1",
+        "react": ">=18.1.0",
+        "react-native": ">=0.70.8"
+    },
+    "devDependencies": {
+        "@babel/core": ">=7.20.0",
+        "@types/react": ">=18.0.27",
+        "@types/react-native": ">=0.70.6",
+        "@typescript-eslint/eslint-plugin": ">=5.49.0",
+        "@typescript-eslint/parser": ">=5.49.0",
+        "eslint": ">=8.44.0",
+        "eslint-plugin-react": ">=7.33.1",
+        "eslint-plugin-react-hooks": ">=4.6.0",
+        "typescript": ">=4.9.4"
+    },
+    "private": true
 }
