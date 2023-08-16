@@ -21,6 +21,7 @@ interface ModalProps {
     modalProps?: any;
     contentStyle?: any;
     overlayStyle?: any;
+    testID?: string;
 }
 
 export const Modal = ({
@@ -33,6 +34,7 @@ export const Modal = ({
     modalProps,
     contentStyle,
     overlayStyle,
+    testID
 }: ModalProps): React.ReactElement => {
     const [screenHeight, setScreenHeight] = useState(
         Dimensions.get("window").height
@@ -121,7 +123,7 @@ export const Modal = ({
         } else {
             hide();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isVisible]);
 
     return (
@@ -129,8 +131,9 @@ export const Modal = ({
             transparent
             animationType="fade"
             visible={isVisible}
-            {...modalProps}>
-            <TouchableWithoutFeedback onPress={onOverlayPress}>
+            {...modalProps}
+            testID={testID ?? "modal"}>
+            <TouchableWithoutFeedback onPress={onOverlayPress} testID="modal-backdrop">
                 <Animated.View
                     style={[
                         styles.backdrop,

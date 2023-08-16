@@ -1,7 +1,7 @@
 import { padWithZero } from "./padWithZero";
 
 export const generateNumbers = (
-    max: number,
+    numberOfItems: number,
     options: {
         repeatNTimes?: number;
         padWithZero?: boolean;
@@ -9,13 +9,17 @@ export const generateNumbers = (
         padWithNItems: number;
     }
 ) => {
+    if (numberOfItems <= 0) {
+        return [];
+    }
+
     let numbers: string[] = [];
     if (options.padWithZero) {
-        for (let i = 0; i <= max; i++) {
+        for (let i = 0; i <= numberOfItems; i++) {
             numbers.push(padWithZero(i));
         }
     } else {
-        for (let i = 0; i <= max; i++) {
+        for (let i = 0; i <= numberOfItems; i++) {
             numbers.push(String(i));
         }
     }

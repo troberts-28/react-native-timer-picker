@@ -1,6 +1,6 @@
 {
     "name": "react-native-timer-picker",
-    "description": "A simple, flexible, performant duration picker for Expo React Native apps 🔥 Great for timers, alarms and duration inputs ⏰🕰️⏳",
+    "description": "A simple, flexible, performant duration picker for Expo React Native apps 🔥\n\nGreat for timers, alarms and duration inputs ⏰🕰️⏳",
     "author": {
         "name": "Tim Roberts",
         "url": "https://github.com/troberts-28"
@@ -10,10 +10,13 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
+        "test": "jest --forceExit --silent",
         "build": "tsc",
         "build:dev": "tsc --noEmit",
         "clean": "rm yarn.lock && rm -rf ./node_modules && yarn install",
-        "start": "cp -Rf src example && cd example && yarn install && npx expo start"
+        "start": "cp -Rf src example && cd example && yarn add expo && npx expo install && npx expo start",
+        "lint": "eslint --ext .ts,.tsx .",
+        "lint:fix": "eslint --ext .ts,.tsx . --fix"
     },
     "homepage": "https://github.com/troberts-28/react-native-timer-picker",
     "bugs": {
@@ -43,16 +46,22 @@
         "time",
         "timer",
         "alarm",
+        "modal",
         "durationpicker",
         "duration-picker",
+        "duration-picker-modal",
         "react-native-duration-picker",
+        "react-native-duration-picker-modal",
         "timepicker",
         "time-picker",
         "alarmpicker",
         "alarm-picker",
-        "reacct-native-alarm-picker",
+        "alarm-picker-modal",
+        "react-native-alarm-picker",
         "timerpicker",
         "timer-picker",
+        "timer-picker-modal",
+        "react-native-duration-picker-modal",
         "expo-duration-picker",
         "expo-time-picker",
         "expo-timepicker",
@@ -65,21 +74,47 @@
     "engines": {
         "node": ">=16.0.0"
     },
+    "jest": {
+        "preset": "react-native",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "jsx",
+            "json",
+            "node"
+        ],
+        "testEnvironment": "node",
+        "modulePathIgnorePatterns": [
+            "<rootDir>/dist/",
+            "<rootDir>/example/"
+        ],
+        "transformIgnorePatterns": []
+    },
     "private": false,
     "typings": "./dist/index.d.ts",
     "peerDependencies": {
-        "expo-linear-gradient": ">=12.0.1",
-        "react": ">=18.1.0",
-        "react-native": ">=0.70.8"
+        "react": ">=16.8.0",
+        "react-native": ">=0.59.0"
     },
     "devDependencies": {
+        "@babel/core": ">=7.20.0",
+        "@babel/plugin-transform-class-properties": "^7.22.5",
+        "@babel/plugin-transform-flow-strip-types": "^7.22.5",
+        "@babel/plugin-transform-private-methods": "^7.22.5",
+        "@testing-library/react-native": "^12.0.0",
+        "@types/jest": "^29.0.0",
         "@types/react": ">=18.0.27",
         "@types/react-native": ">=0.70.6",
         "@typescript-eslint/eslint-plugin": ">=5.49.0",
         "@typescript-eslint/parser": ">=5.49.0",
+        "babel-jest": "^29.6.2",
         "eslint": ">=8.44.0",
         "eslint-plugin-react": ">=7.33.1",
         "eslint-plugin-react-hooks": ">=4.6.0",
+        "jest": "^29.0.0",
+        "metro-react-native-babel-preset": "^0.71.1",
+        "react-test-renderer": "^18.0.0",
         "typescript": ">=4.9.4"
     }
 }

@@ -10,11 +10,6 @@ export interface CustomTimerPickerStyles {
     pickerLabel?: any;
     pickerItemContainer?: any;
     pickerItem?: any;
-    buttonContainer?: any;
-    button?: any;
-    cancelButton?: any;
-    confirmButton?: any;
-    modalTitle?: any;
     pickerGradientOverlay?: any;
 }
 
