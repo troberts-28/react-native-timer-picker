@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export interface CustomTimerPickerStyles {
     theme?: "light" | "dark";
     backgroundColor?: string;
-    textColor?: string;
+    text?: any;
     pickerContainer?: any;
     pickerLabelContainer?: any;
     pickerLabel?: any;
@@ -46,10 +46,10 @@ export const generateStyles = (
             fontWeight: "bold",
             marginTop: (customStyles?.pickerItem?.fontSize ?? 25) / 6,
             color:
-                customStyles?.textColor ??
-                (customStyles?.theme === "dark"
+                customStyles?.theme === "dark"
                     ? DARK_MODE_TEXT_COLOR
-                    : LIGHT_MODE_TEXT_COLOR),
+                    : LIGHT_MODE_TEXT_COLOR,
+            ...customStyles?.text,
             ...customStyles?.pickerLabel,
         },
         pickerItemContainer: {
@@ -63,10 +63,10 @@ export const generateStyles = (
             textAlignVertical: "center",
             fontSize: 25,
             color:
-                customStyles?.textColor ??
-                (customStyles?.theme === "dark"
+                customStyles?.theme === "dark"
                     ? DARK_MODE_TEXT_COLOR
-                    : LIGHT_MODE_TEXT_COLOR),
+                    : LIGHT_MODE_TEXT_COLOR,
+            ...customStyles?.text,
             ...customStyles?.pickerItem,
         },
         pickerGradientOverlay: {

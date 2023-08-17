@@ -3,8 +3,7 @@ import { StyleSheet } from "react-native";
 
 import type { CustomTimerPickerStyles } from "./TimerPicker/TimerPicker.styles";
 
-export interface CustomTimerPickerModalStyles
-    extends CustomTimerPickerStyles {
+export interface CustomTimerPickerModalStyles extends CustomTimerPickerStyles {
     container?: any;
     contentContainer?: any;
     buttonContainer?: any;
@@ -53,26 +52,25 @@ export const generateStyles = (
             borderRadius: 10,
             fontSize: 16,
             overflow: "hidden",
+            ...customStyles?.text,
             ...customStyles?.button,
         },
         cancelButton: {
             borderColor: "gray",
             color:
-                customStyles?.textColor ?? customStyles?.theme === "dark"
-                    ? DARK_MODE_TEXT_COLOR
-                    : "gray",
+                customStyles?.theme === "dark" ? DARK_MODE_TEXT_COLOR : "gray",
             backgroundColor:
                 customStyles?.theme === "dark" ? "gray" : undefined,
+            ...customStyles?.text,
             ...customStyles?.cancelButton,
         },
         confirmButton: {
             borderColor: "green",
             color:
-                customStyles?.textColor ?? customStyles?.theme === "dark"
-                    ? DARK_MODE_TEXT_COLOR
-                    : "green",
+                customStyles?.theme === "dark" ? DARK_MODE_TEXT_COLOR : "green",
             backgroundColor:
                 customStyles?.theme === "dark" ? "green" : undefined,
+            ...customStyles?.text,
             ...customStyles?.confirmButton,
         },
         modalTitle: {
@@ -80,9 +78,10 @@ export const generateStyles = (
             fontWeight: "bold",
             marginBottom: 15,
             color:
-                customStyles?.textColor ?? customStyles?.theme === "dark"
+                customStyles?.theme === "dark"
                     ? DARK_MODE_TEXT_COLOR
                     : LIGHT_MODE_TEXT_COLOR,
+            ...customStyles?.text,
             ...customStyles?.modalTitle,
         },
     });
