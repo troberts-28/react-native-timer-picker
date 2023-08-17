@@ -11,7 +11,7 @@ Great for timers, alarms and duration inputs ⏰🕰️⏳
 
 Works with Expo and bare React Native apps.
 
-- [Demos 📱](#demos-)
+- [Demos 📱](#demos-📱)
 - [Peer Dependencies 👶](#peer-dependencies-)
 - [Installation 🚀](#installation-)
 - [Examples 😎](#examples-)
@@ -23,7 +23,7 @@ Works with Expo and bare React Native apps.
     - [TimerPicker ⏲️](#timerpicker-️)
         - [Custom Styles 👗](#custom-styles-)
     - [TimerPickerModal ⏰](#timerpickermodal-)
-        - [Custom Styles 👗](#custom-styles--1)
+        - [Custom Styles 👕](#custom-styles--1)
 - [Methods 🔄](#methods-)
     - [TimerPickerModal](#timerpickermodal)
 - [License 📝](#license-)
@@ -299,7 +299,7 @@ return (
 
 ### TimerPicker ⏲️
 
-| Prop                        | Description                                               | Type                                              | Default Value       | Required |
+| Prop                        | Description                                               | Type                                              | Default       | Required |
 | :--------------------------:|:----------------------------------------------------------|:-------------------------------------------------:|:-------------------:|:--------:|
 | onDurationChange            | Callback when the duration changes                        | `(duration: { hours: number, minutes: number, seconds: number }) => void` | -                   | false    |
 | initialHours                | Initial value for hours                                   | Number                                            | -                   | false    |
@@ -313,10 +313,10 @@ return (
 | secondLabel                 | Label for the seconds picker                              | String                                            | s                   | false    |
 | padWithNItems               | Number of items to pad the picker with on either side     | Number                                            | 1                   | false    |
 | disableInfiniteScroll       | Disable the infinite scroll feature                       | Boolean                                           | false               | false    |
-| LinearGradient              | Linear Gradient Component                                 | expo-linear-gradient.LinearGradient or react-native-linear-gradient.default | -                   | false    |
+| LinearGradient              | Linear Gradient Component                                 | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default | -                   | false    |
 | pickerContainerProps        | Props for the picker container                            | `React.ComponentProps<typeof View>`               | -                   | false    |
 | pickerGradientOverlayProps  | Props for the gradient overlay                            | LinearGradientProps                               | -                   | false    |
-| styles                      | Custom styles for the timer picker                        | [CustomTimerPickerStyles](#custom-styles)         | -                   | false    |
+| styles                      | Custom styles for the timer picker                        | [CustomTimerPickerStyles](#custom-styles-)         | -                   | false    |
 
 #### Custom Styles 👗
 
@@ -336,29 +336,29 @@ The following custom styles can be supplied to re-style the component in any way
 
 ### TimerPickerModal ⏰
 
-The TimerPickerModal component accepts all [TimerPicker props](#timerpicker), and the below additional props.
+The TimerPickerModal component accepts all [TimerPicker props](#timerpicker-️), and the below additional props.
 
-| Prop                  | Description                                               | Type                                                      | Default Value       | Required |
+| Prop                  | Description                                               | Type                                                      | Default       | Required |
 | :--------------------:|:----------------------------------------------------------|:---------------------------------------------------------:|:-------------------:|:--------:|
 | visible               | Determines if the modal is visible                        | Boolean                                                   | -                   | true     |
 | setIsVisible          | Callback to set modal visibility                          | `(isVisible: boolean) => void`                            | -                   | true     |
 | onConfirm             | Callback when the user confirms the selected time         | `({ hours, minutes, seconds }: { hours: number, minutes: number, seconds: number }) => void` | -                   | true     |
 | onCancel              | Callback when the user cancels the selection              | `() => void`                                              | -                   | false    |
-| closeOnOverlayPress   | Determines if the modal should close on overlay press     | Boolean                                                   | -                   | false    |
-| hideCancelButton      | Hide the cancel button within the modal                   | Boolean                                                   | -                   | false    |
-| confirmButtonText     | Text for the confirm button                               | String                                                    | -                   | false    |
-| cancelButtonText      | Text for the cancel button                                | String                                                    | -                   | false    |
+| closeOnOverlayPress   | Determines if the modal should close on overlay press     | Boolean                                                   | false               | false    |
+| hideCancelButton      | Hide the cancel button within the modal                   | Boolean                                                   | false               | false    |
+| confirmButtonText     | Text for the confirm button                               | String                                                    | Confirm             | false    |
+| cancelButtonText      | Text for the cancel button                                | String                                                    | Cancel              | false    |
 | modalTitle            | Title text for the modal                                  | String                                                    | -                   | false    |
 | modalProps            | Props for the main modal component                        | `React.ComponentProps<typeof Modal>`                      | -                   | false    |
 | containerProps        | Props for the main container                              | `React.ComponentProps<typeof View>`                       | -                   | false    |
 | contentContainerProps | Props for the content container                           | `React.ComponentProps<typeof View>`                       | -                   | false    |
 | buttonContainerProps  | Props for the button container                            | `React.ComponentProps<typeof View>`                       | -                   | false    |
 | modalTitleProps       | Props for the modal title text component                  | `React.ComponentProps<typeof Text>`                       | -                   | false    |
-| styles                | Custom styles for the timer picker modal                  | [CustomTimerPickerModalStyles](#custom-styles-1)          | -                   | false    |
+| styles                | Custom styles for the timer picker modal                  | [CustomTimerPickerModalStyles](#custom-styles--1)          | -                   | false    |
 
-#### Custom Styles 👗
+#### Custom Styles 👕
 
-The following custom styles can be supplied to re-style the component in any way. You can also supply all of the styles specified in [CustomTimerPickerStyles](#custom-styles). Various styles are applied by default - you can take a look at these [here](src/components/TimerPickerModal.styles.ts).
+The following custom styles can be supplied to re-style the component in any way. You can also supply all of the styles specified in [CustomTimerPickerStyles](#custom-styles-). Various styles are applied by default - you can take a look at these [here](src/components/TimerPickerModal.styles.ts).
 
 | Style Prop        | Description                            | Type      |
 | :---------------: | :------------------------------------- | :-------: |
@@ -383,4 +383,4 @@ timerPickerModalRef.current.reset();
 
 ## License 📝
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).

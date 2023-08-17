@@ -9,9 +9,5 @@
         "strictPropertyInitialization": false,
         "skipLibCheck": true
     },
-    "exclude": [
-        "example/*",
-        "dist/*",
-        "src/tests*"
-    ]
+    "exclude": ["example/*", "dist/*", "src/tests*"],
 }

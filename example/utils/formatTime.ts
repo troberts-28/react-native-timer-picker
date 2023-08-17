@@ -7,7 +7,7 @@ export const formatTime = ({
     minutes?: number;
     seconds?: number;
 }) => {
-    let timeParts = [];
+    const timeParts = [];
 
     if (hours !== undefined) {
         timeParts.push(hours.toString().padStart(2, "0"));
