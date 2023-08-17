@@ -24,6 +24,11 @@ export type LinearGradientProps = React.ComponentProps<typeof View> & {
     end?: LinearGradientPoint | null;
 };
 
+export type LimitType = {
+    max?: number;
+    min?: number;
+};
+
 interface DurationScrollProps {
     numberOfItems: number;
     label?: string;
@@ -31,6 +36,7 @@ interface DurationScrollProps {
     onDurationChange: (duration: number) => void;
     padNumbersWithZero?: boolean;
     disableInfiniteScroll?: boolean;
+    limit?: LimitType;
     padWithNItems: number;
     pickerGradientOverlayProps?: LinearGradientProps;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,6 +52,7 @@ const DurationScroll = ({
     onDurationChange,
     padNumbersWithZero = false,
     disableInfiniteScroll = false,
+    limit,
     padWithNItems,
     pickerGradientOverlayProps,
     LinearGradient,
@@ -146,7 +153,9 @@ const DurationScroll = ({
                             styles.pickerItemContainer.height
                     );
                     onDurationChange(
-                        (disableInfiniteScroll ? newIndex : newIndex + padWithNItems) %
+                        (disableInfiniteScroll
+                            ? newIndex
+                            : newIndex + padWithNItems) %
                             (numberOfItems + 1)
                     );
                 }}
