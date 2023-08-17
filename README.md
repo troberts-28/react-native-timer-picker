@@ -11,7 +11,7 @@ Great for timers, alarms and duration inputs ⏰🕰️⏳
 
 Works with Expo and bare React Native apps.
 
-- [Demos 📱](#demos-)
+- [Demos 📱](#demos-📱)
 - [Peer Dependencies 👶](#peer-dependencies-)
 - [Installation 🚀](#installation-)
 - [Examples 😎](#examples-)
@@ -316,7 +316,7 @@ return (
 | LinearGradient              | Linear Gradient Component                                 | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default | -                   | false    |
 | pickerContainerProps        | Props for the picker container                            | `React.ComponentProps<typeof View>`               | -                   | false    |
 | pickerGradientOverlayProps  | Props for the gradient overlay                            | LinearGradientProps                               | -                   | false    |
-| styles                      | Custom styles for the timer picker                        | [CustomTimerPickerStyles](#custom-styles-👗)         | -                   | false    |
+| styles                      | Custom styles for the timer picker                        | [CustomTimerPickerStyles](#custom-styles-)         | -                   | false    |
 
 #### Custom Styles 👗
 
@@ -336,7 +336,7 @@ The following custom styles can be supplied to re-style the component in any way
 
 ### TimerPickerModal ⏰
 
-The TimerPickerModal component accepts all [TimerPicker props](#timerpicker-⏲️), and the below additional props.
+The TimerPickerModal component accepts all [TimerPicker props](#timerpicker-️), and the below additional props.
 
 | Prop                  | Description                                               | Type                                                      | Default       | Required |
 | :--------------------:|:----------------------------------------------------------|:---------------------------------------------------------:|:-------------------:|:--------:|
@@ -354,11 +354,11 @@ The TimerPickerModal component accepts all [TimerPicker props](#timerpicker-⏲�
 | contentContainerProps | Props for the content container                           | `React.ComponentProps<typeof View>`                       | -                   | false    |
 | buttonContainerProps  | Props for the button container                            | `React.ComponentProps<typeof View>`                       | -                   | false    |
 | modalTitleProps       | Props for the modal title text component                  | `React.ComponentProps<typeof Text>`                       | -                   | false    |
-| styles                | Custom styles for the timer picker modal                  | [CustomTimerPickerModalStyles](#custom-styles-👕)          | -                   | false    |
+| styles                | Custom styles for the timer picker modal                  | [CustomTimerPickerModalStyles](#custom-styles--1)          | -                   | false    |
 
 #### Custom Styles 👕
 
-The following custom styles can be supplied to re-style the component in any way. You can also supply all of the styles specified in [CustomTimerPickerStyles](#custom-styles-👗). Various styles are applied by default - you can take a look at these [here](src/components/TimerPickerModal.styles.ts).
+The following custom styles can be supplied to re-style the component in any way. You can also supply all of the styles specified in [CustomTimerPickerStyles](#custom-styles-). Various styles are applied by default - you can take a look at these [here](src/components/TimerPickerModal.styles.ts).
 
 | Style Prop        | Description                            | Type      |
 | :---------------: | :------------------------------------- | :-------: |
@@ -383,4 +383,4 @@ timerPickerModalRef.current.reset();
 
 ## License 📝
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
