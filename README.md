@@ -326,7 +326,7 @@ The following custom styles can be supplied to re-style the component in any way
 | :-------------------: | :------------------------------------- | :-----------------------------------: |
 | theme                 | Theme of the component                 | "light" \| "dark"                     |
 | backgroundColor       | Main background color                  | string                                |
-| textColor             | Color for the text elements            | string                                |
+| text                  | Base text style                        | TextStyle                            |
 | pickerContainer       | Main container for the picker          | ViewStyle                             |
 | pickerLabelContainer  | Container for the picker's labels      | ViewStyle                             |
 | pickerLabel           | Style for the picker's labels          | TextStyle                             |
@@ -365,9 +365,9 @@ The following custom styles can be supplied to re-style the component in any way
 | container         | Main container's style                 | ViewStyle |
 | contentContainer  | Style for the content's container      | ViewStyle |
 | buttonContainer   | Style for the container around the buttons | ViewStyle |
-| button            | General style for both buttons         | ViewStyle |
-| cancelButton      | Style for the cancel button            | ViewStyle |
-| confirmButton     | Style for the confirm button           | ViewStyle |
+| button            | General style for both buttons         | TextStyle |
+| cancelButton      | Style for the cancel button            | TextStyle |
+| confirmButton     | Style for the confirm button           | TextStyle |
 | modalTitle        | Style for the title of the modal       | TextStyle |
 
 
