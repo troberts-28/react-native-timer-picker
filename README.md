@@ -25,8 +25,11 @@ Works with Expo and bare React Native apps.
     - [TimerPickerModal ⏰](#timerpickermodal-)
         - [Custom Styles 👕](#custom-styles--1)
 - [Methods 🔄](#methods-)
+    - [TimerPicker](#timerpicker)
     - [TimerPickerModal](#timerpickermodal)
 - [License 📝](#license-)
+
+<br>
 
 ## Demos 📱
 
@@ -39,6 +42,7 @@ Works with Expo and bare React Native apps.
     <img src="demos/example4.gif" width="250" height="550"/>
 </p>
 
+<br>
 
 ## Peer Dependencies 👶
 
@@ -49,7 +53,9 @@ If you want the numbers to fade in/out at the top and bottom of the picker, you 
 -   [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient) (if using Expo)
 -   [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient) (if using in a bare React Native project)
 
-To enable the linear gradient, you need to supply the component as a prop to either TimerPickerModal or TimerPicker.
+**To enable the linear gradient, you need to supply the component as a prop to either TimerPickerModal or TimerPicker.**
+
+<br>
 
 ## Installation 🚀
 
@@ -66,6 +72,8 @@ or
 ```bash
 yarn add react-native-timer-picker
 ```
+
+<br>
 
 ## Examples 😎
 
@@ -295,6 +303,8 @@ return (
 ```
 <img src="demos/example4.gif" width="250" height="550"/>
 
+<br>
+
 ## Props 💅
 
 ### TimerPicker ⏲️
@@ -374,6 +384,7 @@ The following custom styles can be supplied to re-style the component in any way
 | confirmButton     | Style for the confirm button           | TextStyle |
 | modalTitle        | Style for the title of the modal       | TextStyle |
 
+<br>
 
 ## Methods 🔄
 
@@ -402,6 +413,8 @@ timerPickerRef.current.setValue({ hours: number, minutes: number, seconds: numbe
 ### TimerPickerModal
 
 An identical ref is also exposed for the TimerPickerModal component.
+
+<br>
 
 ## License 📝
 
