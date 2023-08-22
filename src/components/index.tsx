@@ -1,7 +1,13 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useState } from "react";
+import React, {
+    forwardRef,
+    useCallback,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
-import TimerPicker, { TimerPickerProps } from "./TimerPicker";
+import TimerPicker, { TimerPickerProps, TimerPickerRef } from "./TimerPicker";
 import Modal from "./Modal";
 
 import {
@@ -125,8 +131,11 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             [onDurationChange]
         );
 
+        const timerPickerRef = useRef<TimerPickerRef>(null);
+
         useImperativeHandle(ref, () => ({
             reset: () => {
+                timerPickerRef.current?.reset();
                 const initialDuration = {
                     hours: initialHours,
                     minutes: initialMinutes,
@@ -137,6 +146,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                 setIsVisible(false);
             },
             setValue: (value) => {
+                timerPickerRef.current?.setValue(value);
                 setSelectedDuration(value);
                 setConfirmedDuration(value);
             },
@@ -160,6 +170,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             </Text>
                         ) : null}
                         <TimerPicker
+                            ref={timerPickerRef}
                             onDurationChange={durationChange}
                             initialHours={confirmedDuration.hours}
                             initialMinutes={confirmedDuration.minutes}

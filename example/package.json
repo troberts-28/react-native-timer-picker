@@ -9,7 +9,7 @@
         "web": "npx expo start --web"
     },
     "dependencies": {
-        "expo": "^49.0.7",
+        "expo": "^49.0.8",
         "expo-linear-gradient": ">=12.0.1",
         "react": ">=18.1.0",
         "react-native": ">=0.70.8"
