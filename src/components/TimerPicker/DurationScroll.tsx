@@ -26,7 +26,7 @@ export type LinearGradientProps = React.ComponentProps<typeof View> & {
 
 interface DurationScrollProps {
     numberOfItems: number;
-    label?: string;
+    label?: string | React.ReactElement;
     initialIndex?: number;
     onDurationChange: (duration: number) => void;
     padNumbersWithZero?: boolean;
@@ -146,14 +146,20 @@ const DurationScroll = ({
                             styles.pickerItemContainer.height
                     );
                     onDurationChange(
-                        (disableInfiniteScroll ? newIndex : newIndex + padWithNItems) %
+                        (disableInfiniteScroll
+                            ? newIndex
+                            : newIndex + padWithNItems) %
                             (numberOfItems + 1)
                     );
                 }}
                 testID="duration-scroll-flatlist"
             />
             <View style={styles.pickerLabelContainer}>
-                <Text style={styles.pickerLabel}>{label}</Text>
+                {typeof label === "string" ? (
+                    <Text style={styles.pickerLabel}>{label}</Text>
+                ) : (
+                    label ?? null
+                )}
             </View>
             {LinearGradient ? (
                 <>

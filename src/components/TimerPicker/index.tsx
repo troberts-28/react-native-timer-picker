@@ -18,9 +18,9 @@ export interface TimerPickerProps {
     hideHours?: boolean;
     hideMinutes?: boolean;
     hideSeconds?: boolean;
-    hourLabel?: string;
-    minuteLabel?: string;
-    secondLabel?: string;
+    hourLabel?: string | React.ReactElement;
+    minuteLabel?: string | React.ReactElement;
+    secondLabel?: string | React.ReactElement;
     padWithNItems?: number;
     disableInfiniteScroll?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
