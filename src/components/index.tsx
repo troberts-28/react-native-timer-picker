@@ -9,7 +9,7 @@ import {
     CustomTimerPickerModalStyles,
 } from "./TimerPickerModal.styles";
 
-interface TimePickerModalRef {
+export interface TimePickerModalRef {
     reset: () => void;
 }
 
