@@ -377,12 +377,12 @@ The following custom styles can be supplied to re-style the component in any way
 
 ## Methods 🔄
 
-### TimerPickerModal
+### TimerPicker
 
-The library exposes a TimerPickerModalRef type, which can be used to type your ref to the modal:
+The library exposes a TimerPickerRef type, which can be used to type your ref to the picker:
 
 ```javascript
-const timerPickerModalRef = useRef<TimerPickerModalRef>(null);
+const timerPickerRef = useRef<TimerPickerRef>(null);
 ```
 
 It has the following available methods:
@@ -390,14 +390,18 @@ It has the following available methods:
 `reset` - imperative method to reset the selected duration to their initial values.
 
 ```javascript
-timerPickerModalRef.current.reset();
+timerPickerRef.current.reset(options?: { animated: boolean });
 ```
 
 `setValue` - imperative method to set the selected duration to a particular value
 
 ```javascript
-timerPickerModalRef.current.setValue({hours: number, minutes: number, seconds: number});
+timerPickerRef.current.setValue({ hours: number, minutes: number, seconds: number }, options?: { animated: boolean });
 ```
+
+### TimerPickerModal
+
+An identical ref is also exposed for the TimerPickerModal component.
 
 ## License 📝
 
