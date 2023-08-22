@@ -22,8 +22,8 @@ import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
 import { getScrollIndex } from "../../utils/getScrollIndex";
 
 export interface DurationScrollRef {
-    reset: () => void;
-    setValue: (value: number) => void;
+    reset: (options?: { animated?: boolean }) => void;
+    setValue: (value: number, options?: { animated?: boolean }) => void;
 }
 
 type LinearGradientPoint = {
@@ -101,15 +101,15 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         });
 
         useImperativeHandle(ref, () => ({
-            reset: () => {
+            reset: (options) => {
                 flatListRef.current?.scrollToIndex({
-                    animated: false,
+                    animated: options?.animated ?? false,
                     index: initialScrollIndex,
                 });
             },
-            setValue: (value) => {
+            setValue: (value, options) => {
                 flatListRef.current?.scrollToIndex({
-                    animated: false,
+                    animated: options?.animated ?? false,
                     index: getScrollIndex({
                         value: value,
                         numberOfItems,

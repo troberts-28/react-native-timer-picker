@@ -14,12 +14,15 @@ import { generateStyles, CustomTimerPickerStyles } from "./TimerPicker.styles";
 import { LinearGradientProps } from "./DurationScroll";
 
 export interface TimerPickerRef {
-    reset: () => void;
-    setValue: (value: {
-        hours: number;
-        minutes: number;
-        seconds: number;
-    }) => void;
+    reset: (options?: { animated?: boolean }) => void;
+    setValue: (
+        value: {
+            hours: number;
+            minutes: number;
+            seconds: number;
+        },
+        options?: { animated?: boolean }
+    ) => void;
 }
 
 export interface TimerPickerProps {
@@ -104,21 +107,27 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
         const secondsDurationScrollRef = useRef<DurationScrollRef>(null);
 
         useImperativeHandle(ref, () => ({
-            reset: () => {
+            reset: (options) => {
                 setSelectedHours(initialHours);
                 setSelectedMinutes(initialMinutes);
                 setSelectedSeconds(initialSeconds);
-                hoursDurationScrollRef.current?.reset();
-                minutesDurationScrollRef.current?.reset();
-                secondsDurationScrollRef.current?.reset();
+                hoursDurationScrollRef.current?.reset(options);
+                minutesDurationScrollRef.current?.reset(options);
+                secondsDurationScrollRef.current?.reset(options);
             },
-            setValue: (value) => {
+            setValue: (value, options) => {
                 setSelectedHours(value.hours);
                 setSelectedMinutes(value.minutes);
                 setSelectedSeconds(value.seconds);
-                hoursDurationScrollRef.current?.setValue(value.hours);
-                minutesDurationScrollRef.current?.setValue(value.minutes);
-                secondsDurationScrollRef.current?.setValue(value.seconds);
+                hoursDurationScrollRef.current?.setValue(value.hours, options);
+                minutesDurationScrollRef.current?.setValue(
+                    value.minutes,
+                    options
+                );
+                secondsDurationScrollRef.current?.setValue(
+                    value.seconds,
+                    options
+                );
             },
         }));
 
