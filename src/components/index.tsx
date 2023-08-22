@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState } from "react";
+import React, { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 import TimerPicker, { TimerPickerProps } from "./TimerPicker";
@@ -116,6 +116,15 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             onCancel?.();
         };
 
+        // wrapped in useCallback to avoid unnecessary re-renders of TimerPicker
+        const durationChange = useCallback(
+            (duration: { hours: number; minutes: number; seconds: number }) => {
+                setSelectedDuration(duration);
+                onDurationChange?.(duration);
+            },
+            [onDurationChange]
+        );
+
         useImperativeHandle(ref, () => ({
             reset: () => {
                 const initialDuration = {
@@ -151,10 +160,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             </Text>
                         ) : null}
                         <TimerPicker
-                            onDurationChange={(duration) => {
-                                setSelectedDuration(duration);
-                                onDurationChange?.(duration);
-                            }}
+                            onDurationChange={durationChange}
                             initialHours={confirmedDuration.hours}
                             initialMinutes={confirmedDuration.minutes}
                             initialSeconds={confirmedDuration.seconds}
@@ -207,4 +213,4 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
     }
 );
 
-export default TimerPickerModal;
+export default React.memo(TimerPickerModal);

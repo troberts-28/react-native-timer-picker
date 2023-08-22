@@ -281,4 +281,4 @@ const DurationScroll = ({
     );
 };
 
-export default DurationScroll;
+export default React.memo(DurationScroll);

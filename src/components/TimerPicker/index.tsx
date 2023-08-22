@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 
 import DurationScroll, { LimitType } from "./DurationScroll";
@@ -57,9 +57,14 @@ const TimerPicker = ({
     const checkedPadWithNItems =
         padWithNItems >= 0 ? Math.round(padWithNItems) : 0;
 
-    const styles = generateStyles(customStyles, {
-        padWithNItems: checkedPadWithNItems,
-    });
+    const styles = useMemo(
+        () =>
+            generateStyles(customStyles, {
+                padWithNItems: checkedPadWithNItems,
+            }),
+
+        [checkedPadWithNItems, customStyles]
+    );
 
     const [selectedHours, setSelectedHours] = useState(initialHours);
     const [selectedMinutes, setSelectedMinutes] = useState(initialMinutes);
@@ -130,4 +135,4 @@ const TimerPicker = ({
     );
 };
 
-export default TimerPicker;
+export default React.memo(TimerPicker);
