@@ -9,8 +9,13 @@ import {
     CustomTimerPickerModalStyles,
 } from "./TimerPickerModal.styles";
 
-interface TimePickerModalRef {
+export interface TimerPickerModalRef {
     reset: () => void;
+    setValue: (value: {
+        hours: number;
+        minutes: number;
+        seconds: number;
+    }) => void;
 }
 
 export interface TimerPickerModalProps extends TimerPickerProps {
@@ -39,7 +44,7 @@ export interface TimerPickerModalProps extends TimerPickerProps {
     styles?: CustomTimerPickerModalStyles;
 }
 
-const TimerPickerModal = forwardRef<TimePickerModalRef, TimerPickerModalProps>(
+const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
     (
         {
             visible,
@@ -121,6 +126,10 @@ const TimerPickerModal = forwardRef<TimePickerModalRef, TimerPickerModalProps>(
                 setSelectedDuration(initialDuration);
                 setConfirmedDuration(initialDuration);
                 setIsVisible(false);
+            },
+            setValue: (value) => {
+                setSelectedDuration(value);
+                setConfirmedDuration(value);
             },
         }));
 
