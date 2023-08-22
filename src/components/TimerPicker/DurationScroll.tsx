@@ -6,11 +6,14 @@ import {
     FlatList,
     ViewabilityConfigCallbackPairs,
     ViewToken,
+    NativeSyntheticEvent,
+    NativeScrollEvent,
 } from "react-native";
 
 import { generateNumbers } from "../../utils/generateNumbers";
 import { colorToRgba } from "../../utils/colorToRgba";
 import { generateStyles } from "./TimerPicker.styles";
+import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
 
 type LinearGradientPoint = {
     x: number;
@@ -24,6 +27,11 @@ export type LinearGradientProps = React.ComponentProps<typeof View> & {
     end?: LinearGradientPoint | null;
 };
 
+export type LimitType = {
+    max?: number;
+    min?: number;
+};
+
 interface DurationScrollProps {
     numberOfItems: number;
     label?: string;
@@ -31,6 +39,7 @@ interface DurationScrollProps {
     onDurationChange: (duration: number) => void;
     padNumbersWithZero?: boolean;
     disableInfiniteScroll?: boolean;
+    limit?: LimitType;
     padWithNItems: number;
     pickerGradientOverlayProps?: LinearGradientProps;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,6 +48,9 @@ interface DurationScrollProps {
     styles: ReturnType<typeof generateStyles>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const KEY_EXTRACTOR = (_: any, index: number) => index.toString();
+
 const DurationScroll = ({
     numberOfItems,
     label,
@@ -46,6 +58,7 @@ const DurationScroll = ({
     onDurationChange,
     padNumbersWithZero = false,
     disableInfiniteScroll = false,
+    limit,
     padWithNItems,
     pickerGradientOverlayProps,
     LinearGradient,
@@ -63,13 +76,88 @@ const DurationScroll = ({
 
     const numberOfItemsToShow = 1 + padWithNItems * 2;
 
-    const renderItem = ({ item }: { item: string }) => (
-        <View
-            key={item}
-            style={styles.pickerItemContainer}
-            testID="picker-item">
-            <Text style={styles.pickerItem}>{item}</Text>
-        </View>
+    const adjustedLimited = getAdjustedLimit(limit, numberOfItems);
+
+    const renderItem = useCallback(
+        ({ item }: { item: string }) => {
+            const intItem = parseInt(item);
+
+            return (
+                <View
+                    key={item}
+                    style={styles.pickerItemContainer}
+                    testID="picker-item">
+                    <Text
+                        style={[
+                            styles.pickerItem,
+                            intItem > adjustedLimited.max ||
+                            intItem < adjustedLimited.min
+                                ? styles.disabledPickerItem
+                                : {},
+                        ]}>
+                        {item}
+                    </Text>
+                </View>
+            );
+        },
+        [
+            adjustedLimited.max,
+            adjustedLimited.min,
+            styles.disabledPickerItem,
+            styles.pickerItem,
+            styles.pickerItemContainer,
+        ]
+    );
+
+    const onMomentumScrollEnd = useCallback(
+        (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+            const newIndex = Math.round(
+                e.nativeEvent.contentOffset.y /
+                    styles.pickerItemContainer.height
+            );
+            let newDuration =
+                (disableInfiniteScroll ? newIndex : newIndex + padWithNItems) %
+                (numberOfItems + 1);
+
+            // check limits
+            if (newDuration > adjustedLimited.max) {
+                const targetScrollIndex =
+                    newIndex - (newDuration - adjustedLimited.max);
+                flatListRef.current?.scrollToIndex({
+                    animated: true,
+                    index:
+                        // guard against scrolling beyond end of list
+                        targetScrollIndex >= 0
+                            ? targetScrollIndex
+                            : adjustedLimited.max - 1,
+                }); // scroll down to max
+                newDuration = adjustedLimited.max;
+            } else if (newDuration < adjustedLimited.min) {
+                const targetScrollIndex =
+                    newIndex + (adjustedLimited.min - newDuration);
+                flatListRef.current?.scrollToIndex({
+                    animated: true,
+                    index:
+                        // guard against scrolling beyond end of list
+                        targetScrollIndex <= data.length - 1
+                            ? targetScrollIndex
+                            : adjustedLimited.min,
+                }); // scroll up to min
+                newDuration = adjustedLimited.min;
+            }
+
+            onDurationChange(newDuration);
+        },
+        [
+            adjustedLimited.max,
+            adjustedLimited.min,
+            data.length,
+            disableInfiniteScroll,
+            numberOfItems,
+            onDurationChange,
+            padWithNItems,
+            styles.pickerItemContainer.height,
+        ]
     );
 
     const onViewableItemsChanged = useCallback(
@@ -95,6 +183,15 @@ const DurationScroll = ({
         [numberOfItems]
     );
 
+    const getItemLayout = useCallback(
+        (_: ArrayLike<string> | null | undefined, index: number) => ({
+            length: styles.pickerItemContainer.height,
+            offset: styles.pickerItemContainer.height * index,
+            index,
+        }),
+        [styles.pickerItemContainer.height]
+    );
+
     const viewabilityConfigCallbackPairs =
         useRef<ViewabilityConfigCallbackPairs>([
             {
@@ -113,11 +210,7 @@ const DurationScroll = ({
             <FlatList
                 ref={flatListRef}
                 data={data}
-                getItemLayout={(_, index) => ({
-                    length: styles.pickerItemContainer.height,
-                    offset: styles.pickerItemContainer.height * index,
-                    index,
-                })}
+                getItemLayout={getItemLayout}
                 initialScrollIndex={
                     (initialIndex % numberOfItems) +
                     numberOfItems +
@@ -126,7 +219,7 @@ const DurationScroll = ({
                 }
                 windowSize={numberOfItemsToShow}
                 renderItem={renderItem}
-                keyExtractor={(_, index) => index.toString()}
+                keyExtractor={KEY_EXTRACTOR}
                 showsVerticalScrollIndicator={false}
                 decelerationRate="fast"
                 scrollEventThrottle={16}
@@ -140,16 +233,7 @@ const DurationScroll = ({
                         ? viewabilityConfigCallbackPairs?.current
                         : undefined
                 }
-                onMomentumScrollEnd={(e) => {
-                    const newIndex = Math.round(
-                        e.nativeEvent.contentOffset.y /
-                            styles.pickerItemContainer.height
-                    );
-                    onDurationChange(
-                        (disableInfiniteScroll ? newIndex : newIndex + padWithNItems) %
-                            (numberOfItems + 1)
-                    );
-                }}
+                onMomentumScrollEnd={onMomentumScrollEnd}
                 testID="duration-scroll-flatlist"
             />
             <View style={styles.pickerLabelContainer}>

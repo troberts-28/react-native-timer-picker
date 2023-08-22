@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 
-import DurationScroll from "./DurationScroll";
+import DurationScroll, { LimitType } from "./DurationScroll";
 
 import { generateStyles, CustomTimerPickerStyles } from "./TimerPicker.styles";
 import { LinearGradientProps } from "./DurationScroll";
@@ -18,6 +18,9 @@ export interface TimerPickerProps {
     hideHours?: boolean;
     hideMinutes?: boolean;
     hideSeconds?: boolean;
+    hourLimit?: LimitType;
+    minuteLimit?: LimitType;
+    secondLimit?: LimitType;
     hourLabel?: string;
     minuteLabel?: string;
     secondLabel?: string;
@@ -38,6 +41,9 @@ const TimerPicker = ({
     hideHours = false,
     hideMinutes = false,
     hideSeconds = false,
+    hourLimit,
+    minuteLimit,
+    secondLimit,
     hourLabel = "h",
     minuteLabel = "m",
     secondLabel = "s",
@@ -82,6 +88,7 @@ const TimerPicker = ({
                     pickerGradientOverlayProps={pickerGradientOverlayProps}
                     disableInfiniteScroll={disableInfiniteScroll}
                     padWithNItems={checkedPadWithNItems}
+                    limit={hourLimit}
                     LinearGradient={LinearGradient}
                     styles={styles}
                     testID="duration-scroll-hour"
@@ -97,6 +104,7 @@ const TimerPicker = ({
                     pickerGradientOverlayProps={pickerGradientOverlayProps}
                     disableInfiniteScroll={disableInfiniteScroll}
                     padWithNItems={checkedPadWithNItems}
+                    limit={minuteLimit}
                     LinearGradient={LinearGradient}
                     styles={styles}
                     testID="duration-scroll-minute"
@@ -112,6 +120,7 @@ const TimerPicker = ({
                     pickerGradientOverlayProps={pickerGradientOverlayProps}
                     disableInfiniteScroll={disableInfiniteScroll}
                     padWithNItems={checkedPadWithNItems}
+                    limit={secondLimit}
                     LinearGradient={LinearGradient}
                     styles={styles}
                     testID="duration-scroll-second"

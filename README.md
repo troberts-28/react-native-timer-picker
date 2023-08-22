@@ -308,6 +308,9 @@ return (
 | hideHours                   | Hide the hours picker                                     | Boolean                                           | false               | false    |
 | hideMinutes                 | Hide the minutes picker                                   | Boolean                                           | false               | false    |
 | hideSeconds                 | Hide the seconds picker                                   | Boolean                                           | false               | false    |
+| hourLimit                   | Limit on the hours it is possible to select               | { max?: Number, min?: Number }                    | -                   | false    |
+| minuteLimit                 | Limit on the minutes it is possible to select             | { max?: Number, min?: Number }                    | -                   | false    |
+| secondLimit                 | Limit on the seconds it is possible to select             | { max?: Number, min?: Number }                    | -                   | false    |
 | hourLabel                   | Label for the hours picker                                | String                                            | h                   | false    |
 | minuteLabel                 | Label for the minutes picker                              | String                                            | m                   | false    |
 | secondLabel                 | Label for the seconds picker                              | String                                            | s                   | false    |
@@ -332,6 +335,7 @@ The following custom styles can be supplied to re-style the component in any way
 | pickerLabel           | Style for the picker's labels          | TextStyle                             |
 | pickerItemContainer   | Container for each number in the picker | ViewStyle                             |
 | pickerItem            | Style for each individual picker number | TextStyle                             |
+| disabledPickerItem    | Style for any numbers outside any set limits | TextStyle                         |
 | pickerGradientOverlay | Style for the gradient overlay (fade out) | ViewStyle                             |
 
 ### TimerPickerModal ⏰
