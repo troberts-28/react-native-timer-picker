@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 
-import DurationScroll from "./DurationScroll";
+import DurationScroll, { LimitType } from "./DurationScroll";
 
 import { generateStyles, CustomTimerPickerStyles } from "./TimerPicker.styles";
 import { LinearGradientProps } from "./DurationScroll";
@@ -18,9 +18,12 @@ export interface TimerPickerProps {
     hideHours?: boolean;
     hideMinutes?: boolean;
     hideSeconds?: boolean;
-    hourLabel?: string;
-    minuteLabel?: string;
-    secondLabel?: string;
+    hourLimit?: LimitType;
+    minuteLimit?: LimitType;
+    secondLimit?: LimitType;
+    hourLabel?: string | React.ReactElement;
+    minuteLabel?: string | React.ReactElement;
+    secondLabel?: string | React.ReactElement;
     padWithNItems?: number;
     disableInfiniteScroll?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,6 +41,9 @@ const TimerPicker = ({
     hideHours = false,
     hideMinutes = false,
     hideSeconds = false,
+    hourLimit,
+    minuteLimit,
+    secondLimit,
     hourLabel = "h",
     minuteLabel = "m",
     secondLabel = "s",
@@ -51,9 +57,14 @@ const TimerPicker = ({
     const checkedPadWithNItems =
         padWithNItems >= 0 ? Math.round(padWithNItems) : 0;
 
-    const styles = generateStyles(customStyles, {
-        padWithNItems: checkedPadWithNItems,
-    });
+    const styles = useMemo(
+        () =>
+            generateStyles(customStyles, {
+                padWithNItems: checkedPadWithNItems,
+            }),
+
+        [checkedPadWithNItems, customStyles]
+    );
 
     const [selectedHours, setSelectedHours] = useState(initialHours);
     const [selectedMinutes, setSelectedMinutes] = useState(initialMinutes);
@@ -82,6 +93,7 @@ const TimerPicker = ({
                     pickerGradientOverlayProps={pickerGradientOverlayProps}
                     disableInfiniteScroll={disableInfiniteScroll}
                     padWithNItems={checkedPadWithNItems}
+                    limit={hourLimit}
                     LinearGradient={LinearGradient}
                     styles={styles}
                     testID="duration-scroll-hour"
@@ -97,6 +109,7 @@ const TimerPicker = ({
                     pickerGradientOverlayProps={pickerGradientOverlayProps}
                     disableInfiniteScroll={disableInfiniteScroll}
                     padWithNItems={checkedPadWithNItems}
+                    limit={minuteLimit}
                     LinearGradient={LinearGradient}
                     styles={styles}
                     testID="duration-scroll-minute"
@@ -112,6 +125,7 @@ const TimerPicker = ({
                     pickerGradientOverlayProps={pickerGradientOverlayProps}
                     disableInfiniteScroll={disableInfiniteScroll}
                     padWithNItems={checkedPadWithNItems}
+                    limit={secondLimit}
                     LinearGradient={LinearGradient}
                     styles={styles}
                     testID="duration-scroll-second"
@@ -121,4 +135,4 @@ const TimerPicker = ({
     );
 };
 
-export default TimerPicker;
+export default React.memo(TimerPicker);

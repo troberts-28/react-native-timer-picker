@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState } from "react";
+import React, { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 import TimerPicker, { TimerPickerProps } from "./TimerPicker";
@@ -9,8 +9,13 @@ import {
     CustomTimerPickerModalStyles,
 } from "./TimerPickerModal.styles";
 
-interface TimePickerModalRef {
+export interface TimerPickerModalRef {
     reset: () => void;
+    setValue: (value: {
+        hours: number;
+        minutes: number;
+        seconds: number;
+    }) => void;
 }
 
 export interface TimerPickerModalProps extends TimerPickerProps {
@@ -39,7 +44,7 @@ export interface TimerPickerModalProps extends TimerPickerProps {
     styles?: CustomTimerPickerModalStyles;
 }
 
-const TimerPickerModal = forwardRef<TimePickerModalRef, TimerPickerModalProps>(
+const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
     (
         {
             visible,
@@ -54,6 +59,9 @@ const TimerPickerModal = forwardRef<TimePickerModalRef, TimerPickerModalProps>(
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,
+            hourLimit,
+            minuteLimit,
+            secondLimit,
             hourLabel = "h",
             minuteLabel = "m",
             secondLabel = "s",
@@ -108,6 +116,15 @@ const TimerPickerModal = forwardRef<TimePickerModalRef, TimerPickerModalProps>(
             onCancel?.();
         };
 
+        // wrapped in useCallback to avoid unnecessary re-renders of TimerPicker
+        const durationChange = useCallback(
+            (duration: { hours: number; minutes: number; seconds: number }) => {
+                setSelectedDuration(duration);
+                onDurationChange?.(duration);
+            },
+            [onDurationChange]
+        );
+
         useImperativeHandle(ref, () => ({
             reset: () => {
                 const initialDuration = {
@@ -118,6 +135,10 @@ const TimerPickerModal = forwardRef<TimePickerModalRef, TimerPickerModalProps>(
                 setSelectedDuration(initialDuration);
                 setConfirmedDuration(initialDuration);
                 setIsVisible(false);
+            },
+            setValue: (value) => {
+                setSelectedDuration(value);
+                setConfirmedDuration(value);
             },
         }));
 
@@ -139,16 +160,16 @@ const TimerPickerModal = forwardRef<TimePickerModalRef, TimerPickerModalProps>(
                             </Text>
                         ) : null}
                         <TimerPicker
-                            onDurationChange={(duration) => {
-                                setSelectedDuration(duration);
-                                onDurationChange?.(duration);
-                            }}
+                            onDurationChange={durationChange}
                             initialHours={confirmedDuration.hours}
                             initialMinutes={confirmedDuration.minutes}
                             initialSeconds={confirmedDuration.seconds}
                             hideHours={hideHours}
                             hideMinutes={hideMinutes}
                             hideSeconds={hideSeconds}
+                            hourLimit={hourLimit}
+                            minuteLimit={minuteLimit}
+                            secondLimit={secondLimit}
                             hourLabel={hourLabel}
                             minuteLabel={minuteLabel}
                             secondLabel={secondLabel}
@@ -192,4 +213,4 @@ const TimerPickerModal = forwardRef<TimePickerModalRef, TimerPickerModalProps>(
     }
 );
 
-export default TimerPickerModal;
+export default React.memo(TimerPickerModal);

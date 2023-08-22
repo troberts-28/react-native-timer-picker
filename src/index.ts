@@ -1,6 +1,7 @@
 export {
     default as TimerPickerModal,
     TimerPickerModalProps,
+    TimerPickerModalRef,
 } from "./components";
 
 export {
