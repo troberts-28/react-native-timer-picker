@@ -34,7 +34,7 @@ export type LimitType = {
 
 interface DurationScrollProps {
     numberOfItems: number;
-    label?: string;
+    label?: string | React.ReactElement;
     initialIndex?: number;
     onDurationChange: (duration: number) => void;
     padNumbersWithZero?: boolean;
@@ -237,7 +237,11 @@ const DurationScroll = ({
                 testID="duration-scroll-flatlist"
             />
             <View style={styles.pickerLabelContainer}>
-                <Text style={styles.pickerLabel}>{label}</Text>
+                {typeof label === "string" ? (
+                    <Text style={styles.pickerLabel}>{label}</Text>
+                ) : (
+                    label ?? null
+                )}
             </View>
             {LinearGradient ? (
                 <>

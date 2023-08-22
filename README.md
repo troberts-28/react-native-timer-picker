@@ -311,9 +311,9 @@ return (
 | hourLimit                   | Limit on the hours it is possible to select               | { max?: Number, min?: Number }                    | -                   | false    |
 | minuteLimit                 | Limit on the minutes it is possible to select             | { max?: Number, min?: Number }                    | -                   | false    |
 | secondLimit                 | Limit on the seconds it is possible to select             | { max?: Number, min?: Number }                    | -                   | false    |
-| hourLabel                   | Label for the hours picker                                | String                                            | h                   | false    |
-| minuteLabel                 | Label for the minutes picker                              | String                                            | m                   | false    |
-| secondLabel                 | Label for the seconds picker                              | String                                            | s                   | false    |
+| hourLabel                   | Label for the hours picker                                | String \| React.ReactElement                      | h                   | false    |
+| minuteLabel                 | Label for the minutes picker                              | String \| React.ReactElement                      | m                   | false    |
+| secondLabel                 | Label for the seconds picker                              | String \| React.ReactElement                      | s                   | false    |
 | padWithNItems               | Number of items to pad the picker with on either side     | Number                                            | 1                   | false    |
 | disableInfiniteScroll       | Disable the infinite scroll feature                       | Boolean                                           | false               | false    |
 | LinearGradient              | Linear Gradient Component                                 | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default | -                   | false    |
