@@ -8,8 +8,7 @@ export const getScrollIndex = (variables: {
         variables;
 
     return (
-        (value % numberOfItems) +
-        numberOfItems +
+        ((value + numberOfItems) % (numberOfItems * 3)) +
         (disableInfiniteScroll ? padWithNItems : 0) -
         (padWithNItems - 1)
     );
