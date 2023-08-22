@@ -34,7 +34,7 @@ export const Modal = ({
     modalProps,
     contentStyle,
     overlayStyle,
-    testID
+    testID,
 }: ModalProps): React.ReactElement => {
     const [screenHeight, setScreenHeight] = useState(
         Dimensions.get("window").height
@@ -97,7 +97,7 @@ export const Modal = ({
         Animated.timing(animatedOpacity.current, {
             easing: Easing.inOut(Easing.quad),
             // Using native driver in the modal makes the content flash
-            useNativeDriver: false,
+            useNativeDriver: true,
             duration: animationDuration,
             toValue: 1,
         }).start();
@@ -107,7 +107,7 @@ export const Modal = ({
         Animated.timing(animatedOpacity.current, {
             easing: Easing.inOut(Easing.quad),
             // Using native driver in the modal makes the content flash
-            useNativeDriver: false,
+            useNativeDriver: true,
             duration: animationDuration,
             toValue: 0,
         }).start(() => {
@@ -133,7 +133,9 @@ export const Modal = ({
             visible={isVisible}
             {...modalProps}
             testID={testID ?? "modal"}>
-            <TouchableWithoutFeedback onPress={onOverlayPress} testID="modal-backdrop">
+            <TouchableWithoutFeedback
+                onPress={onOverlayPress}
+                testID="modal-backdrop">
                 <Animated.View
                     style={[
                         styles.backdrop,
@@ -152,4 +154,4 @@ export const Modal = ({
     );
 };
 
-export default Modal;
+export default React.memo(Modal);
