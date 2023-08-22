@@ -7,6 +7,7 @@ export {
 export {
     default as TimerPicker,
     TimerPickerProps,
+    TimerPickerRef,
 } from "./components/TimerPicker";
 
 export { CustomTimerPickerModalStyles } from "./components/TimerPickerModal.styles";
