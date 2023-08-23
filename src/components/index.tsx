@@ -49,6 +49,7 @@ export interface TimerPickerModalProps extends TimerPickerProps {
     containerProps?: React.ComponentProps<typeof View>;
     contentContainerProps?: React.ComponentProps<typeof View>;
     buttonContainerProps?: React.ComponentProps<typeof View>;
+    buttonTouchableOpacityProps: React.ComponentProps<typeof TouchableOpacity>;
     modalTitleProps?: React.ComponentProps<typeof Text>;
     styles?: CustomTimerPickerModalStyles;
 }
@@ -86,6 +87,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             contentContainerProps,
             pickerContainerProps,
             buttonContainerProps,
+            buttonTouchableOpacityProps,
             modalTitleProps,
             pickerGradientOverlayProps,
             styles: customStyles,
@@ -199,7 +201,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             {...buttonContainerProps}
                             style={styles.buttonContainer}>
                             {!hideCancelButton ? (
-                                <TouchableOpacity onPress={cancel}>
+                                <TouchableOpacity
+                                    onPress={cancel}
+                                    {...buttonTouchableOpacityProps}>
                                     <Text
                                         style={[
                                             styles.button,
@@ -209,7 +213,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                                     </Text>
                                 </TouchableOpacity>
                             ) : null}
-                            <TouchableOpacity onPress={confirm}>
+                            <TouchableOpacity
+                                onPress={confirm}
+                                {...buttonTouchableOpacityProps}>
                                 <Text
                                     style={[
                                         styles.button,
