@@ -366,7 +366,8 @@ The TimerPickerModal component accepts all [TimerPicker props](#timerpicker-️)
 | modalProps            | Props for the main modal component                        | `React.ComponentProps<typeof Modal>`                      | -                   | false    |
 | containerProps        | Props for the main container                              | `React.ComponentProps<typeof View>`                       | -                   | false    |
 | contentContainerProps | Props for the content container                           | `React.ComponentProps<typeof View>`                       | -                   | false    |
-| buttonContainerProps  | Props for the button container                            | `React.ComponentProps<typeof View>`                       | -                   | false    |
+| buttonContainerProps  | Props for the button containers                            | `React.ComponentProps<typeof View>`                       | -                   | false    |
+| buttonTouchableOpacityProps  | Props for the button touchable opacities           | `React.ComponentProps<typeof TouchableOpacity>`           | -                   | false    |
 | modalTitleProps       | Props for the modal title text component                  | `React.ComponentProps<typeof Text>`                       | -                   | false    |
 | styles                | Custom styles for the timer picker modal                  | [CustomTimerPickerModalStyles](#custom-styles--1)          | -                   | false    |
 
