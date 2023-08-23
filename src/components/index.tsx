@@ -49,7 +49,7 @@ export interface TimerPickerModalProps extends TimerPickerProps {
     containerProps?: React.ComponentProps<typeof View>;
     contentContainerProps?: React.ComponentProps<typeof View>;
     buttonContainerProps?: React.ComponentProps<typeof View>;
-    buttonTouchableOpacityProps: React.ComponentProps<typeof TouchableOpacity>;
+    buttonTouchableOpacityProps?: React.ComponentProps<typeof TouchableOpacity>;
     modalTitleProps?: React.ComponentProps<typeof Text>;
     styles?: CustomTimerPickerModalStyles;
 }
