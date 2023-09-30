@@ -40,6 +40,9 @@ export interface TimerPickerProps {
     hourLimit?: LimitType;
     minuteLimit?: LimitType;
     secondLimit?: LimitType;
+    hourRange?: number;
+    minuteRange?: number;
+    secondRange?: number;
     hourLabel?: string | React.ReactElement;
     minuteLabel?: string | React.ReactElement;
     secondLabel?: string | React.ReactElement;
@@ -65,6 +68,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             hourLimit,
             minuteLimit,
             secondLimit,
+            hourRange,
+            minuteRange,
+            secondRange,
             hourLabel = "h",
             minuteLabel = "m",
             secondLabel = "s",
@@ -139,7 +145,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 {!hideHours ? (
                     <DurationScroll
                         ref={hoursDurationScrollRef}
-                        numberOfItems={23}
+                        numberOfItems={hourRange}
                         label={hourLabel}
                         initialValue={initialHours}
                         onDurationChange={setSelectedHours}
@@ -155,7 +161,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 {!hideMinutes ? (
                     <DurationScroll
                         ref={minutesDurationScrollRef}
-                        numberOfItems={59}
+                        numberOfItems={minuteRange}
                         label={minuteLabel}
                         initialValue={initialMinutes}
                         onDurationChange={setSelectedMinutes}
@@ -172,7 +178,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 {!hideSeconds ? (
                     <DurationScroll
                         ref={secondsDurationScrollRef}
-                        numberOfItems={59}
+                        numberOfItems={secondRange}
                         label={secondLabel}
                         initialValue={initialSeconds}
                         onDurationChange={setSelectedSeconds}

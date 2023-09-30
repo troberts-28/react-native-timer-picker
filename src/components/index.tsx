@@ -40,6 +40,7 @@ export interface TimerPickerModalProps extends TimerPickerProps {
         seconds: number;
     }) => void;
     onCancel?: () => void;
+    setMinuteRange?: React.ComponentProps<typeof Number>
     closeOnOverlayPress?: boolean;
     hideCancelButton?: boolean;
     confirmButtonText?: string;
@@ -75,6 +76,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             hourLabel = "h",
             minuteLabel = "m",
             secondLabel = "s",
+            secRange = 59,
+            minRange = 59,
+            hrRange = 23,
             padWithNItems = 1,
             disableInfiniteScroll = false,
             hideCancelButton = false,
@@ -95,6 +99,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
         ref
     ): React.ReactElement => {
         const styles = generateStyles(customStyles);
+        const [secondRange, setSecondRange] = useState(secRange)
+        const [minuteRange, setMinuteRange] = useState(minRange)
+        const [hourRange, setHourRange] = useState(hrRange)
 
         const [selectedDuration, setSelectedDuration] = useState({
             hours: initialHours,
@@ -185,6 +192,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             hourLimit={hourLimit}
                             minuteLimit={minuteLimit}
                             secondLimit={secondLimit}
+                            hourRange={hourRange}
+                            minuteRange={minuteRange}
+                            secondRange={secondRange}
                             hourLabel={hourLabel}
                             minuteLabel={minuteLabel}
                             secondLabel={secondLabel}
