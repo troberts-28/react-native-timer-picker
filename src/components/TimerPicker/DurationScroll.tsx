@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import React, {
     useRef,
     useCallback,
@@ -52,7 +51,9 @@ interface DurationScrollProps {
     disableInfiniteScroll?: boolean;
     limit?: LimitType;
     padWithNItems: number;
-    pickerGradientOverlayProps?: LinearGradientProps;
+    pickerGradientOverlayProps?: Partial<LinearGradientProps>;
+    topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
+    bottomPickerGradientOverlayProps?: Partial<LinearGradientProps>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     LinearGradient?: any;
     testID?: string;
@@ -74,6 +75,8 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             limit,
             padWithNItems,
             pickerGradientOverlayProps,
+            topPickerGradientOverlayProps,
+            bottomPickerGradientOverlayProps,
             LinearGradient,
             testID,
             styles,
@@ -299,6 +302,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             start={{ x: 1, y: 0.3 }}
                             end={{ x: 1, y: 1 }}
                             {...pickerGradientOverlayProps}
+                            {...topPickerGradientOverlayProps}
                             style={[styles.pickerGradientOverlay, { top: 0 }]}
                         />
                         <LinearGradient
@@ -315,6 +319,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             start={{ x: 1, y: 0 }}
                             end={{ x: 1, y: 0.7 }}
                             {...pickerGradientOverlayProps}
+                            {...bottomPickerGradientOverlayProps}
                             style={[
                                 styles.pickerGradientOverlay,
                                 { bottom: -1 },

@@ -90,6 +90,8 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             buttonTouchableOpacityProps,
             modalTitleProps,
             pickerGradientOverlayProps,
+            topPickerGradientOverlayProps,
+            bottomPickerGradientOverlayProps,
             styles: customStyles,
         },
         ref
@@ -194,6 +196,12 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             pickerContainerProps={pickerContainerProps}
                             pickerGradientOverlayProps={
                                 pickerGradientOverlayProps
+                            }
+                            topPickerGradientOverlayProps={
+                                topPickerGradientOverlayProps
+                            }
+                            bottomPickerGradientOverlayProps={
+                                bottomPickerGradientOverlayProps
                             }
                             styles={customStyles}
                         />

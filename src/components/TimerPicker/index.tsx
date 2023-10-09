@@ -48,7 +48,9 @@ export interface TimerPickerProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     LinearGradient?: any;
     pickerContainerProps?: React.ComponentProps<typeof View>;
-    pickerGradientOverlayProps?: LinearGradientProps;
+    pickerGradientOverlayProps?: Partial<LinearGradientProps>;
+    topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
+    bottomPickerGradientOverlayProps?: Partial<LinearGradientProps>;
     styles?: CustomTimerPickerStyles;
 }
 
@@ -73,6 +75,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             LinearGradient,
             pickerContainerProps,
             pickerGradientOverlayProps,
+            topPickerGradientOverlayProps,
+            bottomPickerGradientOverlayProps,
             styles: customStyles,
         },
         ref
@@ -144,6 +148,12 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         initialValue={initialHours}
                         onDurationChange={setSelectedHours}
                         pickerGradientOverlayProps={pickerGradientOverlayProps}
+                        topPickerGradientOverlayProps={
+                            topPickerGradientOverlayProps
+                        }
+                        bottomPickerGradientOverlayProps={
+                            bottomPickerGradientOverlayProps
+                        }
                         disableInfiniteScroll={disableInfiniteScroll}
                         padWithNItems={checkedPadWithNItems}
                         limit={hourLimit}
@@ -161,6 +171,12 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         onDurationChange={setSelectedMinutes}
                         padNumbersWithZero
                         pickerGradientOverlayProps={pickerGradientOverlayProps}
+                        topPickerGradientOverlayProps={
+                            topPickerGradientOverlayProps
+                        }
+                        bottomPickerGradientOverlayProps={
+                            bottomPickerGradientOverlayProps
+                        }
                         disableInfiniteScroll={disableInfiniteScroll}
                         padWithNItems={checkedPadWithNItems}
                         limit={minuteLimit}
@@ -178,6 +194,12 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         onDurationChange={setSelectedSeconds}
                         padNumbersWithZero
                         pickerGradientOverlayProps={pickerGradientOverlayProps}
+                        topPickerGradientOverlayProps={
+                            topPickerGradientOverlayProps
+                        }
+                        bottomPickerGradientOverlayProps={
+                            bottomPickerGradientOverlayProps
+                        }
                         disableInfiniteScroll={disableInfiniteScroll}
                         padWithNItems={checkedPadWithNItems}
                         limit={secondLimit}
