@@ -16,6 +16,8 @@ jobs:
       with:
         node-version: 16
         registry-url: https://registry.npmjs.org
+    - name: Install peer dependencies
+      run: yarn add react@>=16.8.0 && yarn add react-native>=0.59.0
     - name: Install dependencies
       run: yarn install
     - name: Build project
