@@ -264,7 +264,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     renderItem={renderItem}
                     keyExtractor={KEY_EXTRACTOR}
                     showsVerticalScrollIndicator={false}
-                    decelerationRate="fast"
+                    decelerationRate={0.9}
                     scrollEventThrottle={16}
                     snapToAlignment="start"
                     // used in place of snapToOffset due to bug on Android
@@ -279,7 +279,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     onMomentumScrollEnd={onMomentumScrollEnd}
                     testID="duration-scroll-flatlist"
                 />
-                <View style={styles.pickerLabelContainer}>
+                <View style={styles.pickerLabelContainer} pointerEvents="none">
                     {typeof label === "string" ? (
                         <Text style={styles.pickerLabel}>{label}</Text>
                     ) : (
@@ -301,6 +301,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             ]}
                             start={{ x: 1, y: 0.3 }}
                             end={{ x: 1, y: 1 }}
+                            pointerEvents="none"
                             {...pickerGradientOverlayProps}
                             {...topPickerGradientOverlayProps}
                             style={[styles.pickerGradientOverlay, { top: 0 }]}
@@ -318,6 +319,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             ]}
                             start={{ x: 1, y: 0 }}
                             end={{ x: 1, y: 0.7 }}
+                            pointerEvents="none"
                             {...pickerGradientOverlayProps}
                             {...bottomPickerGradientOverlayProps}
                             style={[
