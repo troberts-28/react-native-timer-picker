@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from "react";
 import {
-    Dimensions,
     ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
     View,
+    useWindowDimensions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -13,9 +13,9 @@ import { TimerPicker, TimerPickerModal } from "./src";
 
 import { formatTime } from "./utils/formatTime";
 
-const { width: screenWidth } = Dimensions.get("window");
-
 export default function App() {
+    const { width: screenWidth } = useWindowDimensions();
+
     const [showPickerExample1, setShowPickerExample1] = useState(false);
     const [showPickerExample2, setShowPickerExample2] = useState(false);
     const [alarmStringExample1, setAlarmStringExample1] = useState<
@@ -27,7 +27,12 @@ export default function App() {
 
     const renderExample1 = useMemo(() => {
         return (
-            <View style={[styles.container, styles.page1Container]}>
+            <View
+                style={[
+                    styles.container,
+                    styles.page1Container,
+                    { width: screenWidth },
+                ]}>
                 <Text style={styles.textDark}>
                     {alarmStringExample1 !== null
                         ? "Alarm set for"
@@ -74,11 +79,16 @@ export default function App() {
                 />
             </View>
         );
-    }, [alarmStringExample1, showPickerExample1]);
+    }, [alarmStringExample1, screenWidth, showPickerExample1]);
 
     const renderExample2 = useMemo(() => {
         return (
-            <View style={[styles.container, styles.page2Container]}>
+            <View
+                style={[
+                    styles.container,
+                    styles.page2Container,
+                    { width: screenWidth },
+                ]}>
                 <Text style={styles.textLight}>
                     {alarmStringExample2 !== null
                         ? "Alarm set for"
@@ -122,11 +132,16 @@ export default function App() {
                 />
             </View>
         );
-    }, [alarmStringExample2, showPickerExample2]);
+    }, [alarmStringExample2, screenWidth, showPickerExample2]);
 
     const renderExample3 = useMemo(() => {
         return (
-            <View style={[styles.container, styles.page3Container]}>
+            <View
+                style={[
+                    styles.container,
+                    styles.page3Container,
+                    { width: screenWidth },
+                ]}>
                 <TimerPicker
                     padWithNItems={2}
                     hourLabel=":"
@@ -150,11 +165,16 @@ export default function App() {
                 />
             </View>
         );
-    }, []);
+    }, [screenWidth]);
 
     const renderExample4 = useMemo(() => {
         return (
-            <View style={[styles.container, styles.page4Container]}>
+            <View
+                style={[
+                    styles.container,
+                    styles.page4Container,
+                    { width: screenWidth },
+                ]}>
                 <TimerPicker
                     padWithNItems={3}
                     hideHours
@@ -180,7 +200,7 @@ export default function App() {
                 />
             </View>
         );
-    }, []);
+    }, [screenWidth]);
 
     return (
         <ScrollView horizontal pagingEnabled>
@@ -196,7 +216,6 @@ const styles = StyleSheet.create({
     container: {
         alignItems: "center",
         justifyContent: "center",
-        width: screenWidth,
     },
     page1Container: {
         backgroundColor: "#514242",
