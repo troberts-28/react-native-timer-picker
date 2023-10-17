@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
     Animated,
-    DeviceEventEmitter,
-    Dimensions,
     Easing,
     Modal as ReactNativeModal,
     TouchableWithoutFeedback,
+    useWindowDimensions,
 } from "react-native";
 
 import { styles } from "./Modal.styles";
@@ -36,40 +35,18 @@ export const Modal = ({
     overlayStyle,
     testID,
 }: ModalProps): React.ReactElement => {
-    const [screenHeight, setScreenHeight] = useState(
-        Dimensions.get("window").height
-    );
-    const [screenWidth, setScreenWidth] = useState(
-        Dimensions.get("window").width
-    );
+    const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
     const isMounted = useRef(false);
     const animatedOpacity = useRef(new Animated.Value(0));
-
-    const handleDimensionsUpdate = (dimensionsUpdate: any) => {
-        const updatedScreenWidth = dimensionsUpdate.window.width;
-        const updateadScreenHeight = dimensionsUpdate.window.height;
-        if (
-            updatedScreenWidth !== screenWidth ||
-            updateadScreenHeight !== screenHeight
-        ) {
-            setScreenHeight(updateadScreenHeight);
-            setScreenWidth(updatedScreenWidth);
-        }
-    };
 
     useEffect(() => {
         isMounted.current = true;
         if (isVisible) {
             show();
         }
-        const deviceEventEmitter = DeviceEventEmitter.addListener(
-            "didUpdateDimensions",
-            handleDimensionsUpdate
-        );
 
         return () => {
-            deviceEventEmitter.remove();
             isMounted.current = false;
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
