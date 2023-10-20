@@ -25,6 +25,7 @@ export const generateStyles = (
         container: {
             justifyContent: "center",
             alignItems: "center",
+            overflow: "hidden",
             ...customStyles?.container,
         },
         contentContainer: {
