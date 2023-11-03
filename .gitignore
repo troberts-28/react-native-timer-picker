@@ -1,6 +1,6 @@
 node_modules
 .expo
 example/src*
-example-bare
 dist
 *.tgz
+android
