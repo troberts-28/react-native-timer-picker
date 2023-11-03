@@ -16,8 +16,6 @@ jobs:
       with:
         node-version: 16
         registry-url: https://registry.npmjs.org
-    - name: Install react
-      run: yarn add react@18.2.0
     - name: Install dependencies
       run: yarn install
     - name: Build project
