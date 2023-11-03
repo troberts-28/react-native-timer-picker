@@ -7,16 +7,16 @@
     },
     "license": "MIT",
     "version": "1.2.8",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "main": "dist/commonjs/index.js",
+    "types": "dist/typescript/src/index.d.ts",
     "scripts": {
         "test": "jest --forceExit --silent",
-        "build": "tsc",
-        "build:dev": "tsc --noEmit",
+        "build": "bob build",
         "clean": "rm yarn.lock && rm -rf ./node_modules && yarn install",
         "start": "cp -Rf src example && cd example && yarn add expo && npx expo install && npx expo start",
         "lint": "eslint --ext .ts,.tsx .",
-        "lint:fix": "eslint --ext .ts,.tsx . --fix"
+        "lint:fix": "eslint --ext .ts,.tsx . --fix",
+        "prepare": "yarn build"
     },
     "homepage": "https://github.com/troberts-28/react-native-timer-picker",
     "bugs": {
@@ -31,7 +31,11 @@
         "registry": "https://registry.npmjs.org/"
     },
     "files": [
+        "src",
         "dist",
+        "!**/__tests__",
+        "!**/__fixtures__",
+        "!**/__mocks__",
         "package.json",
         "README.md",
         "LICENSE"
@@ -90,8 +94,6 @@
         ],
         "transformIgnorePatterns": []
     },
-    "private": false,
-    "typings": "./dist/index.d.ts",
     "peerDependencies": {
         "react": ">=16.8.0",
         "react-native": ">=0.59.0"
@@ -113,7 +115,25 @@
         "eslint-plugin-react-hooks": ">=4.6.0",
         "jest": "^29.0.0",
         "metro-react-native-babel-preset": "^0.71.1",
+        "react-native-builder-bob": "^0.18.3",
         "react-test-renderer": "^18.0.0",
-        "typescript": ">=4.9.4"
-    }
+        "typescript": ">=4.7.4"
+    },
+    "react-native": "src/index.ts",
+    "source": "src/index.ts",
+    "module": "dist/module/index.js",
+    "typings": "./dist/typescript/index.d.ts",
+    "react-native-builder-bob": {
+        "source": "src",
+        "output": "dist",
+        "targets": [
+            "commonjs",
+            "module",
+            "typescript"
+        ]
+    },
+    "eslintIgnore": [
+        "node_modules/",
+        "dist/"
+    ]
 }
