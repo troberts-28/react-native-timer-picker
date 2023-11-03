@@ -6,22 +6,20 @@
         "allowJs": true,
         "jsx": "react-native",
         "noEmit": false,
-        "isolatedModules": true,
         "strict": true,
-        "noImplicitAny": false,
         "moduleResolution": "node",
-        "baseUrl": ".",
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
         "outDir": "./dist",
+        "rootDir": "src",
         "declaration": true
     },
     "exclude": [
         "example/*",
         "example-bare/*",
         "dist/*",
-        "src/tests/*",
+        "src/tests",
         "babel.config.js",
         "README.md"
     ]
