@@ -1,13 +1,28 @@
 {
     "compilerOptions": {
-        "declaration": true,
-        "outDir": "./dist",
-        "rootDir": "./src",
+        "target": "esnext",
+        "module": "commonjs",
+        "lib": ["esnext"],
+        "allowJs": true,
         "jsx": "react-native",
+        "noEmit": false,
+        "isolatedModules": true,
         "strict": true,
+        "noImplicitAny": false,
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
-        "strictPropertyInitialization": false,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "outDir": "./dist",
+        "declaration": true
     },
-    "exclude": ["example/*", "dist/*", "src/tests*"],
+    "exclude": [
+        "example/*",
+        "example-bare/*",
+        "dist/*",
+        "src/tests/*",
+        "babel.config.js",
+        "README.md"
+    ]
 }
