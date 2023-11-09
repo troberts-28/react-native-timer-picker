@@ -33,6 +33,8 @@ Works with Expo and bare React Native apps.
 
 ## Demos 📱
 
+**Try it out for yourself on [Expo Snack](https://snack.expo.dev/@nuumi/react-native-timer-picker-demo)!** Make sure to run it on iOS/Android to try it out properly.
+
 <p>
     <img src="demos/example1.gif" width="250" height="550" style="margin-right:50px"/>
     <img src="demos/example2.gif" width="250" height="550"/>
