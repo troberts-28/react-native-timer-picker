@@ -6,14 +6,14 @@
         "url": "https://github.com/troberts-28"
     },
     "license": "MIT",
-    "version": "1.2.11",
+    "version": "1.3.0",
     "main": "dist/commonjs/index.js",
     "types": "dist/typescript/src/index.d.ts",
     "scripts": {
         "test": "jest --forceExit --silent",
         "build": "bob build",
         "clean": "rm yarn.lock && rm -rf ./node_modules && yarn install",
-        "start": "cp -Rf src example && cd example && yarn add expo && npx expo install && npx expo start",
+        "start": "cp -Rf src example && cd example && npx expo install && npx expo start",
         "lint": "eslint --ext .ts,.tsx .",
         "lint:fix": "eslint --ext .ts,.tsx . --fix",
         "prepare": "yarn build"

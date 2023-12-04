@@ -3,6 +3,7 @@ import React, {
     useCallback,
     forwardRef,
     useImperativeHandle,
+    MutableRefObject,
 } from "react";
 import {
     View,
@@ -23,6 +24,7 @@ import { getScrollIndex } from "../../utils/getScrollIndex";
 export interface DurationScrollRef {
     reset: (options?: { animated?: boolean }) => void;
     setValue: (value: number, options?: { animated?: boolean }) => void;
+    latestDuration: MutableRefObject<number>;
 }
 
 type LinearGradientPoint = {
@@ -50,6 +52,7 @@ interface DurationScrollProps {
     padNumbersWithZero?: boolean;
     disableInfiniteScroll?: boolean;
     limit?: LimitType;
+    aggressivelyGetLatestDuration: boolean;
     padWithNItems: number;
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
@@ -73,6 +76,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             padNumbersWithZero = false,
             disableInfiniteScroll = false,
             limit,
+            aggressivelyGetLatestDuration,
             padWithNItems,
             pickerGradientOverlayProps,
             topPickerGradientOverlayProps,
@@ -83,8 +87,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         },
         ref
     ): React.ReactElement => {
-        const flatListRef = useRef<FlatList | null>(null);
-
         const data = generateNumbers(numberOfItems, {
             padWithZero: padNumbersWithZero,
             repeatNTimes: 3,
@@ -102,6 +104,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             padWithNItems,
             disableInfiniteScroll,
         });
+
+        const latestDuration = useRef(0);
+
+        const flatListRef = useRef<FlatList | null>(null);
 
         useImperativeHandle(ref, () => ({
             reset: (options) => {
@@ -121,6 +127,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     }),
                 });
             },
+            latestDuration: latestDuration,
         }));
 
         const renderItem = useCallback(
@@ -151,6 +158,39 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 styles.disabledPickerItem,
                 styles.pickerItem,
                 styles.pickerItemContainer,
+            ]
+        );
+
+        const onScroll = useCallback(
+            (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+                // this function is only used when the picker is in a modal
+                // it is used to ensure that the modal gets the latest duration on clicking
+                // the confirm button, even if the scrollview is still scrolling
+                const newIndex = Math.round(
+                    e.nativeEvent.contentOffset.y /
+                        styles.pickerItemContainer.height
+                );
+                let newDuration =
+                    (disableInfiniteScroll
+                        ? newIndex
+                        : newIndex + padWithNItems) %
+                    (numberOfItems + 1);
+
+                // check limits
+                if (newDuration > adjustedLimited.max) {
+                    newDuration = adjustedLimited.max;
+                } else if (newDuration < adjustedLimited.min) {
+                    newDuration = adjustedLimited.min;
+                }
+                latestDuration.current = newDuration;
+            },
+            [
+                adjustedLimited.max,
+                adjustedLimited.min,
+                disableInfiniteScroll,
+                numberOfItems,
+                padWithNItems,
+                styles.pickerItemContainer.height,
             ]
         );
 
@@ -264,7 +304,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     renderItem={renderItem}
                     keyExtractor={KEY_EXTRACTOR}
                     showsVerticalScrollIndicator={false}
-                    decelerationRate={0.9}
+                    decelerationRate={0.88}
                     scrollEventThrottle={16}
                     snapToAlignment="start"
                     // used in place of snapToOffset due to bug on Android
@@ -277,6 +317,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             : undefined
                     }
                     onMomentumScrollEnd={onMomentumScrollEnd}
+                    onScroll={aggressivelyGetLatestDuration ? onScroll : undefined}
                     testID="duration-scroll-flatlist"
                 />
                 <View style={styles.pickerLabelContainer} pointerEvents="none">
