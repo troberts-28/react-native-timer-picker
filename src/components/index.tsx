@@ -98,6 +98,8 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
     ): React.ReactElement => {
         const styles = generateStyles(customStyles);
 
+        const timerPickerRef = useRef<TimerPickerRef>(null);
+
         const [selectedDuration, setSelectedDuration] = useState({
             hours: initialHours,
             minutes: initialMinutes,
@@ -119,8 +121,18 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
         };
 
         const confirmHandler = () => {
-            setConfirmedDuration(selectedDuration);
-            onConfirm(selectedDuration);
+            const latestDuration = timerPickerRef.current?.latestDuration;
+            const newDuration = {
+                hours: latestDuration?.hours?.current ?? selectedDuration.hours,
+                minutes:
+                    latestDuration?.minutes?.current ??
+                    selectedDuration.minutes,
+                seconds:
+                    latestDuration?.seconds?.current ??
+                    selectedDuration.seconds,
+            };
+            setConfirmedDuration(newDuration);
+            onConfirm(newDuration);
         };
 
         const cancelHandler = () => {
@@ -137,8 +149,6 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             },
             [onDurationChange]
         );
-
-        const timerPickerRef = useRef<TimerPickerRef>(null);
 
         useImperativeHandle(ref, () => ({
             reset: (options) => {
@@ -161,7 +171,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
         return (
             <Modal
                 isVisible={visible}
-                onOverlayPress={closeOnOverlayPress ? hideModalHandler : undefined}
+                onOverlayPress={
+                    closeOnOverlayPress ? hideModalHandler : undefined
+                }
                 {...modalProps}
                 testID="timer-picker-modal">
                 <View {...containerProps} style={styles.container}>
@@ -181,6 +193,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             initialHours={confirmedDuration.hours}
                             initialMinutes={confirmedDuration.minutes}
                             initialSeconds={confirmedDuration.seconds}
+                            isInModal
                             hideHours={hideHours}
                             hideMinutes={hideMinutes}
                             hideSeconds={hideSeconds}
