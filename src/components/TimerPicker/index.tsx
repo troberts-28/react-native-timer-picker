@@ -40,7 +40,7 @@ export interface TimerPickerProps {
     initialHours?: number;
     initialMinutes?: number;
     initialSeconds?: number;
-    isInModal?: boolean;
+    aggressivelyGetLatestDuration?: boolean;
     hideHours?: boolean;
     hideMinutes?: boolean;
     hideSeconds?: boolean;
@@ -68,7 +68,6 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             initialHours = 0,
             initialMinutes = 0,
             initialSeconds = 0,
-            isInModal,
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,
@@ -80,6 +79,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             secondLabel = "s",
             padWithNItems = 1,
             disableInfiniteScroll = false,
+            aggressivelyGetLatestDuration = false,
             LinearGradient,
             pickerContainerProps,
             pickerGradientOverlayProps,
@@ -159,7 +159,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         numberOfItems={23}
                         label={hourLabel}
                         initialValue={initialHours}
-                        isInModal={isInModal}
+                        aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
                         onDurationChange={setSelectedHours}
                         pickerGradientOverlayProps={pickerGradientOverlayProps}
                         topPickerGradientOverlayProps={
@@ -182,7 +182,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         numberOfItems={59}
                         label={minuteLabel}
                         initialValue={initialMinutes}
-                        isInModal={isInModal}
+                        aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
                         onDurationChange={setSelectedMinutes}
                         padNumbersWithZero
                         pickerGradientOverlayProps={pickerGradientOverlayProps}
@@ -206,7 +206,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         numberOfItems={59}
                         label={secondLabel}
                         initialValue={initialSeconds}
-                        isInModal={isInModal}
+                        aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
                         onDurationChange={setSelectedSeconds}
                         padNumbersWithZero
                         pickerGradientOverlayProps={pickerGradientOverlayProps}

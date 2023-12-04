@@ -1,4 +1,5 @@
 import React, {
+    MutableRefObject,
     forwardRef,
     useCallback,
     useImperativeHandle,
@@ -25,6 +26,11 @@ export interface TimerPickerModalRef {
         },
         options?: { animated?: boolean }
     ) => void;
+    latestDuration: {
+        hours: MutableRefObject<number> | undefined;
+        minutes: MutableRefObject<number> | undefined;
+        seconds: MutableRefObject<number> | undefined;
+    };
 }
 
 export interface TimerPickerModalProps extends TimerPickerProps {
@@ -166,6 +172,11 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                 setConfirmedDuration(value);
                 timerPickerRef.current?.setValue(value, options);
             },
+            latestDuration: {
+                hours: timerPickerRef.current?.latestDuration?.hours,
+                minutes: timerPickerRef.current?.latestDuration?.minutes,
+                seconds: timerPickerRef.current?.latestDuration?.seconds,
+            },
         }));
 
         return (
@@ -193,7 +204,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             initialHours={confirmedDuration.hours}
                             initialMinutes={confirmedDuration.minutes}
                             initialSeconds={confirmedDuration.seconds}
-                            isInModal
+                            aggressivelyGetLatestDuration={true}
                             hideHours={hideHours}
                             hideMinutes={hideMinutes}
                             hideSeconds={hideSeconds}

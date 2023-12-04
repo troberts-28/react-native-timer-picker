@@ -48,11 +48,11 @@ interface DurationScrollProps {
     numberOfItems: number;
     label?: string | React.ReactElement;
     initialValue?: number;
-    isInModal?: boolean;
     onDurationChange: (duration: number) => void;
     padNumbersWithZero?: boolean;
     disableInfiniteScroll?: boolean;
     limit?: LimitType;
+    aggressivelyGetLatestDuration: boolean;
     padWithNItems: number;
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
@@ -72,11 +72,11 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             numberOfItems,
             label,
             initialValue = 0,
-            isInModal,
             onDurationChange,
             padNumbersWithZero = false,
             disableInfiniteScroll = false,
             limit,
+            aggressivelyGetLatestDuration,
             padWithNItems,
             pickerGradientOverlayProps,
             topPickerGradientOverlayProps,
@@ -317,7 +317,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             : undefined
                     }
                     onMomentumScrollEnd={onMomentumScrollEnd}
-                    onScroll={isInModal ? onScroll : undefined}
+                    onScroll={aggressivelyGetLatestDuration ? onScroll : undefined}
                     testID="duration-scroll-flatlist"
                 />
                 <View style={styles.pickerLabelContainer} pointerEvents="none">
