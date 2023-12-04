@@ -331,6 +331,7 @@ return (
 |           minuteLabel            | Label for the minutes picker                          |                                                                                  String \| React.ReactElement                                                                                   |    m    |  false   |
 |           secondLabel            | Label for the seconds picker                          |                                                                                  String \| React.ReactElement                                                                                   |    s    |  false   |
 |          padWithNItems           | Number of items to pad the picker with on either side |                                                                                             Number                                                                                              |    1    |  false   |
+|          aggressivelyGetLatestDuration           | Set to True to ask DurationScroll to aggressively update the latestDuration ref |                                                                                             Boolean                                                                                              |    false    |  false   |
 |      disableInfiniteScroll       | Disable the infinite scroll feature                   |                                                                                             Boolean                                                                                             |  false  |  false   |
 |          LinearGradient          | Linear Gradient Component                             | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default |    -    |  false   |
 |       pickerContainerProps       | Props for the picker container                        |                                                                               `React.ComponentProps<typeof View>`                                                                               |    -    |  false   |
@@ -417,6 +418,19 @@ timerPickerRef.current.reset(options?: { animated: boolean });
 
 ```javascript
 timerPickerRef.current.setValue({ hours: number, minutes: number, seconds: number }, options?: { animated: boolean });
+```
+
+It also exposes the following ref object:
+
+`latestDuration` - provides access to the latest duration (even during scrolls). **This only works if `aggressivelyGetLatestDuration` is set to True (as in TimerPickerModal).** It is used internally to ensure that the latest duration is returned in `TimerPickerModal` on pressing the confirm button, even if the inputs are still scrolling.
+
+```javascript
+const latestDuration = timerPickerRef.current?.latestDuration;
+const newDuration = {
+    hours: latestDuration?.hours?.current,
+    minutes: latestDuration?.minutes?.current,
+    seconds: latestDuration?.seconds?.current,
+};
 ```
 
 ### TimerPickerModal
