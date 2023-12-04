@@ -1,7 +1,7 @@
 # React Native Timer Picker ⏰🕰️⏳
 
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=for-the-badge)]()
-![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Web-brightgreen.svg?style=for-the-badge&colorB=191A17)
+![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=for-the-badge&colorB=191A17)
 [![Version](https://img.shields.io/npm/v/react-native-timer-picker.svg?style=for-the-badge)](https://www.npmjs.com/package/react-native-timer-picker)
 [![npm](https://img.shields.io/npm/dt/react-native-timer-picker.svg?style=for-the-badge)](https://www.npmjs.com/package/react-native-timer-picker)
 
@@ -33,7 +33,7 @@ Works with Expo and bare React Native apps.
 
 ## Demos 📱
 
-**Try it out for yourself on [Expo Snack](https://snack.expo.dev/@nuumi/react-native-timer-picker-demo)!** Make sure to run it on iOS/Android to try it out properly.
+**Try it out for yourself on [Expo Snack](https://snack.expo.dev/@nuumi/react-native-timer-picker-demo)!** Make sure to run it on iOS/Android to see it working properly.
 
 <p>
     <img src="demos/example1.gif" width="250" height="550" style="margin-right:50px"/>
