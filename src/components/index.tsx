@@ -109,7 +109,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             seconds: initialSeconds,
         });
 
-        const hideModal = () => {
+        const hideModalHandler = () => {
             setSelectedDuration({
                 hours: confirmedDuration.hours,
                 minutes: confirmedDuration.minutes,
@@ -118,19 +118,19 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             setIsVisible(false);
         };
 
-        const confirm = () => {
+        const confirmHandler = () => {
             setConfirmedDuration(selectedDuration);
             onConfirm(selectedDuration);
         };
 
-        const cancel = () => {
+        const cancelHandler = () => {
             setIsVisible(false);
             setSelectedDuration(confirmedDuration);
             onCancel?.();
         };
 
         // wrapped in useCallback to avoid unnecessary re-renders of TimerPicker
-        const durationChange = useCallback(
+        const durationChangeHandler = useCallback(
             (duration: { hours: number; minutes: number; seconds: number }) => {
                 setSelectedDuration(duration);
                 onDurationChange?.(duration);
@@ -161,7 +161,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
         return (
             <Modal
                 isVisible={visible}
-                onOverlayPress={closeOnOverlayPress ? hideModal : undefined}
+                onOverlayPress={closeOnOverlayPress ? hideModalHandler : undefined}
                 {...modalProps}
                 testID="timer-picker-modal">
                 <View {...containerProps} style={styles.container}>
@@ -177,7 +177,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                         ) : null}
                         <TimerPicker
                             ref={timerPickerRef}
-                            onDurationChange={durationChange}
+                            onDurationChange={durationChangeHandler}
                             initialHours={confirmedDuration.hours}
                             initialMinutes={confirmedDuration.minutes}
                             initialSeconds={confirmedDuration.seconds}
@@ -210,7 +210,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             style={styles.buttonContainer}>
                             {!hideCancelButton ? (
                                 <TouchableOpacity
-                                    onPress={cancel}
+                                    onPress={cancelHandler}
                                     {...buttonTouchableOpacityProps}>
                                     <Text
                                         style={[
@@ -222,7 +222,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                                 </TouchableOpacity>
                             ) : null}
                             <TouchableOpacity
-                                onPress={confirm}
+                                onPress={confirmHandler}
                                 {...buttonTouchableOpacityProps}>
                                 <Text
                                     style={[
