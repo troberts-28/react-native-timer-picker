@@ -36,8 +36,6 @@ export const generate12HourNumbers = (options: {
 }) => {
     let numbers: string[] = [];
 
-    console.log(options?.padNumbersWithZero);
-
     // Generate numbers from 0 to 11 for AM
     for (let i = 0; i <= 11; i++) {
         numbers.push(

@@ -8,6 +8,8 @@ export interface CustomTimerPickerStyles {
     pickerContainer?: any;
     pickerLabelContainer?: any;
     pickerLabel?: any;
+    pickerAmPmContainer?: any;
+    pickerAmPmLabel?: any;
     pickerItemContainer?: any;
     pickerItem?: any;
     disabledPickerItem?: any;
@@ -71,6 +73,15 @@ export const generateStyles = (
             ...customStyles?.text,
             ...customStyles?.pickerItem,
         },
+        pickerAmPmContainer: {
+            position: "absolute",
+            right: 0,
+            top: 0,
+            bottom: 0,
+            justifyContent: "center",
+            ...customStyles?.pickerLabelContainer,
+            ...customStyles?.pickerAmPmContainer,
+        },
         pickerAmPmLabel: {
             fontSize: 18,
             fontWeight: "bold",
@@ -79,6 +90,9 @@ export const generateStyles = (
                 customStyles?.theme === "dark"
                     ? DARK_MODE_TEXT_COLOR
                     : LIGHT_MODE_TEXT_COLOR,
+            ...customStyles?.text,
+            ...customStyles?.pickerLabel,
+            ...customStyles?.pickerAmPmLabel,
         },
         disabledPickerItem: {
             opacity: 0.2,

@@ -177,7 +177,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         </Text>
                         {is12HourPicker ? (
                             <View
-                                style={styles.pickerLabelContainer}
+                                style={styles.pickerAmPmContainer}
                                 pointerEvents="none">
                                 <Text style={[styles.pickerAmPmLabel]}>
                                     {isAm ? amLabel : pmLabel}
@@ -194,10 +194,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 is12HourPicker,
                 pmLabel,
                 styles.disabledPickerItem,
+                styles.pickerAmPmContainer,
                 styles.pickerAmPmLabel,
                 styles.pickerItem,
                 styles.pickerItemContainer,
-                styles.pickerLabelContainer,
             ]
         );
 
