@@ -70,7 +70,6 @@ export default function App() {
                     onCancel={() => setShowPickerExample1(false)}
                     closeOnOverlayPress
                     LinearGradient={LinearGradient}
-                    use12HourPicker={true}
                     styles={{
                         theme: "dark",
                     }}
@@ -126,6 +125,7 @@ export default function App() {
                     modalTitle="Set Alarm"
                     onCancel={() => setShowPickerExample2(false)}
                     closeOnOverlayPress
+                    use12HourPicker
                     LinearGradient={LinearGradient}
                     styles={{
                         theme: "light",

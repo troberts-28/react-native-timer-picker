@@ -211,6 +211,7 @@ return (
             modalTitle="Set Alarm"
             onCancel={() => setShowPicker(false)}
             closeOnOverlayPress
+            use12HourPicker
             LinearGradient={LinearGradient}
             styles={{
                 theme: "light",
@@ -332,6 +333,9 @@ return (
 |           secondLabel            | Label for the seconds picker                          |                                                                                  String \| React.ReactElement                                                                                   |    s    |  false   |
 |          padWithNItems           | Number of items to pad the picker with on either side |                                                                                             Number                                                                                              |    1    |  false   |
 |          aggressivelyGetLatestDuration           | Set to True to ask DurationScroll to aggressively update the latestDuration ref |                                                                                             Boolean                                                                                              |    false    |  false   |
+|          use12HourPicker           | Switch the hour picker to 12-hour format with an AM / PM label |                                                                                             Boolean                                                                                              |    false    |  false   |
+|          amLabel           | Set the AM label if using the 12-hour picker |                                                                                             String                                                                                              |    am    |  false   |
+|          pmLabel           | Set the PM label if using the 12-hour picker |                                                                                             String                                                                                              |    pm    |  false   |
 |      disableInfiniteScroll       | Disable the infinite scroll feature                   |                                                                                             Boolean                                                                                             |  false  |  false   |
 |          LinearGradient          | Linear Gradient Component                             | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default |    -    |  false   |
 |       pickerContainerProps       | Props for the picker container                        |                                                                               `React.ComponentProps<typeof View>`                                                                               |    -    |  false   |
@@ -352,6 +356,8 @@ The following custom styles can be supplied to re-style the component in any way
 |    pickerContainer    | Main container for the picker                |     ViewStyle     |
 | pickerLabelContainer  | Container for the picker's labels            |     ViewStyle     |
 |      pickerLabel      | Style for the picker's labels                |     TextStyle     |
+|      pickerAmPmContainer      | Style for the picker's labels                |     ViewStyle     |
+|      pickerAmPmLabel      | Style for the picker's labels                |     TextStyle     |
 |  pickerItemContainer  | Container for each number in the picker      |     ViewStyle     |
 |      pickerItem       | Style for each individual picker number      |     TextStyle     |
 |  disabledPickerItem   | Style for any numbers outside any set limits |     TextStyle     |
