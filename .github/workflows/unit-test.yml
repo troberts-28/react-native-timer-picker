@@ -14,12 +14,12 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
-        node-version: 18
+        node-version: 20
         registry-url: https://registry.npmjs.org
     - name: Install react
       run: yarn add react@18.2.0
     - name: Install react-native
-      run: yarn add react-native@0.73.1
+      run: NODE_OPTIONS=--max-old-space-size=4096 yarn add react-native@0.73.1
     - name: Install dependencies
       run: yarn install -D
     - name: Test
