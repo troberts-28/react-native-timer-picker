@@ -151,12 +151,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 let stringItem = item;
                 let intItem: number;
                 let isAm: boolean | undefined;
+
                 if (!is12HourPicker) {
                     intItem = parseInt(item);
                 } else {
-                    stringItem = item.split(" ")[0];
+                    isAm = item.includes("AM");
+                    stringItem = item.replace(/\s[AP]M/g, "");
                     intItem = parseInt(stringItem);
-                    isAm = item.split(" ")[1] === "AM";
                 }
 
                 return (
@@ -175,9 +176,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             {stringItem}
                         </Text>
                         {is12HourPicker ? (
-                            <Text style={[styles.pickerItem]}>
-                                {isAm ? amLabel : pmLabel}
-                            </Text>
+                            <View
+                                style={styles.pickerLabelContainer}
+                                pointerEvents="none">
+                                <Text style={[styles.pickerAmPmLabel]}>
+                                    {isAm ? amLabel : pmLabel}
+                                </Text>
+                            </View>
                         ) : null}
                     </View>
                 );
@@ -189,8 +194,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 is12HourPicker,
                 pmLabel,
                 styles.disabledPickerItem,
+                styles.pickerAmPmLabel,
                 styles.pickerItem,
                 styles.pickerItemContainer,
+                styles.pickerLabelContainer,
             ]
         );
 

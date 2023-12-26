@@ -71,6 +71,15 @@ export const generateStyles = (
             ...customStyles?.text,
             ...customStyles?.pickerItem,
         },
+        pickerAmPmLabel: {
+            fontSize: 18,
+            fontWeight: "bold",
+            marginTop: (customStyles?.pickerItem?.fontSize ?? 25) / 6,
+            color:
+                customStyles?.theme === "dark"
+                    ? DARK_MODE_TEXT_COLOR
+                    : LIGHT_MODE_TEXT_COLOR,
+        },
         disabledPickerItem: {
             opacity: 0.2,
             ...customStyles?.disabledPickerItem,
