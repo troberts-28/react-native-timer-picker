@@ -19,6 +19,8 @@ jobs:
     - name: Install react
       run: yarn add react@18.2.0
     - name: Install react-native
+      env:
+        NODE_OPTIONS: "--max_old_space_size=8192"
       run: yarn add react-native@0.72.5
     - name: Install dependencies
       run: yarn install -D
