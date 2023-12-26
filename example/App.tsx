@@ -70,6 +70,7 @@ export default function App() {
                     onCancel={() => setShowPickerExample1(false)}
                     closeOnOverlayPress
                     LinearGradient={LinearGradient}
+                    use12HourPicker={true}
                     styles={{
                         theme: "dark",
                     }}

@@ -54,6 +54,7 @@ export const generateStyles = (
             ...customStyles?.pickerLabel,
         },
         pickerItemContainer: {
+            flexDirection: "row",
             height: 50,
             justifyContent: "center",
             alignItems: "center",

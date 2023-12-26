@@ -15,7 +15,10 @@ import {
     NativeScrollEvent,
 } from "react-native";
 
-import { generateNumbers } from "../../utils/generateNumbers";
+import {
+    generate12HourNumbers,
+    generateNumbers,
+} from "../../utils/generateNumbers";
 import { colorToRgba } from "../../utils/colorToRgba";
 import { generateStyles } from "./TimerPicker.styles";
 import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
@@ -53,6 +56,9 @@ interface DurationScrollProps {
     disableInfiniteScroll?: boolean;
     limit?: LimitType;
     aggressivelyGetLatestDuration: boolean;
+    is12HourPicker?: boolean;
+    amLabel?: string;
+    pmLabel?: string;
     padWithNItems: number;
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
@@ -77,6 +83,9 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             disableInfiniteScroll = false,
             limit,
             aggressivelyGetLatestDuration,
+            is12HourPicker,
+            amLabel,
+            pmLabel,
             padWithNItems,
             pickerGradientOverlayProps,
             topPickerGradientOverlayProps,
@@ -87,12 +96,19 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         },
         ref
     ): React.ReactElement => {
-        const data = generateNumbers(numberOfItems, {
-            padWithZero: padNumbersWithZero,
-            repeatNTimes: 3,
-            disableInfiniteScroll,
-            padWithNItems: padWithNItems,
-        });
+        const data = !is12HourPicker
+            ? generateNumbers(numberOfItems, {
+                  padNumbersWithZero,
+                  repeatNTimes: 3,
+                  disableInfiniteScroll,
+                  padWithNItems,
+              })
+            : generate12HourNumbers({
+                  padNumbersWithZero,
+                  repeatNTimes: 3,
+                  disableInfiniteScroll,
+                  padWithNItems,
+              });
 
         const numberOfItemsToShow = 1 + padWithNItems * 2;
 
@@ -132,7 +148,16 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
         const renderItem = useCallback(
             ({ item }: { item: string }) => {
-                const intItem = parseInt(item);
+                let stringItem = item;
+                let intItem: number;
+                let isAm: boolean | undefined;
+                if (!is12HourPicker) {
+                    intItem = parseInt(item);
+                } else {
+                    stringItem = item.split(" ")[0];
+                    intItem = parseInt(stringItem);
+                    isAm = item.split(" ")[1] === "AM";
+                }
 
                 return (
                     <View
@@ -147,14 +172,22 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                                     ? styles.disabledPickerItem
                                     : {},
                             ]}>
-                            {item}
+                            {stringItem}
                         </Text>
+                        {is12HourPicker ? (
+                            <Text style={[styles.pickerItem]}>
+                                {isAm ? amLabel : pmLabel}
+                            </Text>
+                        ) : null}
                     </View>
                 );
             },
             [
                 adjustedLimited.max,
                 adjustedLimited.min,
+                amLabel,
+                is12HourPicker,
+                pmLabel,
                 styles.disabledPickerItem,
                 styles.pickerItem,
                 styles.pickerItemContainer,
@@ -317,7 +350,9 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             : undefined
                     }
                     onMomentumScrollEnd={onMomentumScrollEnd}
-                    onScroll={aggressivelyGetLatestDuration ? onScroll : undefined}
+                    onScroll={
+                        aggressivelyGetLatestDuration ? onScroll : undefined
+                    }
                     testID="duration-scroll-flatlist"
                 />
                 <View style={styles.pickerLabelContainer} pointerEvents="none">

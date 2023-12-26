@@ -41,6 +41,9 @@ export interface TimerPickerProps {
     initialMinutes?: number;
     initialSeconds?: number;
     aggressivelyGetLatestDuration?: boolean;
+    use12HourPicker?: boolean;
+    amLabel?: string;
+    pmLabel?: string;
     hideHours?: boolean;
     hideMinutes?: boolean;
     hideSeconds?: boolean;
@@ -74,12 +77,15 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             hourLimit,
             minuteLimit,
             secondLimit,
-            hourLabel = "h",
-            minuteLabel = "m",
-            secondLabel = "s",
+            hourLabel,
+            minuteLabel,
+            secondLabel,
             padWithNItems = 1,
             disableInfiniteScroll = false,
             aggressivelyGetLatestDuration = false,
+            use12HourPicker = false,
+            amLabel = "am",
+            pmLabel = "pm",
             LinearGradient,
             pickerContainerProps,
             pickerGradientOverlayProps,
@@ -157,9 +163,13 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                     <DurationScroll
                         ref={hoursDurationScrollRef}
                         numberOfItems={23}
-                        label={hourLabel}
+                        label={
+                            hourLabel ?? (!use12HourPicker ? "h" : undefined)
+                        }
                         initialValue={initialHours}
-                        aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
+                        aggressivelyGetLatestDuration={
+                            aggressivelyGetLatestDuration
+                        }
                         onDurationChange={setSelectedHours}
                         pickerGradientOverlayProps={pickerGradientOverlayProps}
                         topPickerGradientOverlayProps={
@@ -172,6 +182,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padWithNItems={checkedPadWithNItems}
                         limit={hourLimit}
                         LinearGradient={LinearGradient}
+                        is12HourPicker={use12HourPicker}
+                        amLabel={amLabel}
+                        pmLabel={pmLabel}
                         styles={styles}
                         testID="duration-scroll-hour"
                     />
@@ -180,9 +193,11 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                     <DurationScroll
                         ref={minutesDurationScrollRef}
                         numberOfItems={59}
-                        label={minuteLabel}
+                        label={minuteLabel ?? "m"}
                         initialValue={initialMinutes}
-                        aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
+                        aggressivelyGetLatestDuration={
+                            aggressivelyGetLatestDuration
+                        }
                         onDurationChange={setSelectedMinutes}
                         padNumbersWithZero
                         pickerGradientOverlayProps={pickerGradientOverlayProps}
@@ -204,9 +219,11 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                     <DurationScroll
                         ref={secondsDurationScrollRef}
                         numberOfItems={59}
-                        label={secondLabel}
+                        label={secondLabel ?? "s"}
                         initialValue={initialSeconds}
-                        aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
+                        aggressivelyGetLatestDuration={
+                            aggressivelyGetLatestDuration
+                        }
                         onDurationChange={setSelectedSeconds}
                         padNumbersWithZero
                         pickerGradientOverlayProps={pickerGradientOverlayProps}
