@@ -42,12 +42,19 @@ export const generateStyles = (
             top: 0,
             bottom: 0,
             justifyContent: "center",
+            minWidth:
+                (customStyles?.pickerLabel?.fontSize ??
+                    customStyles?.text?.fontSize ??
+                    25) * 0.65,
             ...customStyles?.pickerLabelContainer,
         },
         pickerLabel: {
             fontSize: 18,
             fontWeight: "bold",
-            marginTop: (customStyles?.pickerItem?.fontSize ?? 25) / 6,
+            marginTop:
+                (customStyles?.pickerItem?.fontSize ??
+                    customStyles?.text?.fontSize ??
+                    25) / 6,
             color:
                 customStyles?.theme === "dark"
                     ? DARK_MODE_TEXT_COLOR
