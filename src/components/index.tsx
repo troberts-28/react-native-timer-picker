@@ -78,11 +78,14 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             hourLimit,
             minuteLimit,
             secondLimit,
-            hourLabel = "h",
-            minuteLabel = "m",
-            secondLabel = "s",
+            hourLabel,
+            minuteLabel,
+            secondLabel,
             padWithNItems = 1,
             disableInfiniteScroll = false,
+            use12HourPicker,
+            amLabel,
+            pmLabel,
             hideCancelButton = false,
             confirmButtonText = "Confirm",
             cancelButtonText = "Cancel",
@@ -216,6 +219,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             secondLabel={secondLabel}
                             padWithNItems={padWithNItems}
                             disableInfiniteScroll={disableInfiniteScroll}
+                            use12HourPicker={use12HourPicker}
+                            amLabel={amLabel}
+                            pmLabel={pmLabel}
                             LinearGradient={LinearGradient}
                             pickerContainerProps={pickerContainerProps}
                             pickerGradientOverlayProps={

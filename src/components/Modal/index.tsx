@@ -33,7 +33,7 @@ export const Modal = ({
     modalProps,
     contentStyle,
     overlayStyle,
-    testID,
+    testID = "modal",
 }: ModalProps): React.ReactElement => {
     const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
@@ -109,7 +109,7 @@ export const Modal = ({
             animationType="fade"
             visible={isVisible}
             {...modalProps}
-            testID={testID ?? "modal"}>
+            testID={testID}>
             <TouchableWithoutFeedback
                 onPress={onOverlayPress}
                 testID="modal-backdrop">

@@ -5,7 +5,7 @@ import Modal from "../components/Modal";
 
 describe("Modal", () => {
     it("renders without crashing", () => {
-        const { getByTestId } = render(<Modal />);
+        const { getByTestId } = render(<Modal isVisible/>);
         const component = getByTestId("modal");
         expect(component).toBeDefined();
     });

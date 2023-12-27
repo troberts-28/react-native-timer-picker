@@ -8,6 +8,8 @@ export interface CustomTimerPickerStyles {
     pickerContainer?: any;
     pickerLabelContainer?: any;
     pickerLabel?: any;
+    pickerAmPmContainer?: any;
+    pickerAmPmLabel?: any;
     pickerItemContainer?: any;
     pickerItem?: any;
     disabledPickerItem?: any;
@@ -40,12 +42,19 @@ export const generateStyles = (
             top: 0,
             bottom: 0,
             justifyContent: "center",
+            minWidth:
+                (customStyles?.pickerLabel?.fontSize ??
+                    customStyles?.text?.fontSize ??
+                    25) * 0.65,
             ...customStyles?.pickerLabelContainer,
         },
         pickerLabel: {
             fontSize: 18,
             fontWeight: "bold",
-            marginTop: (customStyles?.pickerItem?.fontSize ?? 25) / 6,
+            marginTop:
+                (customStyles?.pickerItem?.fontSize ??
+                    customStyles?.text?.fontSize ??
+                    25) / 6,
             color:
                 customStyles?.theme === "dark"
                     ? DARK_MODE_TEXT_COLOR
@@ -54,6 +63,7 @@ export const generateStyles = (
             ...customStyles?.pickerLabel,
         },
         pickerItemContainer: {
+            flexDirection: "row",
             height: 50,
             justifyContent: "center",
             alignItems: "center",
@@ -69,6 +79,27 @@ export const generateStyles = (
                     : LIGHT_MODE_TEXT_COLOR,
             ...customStyles?.text,
             ...customStyles?.pickerItem,
+        },
+        pickerAmPmContainer: {
+            position: "absolute",
+            right: 0,
+            top: 0,
+            bottom: 0,
+            justifyContent: "center",
+            ...customStyles?.pickerLabelContainer,
+            ...customStyles?.pickerAmPmContainer,
+        },
+        pickerAmPmLabel: {
+            fontSize: 18,
+            fontWeight: "bold",
+            marginTop: (customStyles?.pickerItem?.fontSize ?? 25) / 6,
+            color:
+                customStyles?.theme === "dark"
+                    ? DARK_MODE_TEXT_COLOR
+                    : LIGHT_MODE_TEXT_COLOR,
+            ...customStyles?.text,
+            ...customStyles?.pickerLabel,
+            ...customStyles?.pickerAmPmLabel,
         },
         disabledPickerItem: {
             opacity: 0.2,
