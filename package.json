@@ -1,6 +1,6 @@
 {
     "name": "react-native-timer-picker",
-    "description": "A simple, flexible, performant duration picker for Expo React Native apps 🔥\n\nGreat for timers, alarms and duration inputs ⏰🕰️⏳",
+    "description": "A simple, flexible, performant duration picker for React Native apps 🔥\n\nGreat for timers, alarms and duration inputs ⏰🕰️⏳",
     "author": {
         "name": "Tim Roberts",
         "url": "https://github.com/troberts-28"
