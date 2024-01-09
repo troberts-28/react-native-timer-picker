@@ -83,6 +83,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             secondLabel,
             padWithNItems = 1,
             disableInfiniteScroll = false,
+            allowFontScaling = false,
             use12HourPicker,
             amLabel,
             pmLabel,
@@ -219,6 +220,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             secondLabel={secondLabel}
                             padWithNItems={padWithNItems}
                             disableInfiniteScroll={disableInfiniteScroll}
+                            allowFontScaling={allowFontScaling}
                             use12HourPicker={use12HourPicker}
                             amLabel={amLabel}
                             pmLabel={pmLabel}

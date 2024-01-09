@@ -32,6 +32,7 @@ export interface TimerPickerRef {
 }
 
 export interface TimerPickerProps {
+    allowFontScaling?: boolean;
     onDurationChange?: (duration: {
         hours: number;
         minutes: number;
@@ -67,6 +68,7 @@ export interface TimerPickerProps {
 const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
     (
         {
+            allowFontScaling = false,
             onDurationChange,
             initialHours = 0,
             initialMinutes = 0,
@@ -167,6 +169,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             hourLabel ?? (!use12HourPicker ? "h" : undefined)
                         }
                         initialValue={initialHours}
+                        allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
                         }
@@ -195,6 +198,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         numberOfItems={59}
                         label={minuteLabel ?? "m"}
                         initialValue={initialMinutes}
+                        allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
                         }
@@ -221,6 +225,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         numberOfItems={59}
                         label={secondLabel ?? "s"}
                         initialValue={initialSeconds}
+                        allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
                         }

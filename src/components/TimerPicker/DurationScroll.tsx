@@ -48,6 +48,7 @@ export type LimitType = {
 };
 
 interface DurationScrollProps {
+    allowFontScaling?: boolean;
     numberOfItems: number;
     label?: string | React.ReactElement;
     initialValue?: number;
@@ -83,6 +84,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             disableInfiniteScroll = false,
             limit,
             aggressivelyGetLatestDuration,
+            allowFontScaling = false,
             is12HourPicker,
             amLabel,
             pmLabel,
@@ -166,6 +168,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         style={styles.pickerItemContainer}
                         testID="picker-item">
                         <Text
+                            allowFontScaling={allowFontScaling}
                             style={[
                                 styles.pickerItem,
                                 intItem > adjustedLimited.max ||
@@ -179,7 +182,9 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             <View
                                 style={styles.pickerAmPmContainer}
                                 pointerEvents="none">
-                                <Text style={[styles.pickerAmPmLabel]}>
+                                <Text
+                                    style={[styles.pickerAmPmLabel]}
+                                    allowFontScaling={allowFontScaling}>
                                     {isAm ? amLabel : pmLabel}
                                 </Text>
                             </View>
@@ -190,6 +195,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             [
                 adjustedLimited.max,
                 adjustedLimited.min,
+                allowFontScaling,
                 amLabel,
                 is12HourPicker,
                 pmLabel,
@@ -364,7 +370,11 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 />
                 <View style={styles.pickerLabelContainer} pointerEvents="none">
                     {typeof label === "string" ? (
-                        <Text style={styles.pickerLabel}>{label}</Text>
+                        <Text
+                            allowFontScaling={allowFontScaling}
+                            style={styles.pickerLabel}>
+                            {label}
+                        </Text>
                     ) : (
                         label ?? null
                     )}
