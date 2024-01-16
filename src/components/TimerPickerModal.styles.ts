@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 import type { CustomTimerPickerStyles } from "./TimerPicker/TimerPicker.styles";
-import { ComponentProps } from "react";
 
 export interface CustomTimerPickerModalStyles extends CustomTimerPickerStyles {
-    container?: ComponentProps<typeof View>;
-    contentContainer?: ComponentProps<typeof View>;
-    buttonContainer?: ComponentProps<typeof View>;
-    button?: ComponentProps<typeof Text>;
-    cancelButton?: ComponentProps<typeof Text>;
-    confirmButton?: ComponentProps<typeof Text>;
-    modalTitle?: ComponentProps<typeof Text>;
+    container?: any;
+    contentContainer?: any;
+    buttonContainer?: any;
+    button?: any;
+    cancelButton?: any;
+    confirmButton?: any;
+    modalTitle?: any;
 }
 
 const DARK_MODE_BACKGROUND_COLOR = "#232323";
