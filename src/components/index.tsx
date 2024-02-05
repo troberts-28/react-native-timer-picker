@@ -2,6 +2,7 @@ import React, {
     MutableRefObject,
     forwardRef,
     useCallback,
+    useEffect,
     useImperativeHandle,
     useRef,
     useState,
@@ -121,6 +122,23 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             seconds: initialSeconds,
         });
 
+        const reset = (options?: { animated?: boolean }) => {
+            const initialDuration = {
+                hours: initialHours,
+                minutes: initialMinutes,
+                seconds: initialSeconds,
+            };
+            setSelectedDuration(initialDuration);
+            setConfirmedDuration(initialDuration);
+            timerPickerRef.current?.reset(options);
+        };
+
+        // reset state if the initial times change
+        useEffect(() => {
+            reset();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [initialHours, initialMinutes, initialSeconds]);
+
         const hideModalHandler = () => {
             setSelectedDuration({
                 hours: confirmedDuration.hours,
@@ -161,16 +179,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
         );
 
         useImperativeHandle(ref, () => ({
-            reset: (options) => {
-                const initialDuration = {
-                    hours: initialHours,
-                    minutes: initialMinutes,
-                    seconds: initialSeconds,
-                };
-                setSelectedDuration(initialDuration);
-                setConfirmedDuration(initialDuration);
-                timerPickerRef.current?.reset(options);
-            },
+            reset,
             setValue: (value, options) => {
                 setSelectedDuration(value);
                 setConfirmedDuration(value);
