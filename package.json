@@ -10,10 +10,11 @@
     "main": "dist/commonjs/index.js",
     "types": "dist/typescript/src/index.d.ts",
     "scripts": {
+        "setup": "yarn && cd example && yarn",
+        "start": " cd example && yarn start",
         "test": "jest --forceExit --silent",
         "build": "bob build",
         "clean": "rm yarn.lock && rm -rf ./node_modules && yarn install",
-        "start": "cp -Rf src example && cd example && npx expo install && npx expo start",
         "lint": "eslint --ext .ts,.tsx .",
         "lint:fix": "eslint --ext .ts,.tsx . --fix",
         "prepare": "yarn build"
