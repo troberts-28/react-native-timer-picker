@@ -102,7 +102,7 @@ export const generateStyles = (
             ...customStyles?.pickerAmPmLabel,
         },
         disabledPickerItem: {
-            opacity: 0.2,
+            // opacity: 0.2,
             ...customStyles?.disabledPickerItem,
         },
         pickerGradientOverlay: {

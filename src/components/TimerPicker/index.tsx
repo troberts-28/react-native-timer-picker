@@ -63,6 +63,10 @@ export interface TimerPickerProps {
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
     bottomPickerGradientOverlayProps?: Partial<LinearGradientProps>;
     styles?: CustomTimerPickerStyles;
+    isPricePicker?: boolean;
+    centDataLimit?: number;
+    centDataIterationValue?: number;
+    dollorDataLimit?: number;
 }
 
 const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
@@ -94,6 +98,10 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             topPickerGradientOverlayProps,
             bottomPickerGradientOverlayProps,
             styles: customStyles,
+            isPricePicker,
+            centDataLimit,
+            centDataIterationValue,
+            dollorDataLimit,
         },
         ref
     ): React.ReactElement => {
@@ -116,7 +124,10 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
         useEffect(() => {
             onDurationChange?.({
                 hours: selectedHours,
-                minutes: selectedMinutes,
+                minutes:
+                    isPricePicker && centDataIterationValue
+                        ? selectedMinutes * centDataIterationValue
+                        : selectedMinutes,
                 seconds: selectedSeconds,
             });
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -164,10 +175,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 {!hideHours ? (
                     <DurationScroll
                         ref={hoursDurationScrollRef}
-                        numberOfItems={23}
-                        label={
-                            hourLabel ?? (!use12HourPicker ? "h" : undefined)
-                        }
+                        numberOfItems={dollorDataLimit ?? 23}
+                        label={isPricePicker ? "$" : "hr"}
                         initialValue={initialHours}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
@@ -190,13 +199,15 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         pmLabel={pmLabel}
                         styles={styles}
                         testID="duration-scroll-hour"
+                        dollorDataLimit={dollorDataLimit}
+                        isPricePicker={isPricePicker}
                     />
                 ) : null}
                 {!hideMinutes ? (
                     <DurationScroll
                         ref={minutesDurationScrollRef}
-                        numberOfItems={59}
-                        label={minuteLabel ?? "m"}
+                        numberOfItems={centDataLimit ?? 59}
+                        label={isPricePicker ? "¢" : "min"}
                         initialValue={initialMinutes}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
@@ -216,6 +227,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         limit={minuteLimit}
                         LinearGradient={LinearGradient}
                         styles={styles}
+                        isPricePicker={isPricePicker}
+                        centDataLimit={centDataLimit}
+                        centDataIterationValue={centDataIterationValue}
                         testID="duration-scroll-minute"
                     />
                 ) : null}

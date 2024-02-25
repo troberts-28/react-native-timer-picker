@@ -59,6 +59,10 @@ export interface TimerPickerModalProps extends TimerPickerProps {
     buttonTouchableOpacityProps?: React.ComponentProps<typeof TouchableOpacity>;
     modalTitleProps?: React.ComponentProps<typeof Text>;
     styles?: CustomTimerPickerModalStyles;
+    isPricePicker?: boolean;
+    centDataLimit?: number;
+    dollorDataLimit?: number;
+    centDataIterationValue?: number | undefined;
 }
 
 const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
@@ -104,6 +108,10 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             topPickerGradientOverlayProps,
             bottomPickerGradientOverlayProps,
             styles: customStyles,
+            isPricePicker,
+            centDataLimit,
+            dollorDataLimit,
+            centDataIterationValue,
         },
         ref
     ): React.ReactElement => {
@@ -245,6 +253,10 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                                 bottomPickerGradientOverlayProps
                             }
                             styles={customStyles}
+                            isPricePicker={isPricePicker}
+                            centDataLimit={centDataLimit}
+                            centDataIterationValue={centDataIterationValue}
+                            dollorDataLimit={dollorDataLimit}
                         />
                         <View
                             {...buttonContainerProps}

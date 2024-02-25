@@ -2,6 +2,9 @@ import { padNumber } from "./padNumber";
 
 export const generateNumbers = (
     numberOfItems: number,
+    isPricePicker: boolean | undefined,
+    centDataLimit: number | undefined,
+    centDataIterationValue: number | undefined,
     options: {
         repeatNTimes?: number;
         padNumbersWithZero?: boolean;
@@ -15,7 +18,17 @@ export const generateNumbers = (
 
     let numbers: string[] = [];
     for (let i = 0; i <= numberOfItems; i++) {
-        numbers.push(padNumber(i, { padWithZero: options.padNumbersWithZero }));
+        numbers.push(
+            padNumber(
+                // added extra params to change the generation of cent value.
+                i,
+                numberOfItems,
+                isPricePicker,
+                centDataLimit,
+                centDataIterationValue,
+                { padWithZero: options.padNumbersWithZero }
+            )
+        );
     }
 
     if ((options.repeatNTimes ?? 1) > 1) {
@@ -39,7 +52,10 @@ export const generate12HourNumbers = (options: {
     // Generate numbers from 0 to 11 for AM
     for (let i = 0; i <= 11; i++) {
         numbers.push(
-            `${padNumber(i, { padWithZero: options.padNumbersWithZero })} AM`
+            `${padNumber(i, 0, false, 0, 0, {
+                //Added as same function parameters of generateNUmber :may need to change if want in AM or Pm
+                padWithZero: options.padNumbersWithZero,
+            })} AM`
         );
     }
 
@@ -47,7 +63,10 @@ export const generate12HourNumbers = (options: {
     for (let i = 12; i <= 23; i++) {
         const hour = i > 12 ? i - 12 : i;
         numbers.push(
-            `${padNumber(hour, { padWithZero: options.padNumbersWithZero })} PM`
+            `${padNumber(hour, 0, false, 0, 0, {
+                //Added as same function parameters of generateNUmber :may need to change if want in AM or Pm
+                padWithZero: options.padNumbersWithZero,
+            })} PM`
         );
     }
 

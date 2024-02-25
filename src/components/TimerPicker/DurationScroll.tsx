@@ -68,6 +68,10 @@ interface DurationScrollProps {
     LinearGradient?: any;
     testID?: string;
     styles: ReturnType<typeof generateStyles>;
+    isPricePicker?: boolean;
+    centDataLimit?: number;
+    centDataIterationValue?: number;
+    dollorDataLimit?: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,16 +99,28 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             LinearGradient,
             testID,
             styles,
+            isPricePicker,
+            centDataLimit,
+            centDataIterationValue,
         },
         ref
     ): React.ReactElement => {
         const data = !is12HourPicker
-            ? generateNumbers(numberOfItems, {
-                  padNumbersWithZero,
-                  repeatNTimes: 3,
-                  disableInfiniteScroll,
-                  padWithNItems,
-              })
+            ? generateNumbers(
+                  numberOfItems,
+                  isPricePicker,
+                  centDataLimit,
+                  centDataIterationValue,
+                  {
+                      padNumbersWithZero,
+                      repeatNTimes:
+                          isPricePicker && numberOfItems == centDataLimit
+                              ? 1
+                              : 3,
+                      disableInfiniteScroll,
+                      padWithNItems,
+                  }
+              )
             : generate12HourNumbers({
                   padNumbersWithZero,
                   repeatNTimes: 3,
