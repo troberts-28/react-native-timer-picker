@@ -1,4 +1,5 @@
 import React, {
+    MutableRefObject,
     forwardRef,
     useEffect,
     useImperativeHandle,
@@ -23,9 +24,15 @@ export interface TimerPickerRef {
         },
         options?: { animated?: boolean }
     ) => void;
+    latestDuration: {
+        hours: MutableRefObject<number> | undefined;
+        minutes: MutableRefObject<number> | undefined;
+        seconds: MutableRefObject<number> | undefined;
+    };
 }
 
 export interface TimerPickerProps {
+    allowFontScaling?: boolean;
     onDurationChange?: (duration: {
         hours: number;
         minutes: number;
@@ -34,6 +41,10 @@ export interface TimerPickerProps {
     initialHours?: number;
     initialMinutes?: number;
     initialSeconds?: number;
+    aggressivelyGetLatestDuration?: boolean;
+    use12HourPicker?: boolean;
+    amLabel?: string;
+    pmLabel?: string;
     hideHours?: boolean;
     hideMinutes?: boolean;
     hideSeconds?: boolean;
@@ -48,13 +59,16 @@ export interface TimerPickerProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     LinearGradient?: any;
     pickerContainerProps?: React.ComponentProps<typeof View>;
-    pickerGradientOverlayProps?: LinearGradientProps;
+    pickerGradientOverlayProps?: Partial<LinearGradientProps>;
+    topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
+    bottomPickerGradientOverlayProps?: Partial<LinearGradientProps>;
     styles?: CustomTimerPickerStyles;
 }
 
 const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
     (
         {
+            allowFontScaling = false,
             onDurationChange,
             initialHours = 0,
             initialMinutes = 0,
@@ -65,14 +79,20 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             hourLimit,
             minuteLimit,
             secondLimit,
-            hourLabel = "h",
-            minuteLabel = "m",
-            secondLabel = "s",
+            hourLabel,
+            minuteLabel,
+            secondLabel,
             padWithNItems = 1,
             disableInfiniteScroll = false,
+            aggressivelyGetLatestDuration = false,
+            use12HourPicker = false,
+            amLabel = "am",
+            pmLabel = "pm",
             LinearGradient,
             pickerContainerProps,
             pickerGradientOverlayProps,
+            topPickerGradientOverlayProps,
+            bottomPickerGradientOverlayProps,
             styles: customStyles,
         },
         ref
@@ -129,6 +149,11 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                     options
                 );
             },
+            latestDuration: {
+                hours: hoursDurationScrollRef.current?.latestDuration,
+                minutes: minutesDurationScrollRef.current?.latestDuration,
+                seconds: secondsDurationScrollRef.current?.latestDuration,
+            },
         }));
 
         return (
@@ -140,14 +165,29 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                     <DurationScroll
                         ref={hoursDurationScrollRef}
                         numberOfItems={23}
-                        label={hourLabel}
+                        label={
+                            hourLabel ?? (!use12HourPicker ? "h" : undefined)
+                        }
                         initialValue={initialHours}
+                        allowFontScaling={allowFontScaling}
+                        aggressivelyGetLatestDuration={
+                            aggressivelyGetLatestDuration
+                        }
                         onDurationChange={setSelectedHours}
                         pickerGradientOverlayProps={pickerGradientOverlayProps}
+                        topPickerGradientOverlayProps={
+                            topPickerGradientOverlayProps
+                        }
+                        bottomPickerGradientOverlayProps={
+                            bottomPickerGradientOverlayProps
+                        }
                         disableInfiniteScroll={disableInfiniteScroll}
                         padWithNItems={checkedPadWithNItems}
                         limit={hourLimit}
                         LinearGradient={LinearGradient}
+                        is12HourPicker={use12HourPicker}
+                        amLabel={amLabel}
+                        pmLabel={pmLabel}
                         styles={styles}
                         testID="duration-scroll-hour"
                     />
@@ -156,11 +196,21 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                     <DurationScroll
                         ref={minutesDurationScrollRef}
                         numberOfItems={59}
-                        label={minuteLabel}
+                        label={minuteLabel ?? "m"}
                         initialValue={initialMinutes}
+                        allowFontScaling={allowFontScaling}
+                        aggressivelyGetLatestDuration={
+                            aggressivelyGetLatestDuration
+                        }
                         onDurationChange={setSelectedMinutes}
                         padNumbersWithZero
                         pickerGradientOverlayProps={pickerGradientOverlayProps}
+                        topPickerGradientOverlayProps={
+                            topPickerGradientOverlayProps
+                        }
+                        bottomPickerGradientOverlayProps={
+                            bottomPickerGradientOverlayProps
+                        }
                         disableInfiniteScroll={disableInfiniteScroll}
                         padWithNItems={checkedPadWithNItems}
                         limit={minuteLimit}
@@ -173,11 +223,21 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                     <DurationScroll
                         ref={secondsDurationScrollRef}
                         numberOfItems={59}
-                        label={secondLabel}
+                        label={secondLabel ?? "s"}
                         initialValue={initialSeconds}
+                        allowFontScaling={allowFontScaling}
+                        aggressivelyGetLatestDuration={
+                            aggressivelyGetLatestDuration
+                        }
                         onDurationChange={setSelectedSeconds}
                         padNumbersWithZero
                         pickerGradientOverlayProps={pickerGradientOverlayProps}
+                        topPickerGradientOverlayProps={
+                            topPickerGradientOverlayProps
+                        }
+                        bottomPickerGradientOverlayProps={
+                            bottomPickerGradientOverlayProps
+                        }
                         disableInfiniteScroll={disableInfiniteScroll}
                         padWithNItems={checkedPadWithNItems}
                         limit={secondLimit}

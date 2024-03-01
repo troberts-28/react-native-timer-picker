@@ -23,9 +23,9 @@ export const generateStyles = (
 ) =>
     StyleSheet.create({
         container: {
-            flex: 1,
             justifyContent: "center",
             alignItems: "center",
+            overflow: "hidden",
             ...customStyles?.container,
         },
         contentContainer: {

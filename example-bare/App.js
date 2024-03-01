@@ -1,72 +1,24 @@
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from "react";
+import React, { useMemo, useState } from "react";
 import {
-    LayoutAnimation,
-    NativeScrollEvent,
-    NativeSyntheticEvent,
-    Platform,
-    Pressable,
     ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
-    UIManager,
     View,
     useWindowDimensions,
 } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { LinearGradient } from "expo-linear-gradient";
 
-import { TimerPicker, TimerPickerModal } from "../src";
+import { TimerPicker, TimerPickerModal } from "react-native-timer-picker";
 
 import { formatTime } from "./utils/formatTime";
-
-if (Platform.OS === "android") {
-    UIManager.setLayoutAnimationEnabledExperimental?.(true);
-}
 
 export default function App() {
     const { width: screenWidth } = useWindowDimensions();
 
-    const scrollViewRef = useRef<ScrollView>(null);
-
-    const [currentPageIndex, setCurrentPageIndex] = useState(0);
     const [showPickerExample1, setShowPickerExample1] = useState(false);
     const [showPickerExample2, setShowPickerExample2] = useState(false);
-    const [alarmStringExample1, setAlarmStringExample1] = useState<
-        string | null
-    >(null);
-    const [alarmStringExample2, setAlarmStringExample2] = useState<
-        string | null
-    >(null);
-
-    useEffect(() => {
-        // when changing to landscape mode, scroll to the nearest page index
-        scrollViewRef.current?.scrollTo({
-            x: screenWidth * currentPageIndex,
-            animated: false,
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [screenWidth]);
-
-    const onMomentumScrollEnd = useCallback(
-        (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-            LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-            );
-            const { contentOffset } = event.nativeEvent;
-            const newPageIndex = Math.round(contentOffset.x / screenWidth) as
-                | 0
-                | 1;
-            setCurrentPageIndex(newPageIndex);
-        },
-        [screenWidth]
-    );
+    const [alarmStringExample1, setAlarmStringExample1] = useState(null);
+    const [alarmStringExample2, setAlarmStringExample2] = useState(null);
 
     const renderExample1 = useMemo(() => {
         return (
@@ -112,7 +64,6 @@ export default function App() {
                     modalTitle="Set Alarm"
                     onCancel={() => setShowPickerExample1(false)}
                     closeOnOverlayPress
-                    LinearGradient={LinearGradient}
                     styles={{
                         theme: "dark",
                     }}
@@ -168,8 +119,6 @@ export default function App() {
                     modalTitle="Set Alarm"
                     onCancel={() => setShowPickerExample2(false)}
                     closeOnOverlayPress
-                    use12HourPicker
-                    LinearGradient={LinearGradient}
                     styles={{
                         theme: "light",
                     }}
@@ -191,7 +140,6 @@ export default function App() {
                     hourLabel=":"
                     minuteLabel=":"
                     secondLabel=""
-                    LinearGradient={LinearGradient}
                     styles={{
                         theme: "dark",
                         backgroundColor: "#202020",
@@ -204,16 +152,6 @@ export default function App() {
                         },
                         pickerContainer: {
                             marginRight: 6,
-                        },
-                        pickerItemContainer: {
-                            width: 100
-                        },
-                        pickerLabelContainer: {
-                            right: -20,
-                            top: 0,
-                            bottom: 6,
-                            width: 40,
-                            alignItems: "center",
                         },
                     }}
                 />
@@ -234,7 +172,6 @@ export default function App() {
                     hideHours
                     minuteLabel="min"
                     secondLabel="sec"
-                    LinearGradient={LinearGradient}
                     styles={{
                         theme: "light",
                         pickerItem: {
@@ -256,87 +193,13 @@ export default function App() {
         );
     }, [screenWidth]);
 
-    const renderNavigationArrows = useMemo(() => {
-        return (
-            <>
-                {currentPageIndex !== 3 ? (
-                    <Pressable
-                        onPress={() => {
-                            LayoutAnimation.configureNext(
-                                LayoutAnimation.Presets.easeInEaseOut
-                            );
-                            setCurrentPageIndex((currentPageIndex) => {
-                                scrollViewRef.current?.scrollTo({
-                                    x: screenWidth * (currentPageIndex + 1),
-                                    animated: true,
-                                });
-                                return currentPageIndex + 1;
-                            });
-                        }}
-                        style={({ pressed }) => [
-                            styles.chevronPressable,
-                            { right: 8 },
-                            pressed && styles.chevronPressable._pressed,
-                        ]}>
-                        <Ionicons
-                            color={
-                                currentPageIndex % 2 !== 0
-                                    ? "#514242"
-                                    : "#F1F1F1"
-                            }
-                            name="chevron-forward"
-                            size={32}
-                        />
-                    </Pressable>
-                ) : null}
-                {currentPageIndex !== 0 ? (
-                    <Pressable
-                        onPress={() => {
-                            LayoutAnimation.configureNext(
-                                LayoutAnimation.Presets.easeInEaseOut
-                            );
-                            setCurrentPageIndex((currentPageIndex) => {
-                                scrollViewRef.current?.scrollTo({
-                                    x: screenWidth * (currentPageIndex - 1),
-                                    animated: true,
-                                });
-                                return currentPageIndex - 1;
-                            });
-                        }}
-                        style={({ pressed }) => [
-                            styles.chevronPressable,
-                            { left: 8 },
-                            pressed && styles.chevronPressable._pressed,
-                        ]}>
-                        <Ionicons
-                            color={
-                                currentPageIndex % 2 !== 0
-                                    ? "#514242"
-                                    : "#F1F1F1"
-                            }
-                            name="chevron-back"
-                            size={32}
-                        />
-                    </Pressable>
-                ) : null}
-            </>
-        );
-    }, [currentPageIndex, screenWidth]);
-
     return (
-        <>
-            <ScrollView
-                ref={scrollViewRef}
-                horizontal
-                pagingEnabled
-                onMomentumScrollEnd={onMomentumScrollEnd}>
-                {renderExample1}
-                {renderExample2}
-                {renderExample3}
-                {renderExample4}
-            </ScrollView>
-            {renderNavigationArrows}
-        </>
+        <ScrollView horizontal pagingEnabled>
+            {renderExample1}
+            {renderExample2}
+            {renderExample3}
+            {renderExample4}
+        </ScrollView>
     );
 }
 
@@ -391,16 +254,5 @@ const styles = StyleSheet.create({
     buttonLight: { borderColor: "#8C8C8C", color: "#8C8C8C" },
     buttonContainer: {
         marginTop: 30,
-    },
-    chevronPressable: {
-        justifyContent: "center",
-        alignItems: "center",
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        padding: 8,
-        _pressed: {
-            opacity: 0.7,
-        },
     },
 });
