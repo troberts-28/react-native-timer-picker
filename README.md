@@ -7,7 +7,7 @@
 
 A simple, flexible, performant duration picker component for React Native apps 🔥
 
-Great for timers, alarms and duration inputs ⏰🕰️⏳
+Great for timers, alarms and duration inputs.
 
 Works with Expo and bare React Native apps.
 
