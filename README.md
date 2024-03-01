@@ -11,26 +11,26 @@ Great for timers, alarms and duration inputs ⏰🕰️⏳
 
 Works with Expo and bare React Native apps.
 
-- [Demos 📱](#demos-)
-- [Peer Dependencies 👶](#peer-dependencies-)
-- [Installation 🚀](#installation-)
-- [Examples 😎](#examples-)
-    - [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
-    - [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
-    - [Timer Picker with Customisation (Dark Mode) 🌒](#timer-picker-with-customisation-dark-mode-)
-    - [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
-- [Props 💅](#props-)
-    - [TimerPicker ⏲️](#timerpicker-️)
-        - [Custom Styles 👗](#custom-styles-)
-    - [TimerPickerModal ⏰](#timerpickermodal-)
-        - [Custom Styles 👕](#custom-styles--1)
-- [Methods 🔄](#methods-)
-    - [TimerPicker](#timerpicker)
-    - [TimerPickerModal](#timerpickermodal)
-- [Contributing 🧑‍🤝‍🧑](#contributing-)
-    - [Dev Setup](#dev-setup)
-    - [GitHub Guidelines](#github-guidelines)
-- [License 📝](#license-)
+-   [Demos 📱](#demos-)
+-   [Peer Dependencies 👶](#peer-dependencies-)
+-   [Installation 🚀](#installation-)
+-   [Examples 😎](#examples-)
+    -   [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
+    -   [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
+    -   [Timer Picker with Customisation (Dark Mode) 🌒](#timer-picker-with-customisation-dark-mode-)
+    -   [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
+-   [Props 💅](#props-)
+    -   [TimerPicker ⏲️](#timerpicker-️)
+        -   [Custom Styles 👗](#custom-styles-)
+    -   [TimerPickerModal ⏰](#timerpickermodal-)
+        -   [Custom Styles 👕](#custom-styles--1)
+-   [Methods 🔄](#methods-)
+    -   [TimerPicker](#timerpicker)
+    -   [TimerPickerModal](#timerpickermodal)
+-   [Contributing 🧑‍🤝‍🧑](#contributing-)
+    -   [Dev Setup](#dev-setup)
+    -   [GitHub Guidelines](#github-guidelines)
+-   [License 📝](#license-)
 
 <br>
 
@@ -259,6 +259,16 @@ return (
                 },
                 pickerContainer: {
                     marginRight: 6,
+                },
+                pickerItemContainer: {
+                    width: 100
+                },
+                pickerLabelContainer: {
+                    right: -20,
+                    top: 0,
+                    bottom: 6,
+                    width: 40,
+                    alignItems: "center",
                 },
             }}
         />

@@ -205,6 +205,16 @@ export default function App() {
                         pickerContainer: {
                             marginRight: 6,
                         },
+                        pickerItemContainer: {
+                            width: 100
+                        },
+                        pickerLabelContainer: {
+                            right: -20,
+                            top: 0,
+                            bottom: 6,
+                            width: 40,
+                            alignItems: "center",
+                        },
                     }}
                 />
             </View>
