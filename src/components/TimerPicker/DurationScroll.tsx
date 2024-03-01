@@ -339,7 +339,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 style={{
                     height:
                         styles.pickerItemContainer.height * numberOfItemsToShow,
-                    overflow: "hidden",
+                    overflow: "visible",
                 }}>
                 <FlatList
                     ref={flatListRef}
