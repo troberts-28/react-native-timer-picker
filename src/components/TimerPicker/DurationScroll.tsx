@@ -339,11 +339,15 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             <View
                 testID={testID}
                 pointerEvents={isDisabled ? "none" : undefined}
-                style={{
-                    height:
-                        styles.pickerItemContainer.height * numberOfItemsToShow,
-                    overflow: "visible",
-                }}>
+                style={[
+                    {
+                        height:
+                            styles.pickerItemContainer.height *
+                            numberOfItemsToShow,
+                        overflow: "visible",
+                    },
+                    isDisabled && styles.disabledPickerContainer,
+                ]}>
                 <FlatList
                     ref={flatListRef}
                     data={data}
