@@ -12,6 +12,7 @@ export interface CustomTimerPickerStyles {
     pickerAmPmLabel?: any;
     pickerItemContainer?: any;
     pickerItem?: any;
+    disabledPickerContainer?: any;
     disabledPickerItem?: any;
     pickerGradientOverlay?: any;
 }
@@ -100,6 +101,10 @@ export const generateStyles = (
             ...customStyles?.text,
             ...customStyles?.pickerLabel,
             ...customStyles?.pickerAmPmLabel,
+        },
+        disabledPickerContainer: {
+            opacity: 0.4,
+            ...customStyles?.disabledPickerContainer,
         },
         disabledPickerItem: {
             opacity: 0.2,

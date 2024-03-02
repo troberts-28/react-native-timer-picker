@@ -338,6 +338,9 @@ return (
 |            hideHours             | Hide the hours picker                                                           |                                                                                             Boolean                                                                                             |  false  |  false   |
 |           hideMinutes            | Hide the minutes picker                                                         |                                                                                             Boolean                                                                                             |  false  |  false   |
 |           hideSeconds            | Hide the seconds picker                                                         |                                                                                             Boolean                                                                                             |  false  |  false   |
+|      hoursPickerIsDisabled       | Disable the hours picker picker                                                 |                                                                                             Boolean                                                                                             |  false  |  false   |
+|     minutesPickerIsDisabled      | Disable the minutes picker picker                                               |                                                                                             Boolean                                                                                             |  false  |  false   |
+|     secondsPickerIsDisabled      | Disable the seconds picker picker                                               |                                                                                             Boolean                                                                                             |  false  |  false   |
 |            hourLimit             | Limit on the hours it is possible to select                                     |                                                                                 { max?: Number, min?: Number }                                                                                  |    -    |  false   |
 |           minuteLimit            | Limit on the minutes it is possible to select                                   |                                                                                 { max?: Number, min?: Number }                                                                                  |    -    |  false   |
 |           secondLimit            | Limit on the seconds it is possible to select                                   |                                                                                 { max?: Number, min?: Number }                                                                                  |    -    |  false   |
@@ -362,20 +365,21 @@ return (
 
 The following custom styles can be supplied to re-style the component in any way. Various styles are applied by default - you can take a look at these [here](src/components/TimerPicker/TimerPicker.styles.ts).
 
-|      Style Prop       | Description                                  |       Type        |
-| :-------------------: | :------------------------------------------- | :---------------: |
-|         theme         | Theme of the component                       | "light" \| "dark" |
-|    backgroundColor    | Main background color                        |      string       |
-|         text          | Base text style                              |     TextStyle     |
-|    pickerContainer    | Main container for the picker                |     ViewStyle     |
-| pickerLabelContainer  | Container for the picker's labels            |     ViewStyle     |
-|      pickerLabel      | Style for the picker's labels                |     TextStyle     |
-|  pickerAmPmContainer  | Style for the picker's labels                |     ViewStyle     |
-|    pickerAmPmLabel    | Style for the picker's labels                |     TextStyle     |
-|  pickerItemContainer  | Container for each number in the picker      |     ViewStyle     |
-|      pickerItem       | Style for each individual picker number      |     TextStyle     |
-|  disabledPickerItem   | Style for any numbers outside any set limits |     TextStyle     |
-| pickerGradientOverlay | Style for the gradient overlay (fade out)    |     ViewStyle     |
+|       Style Prop        | Description                                  |       Type        |
+| :---------------------: | :------------------------------------------- | :---------------: |
+|          theme          | Theme of the component                       | "light" \| "dark" |
+|     backgroundColor     | Main background color                        |      string       |
+|          text           | Base text style                              |     TextStyle     |
+|     pickerContainer     | Main container for the picker                |     ViewStyle     |
+|  pickerLabelContainer   | Container for the picker's labels            |     ViewStyle     |
+|       pickerLabel       | Style for the picker's labels                |     TextStyle     |
+|   pickerAmPmContainer   | Style for the picker's labels                |     ViewStyle     |
+|     pickerAmPmLabel     | Style for the picker's labels                |     TextStyle     |
+|   pickerItemContainer   | Container for each number in the picker      |     ViewStyle     |
+|       pickerItem        | Style for each individual picker number      |     TextStyle     |
+|   disabledPickerItem    | Style for any numbers outside any set limits |     TextStyle     |
+| disabledPickerContainer | Style for disabled pickers                   |     ViewStyle     |
+|  pickerGradientOverlay  | Style for the gradient overlay (fade out)    |     ViewStyle     |
 
 ### TimerPickerModal ⏰
 
