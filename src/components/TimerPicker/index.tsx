@@ -48,9 +48,9 @@ export interface TimerPickerProps {
     hideHours?: boolean;
     hideMinutes?: boolean;
     hideSeconds?: boolean;
-    hourPickerIsDisabled?: boolean;
-    minutePickerIsDisabled?: boolean;
-    secondPickerIsDisabled?: boolean;
+    hoursPickerIsDisabled?: boolean;
+    minutesPickerIsDisabled?: boolean;
+    secondsPickerIsDisabled?: boolean;
     hourLimit?: LimitType;
     minuteLimit?: LimitType;
     secondLimit?: LimitType;
@@ -79,9 +79,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,
-            hourPickerIsDisabled = false,
-            minutePickerIsDisabled = false,
-            secondPickerIsDisabled = false,
+            hoursPickerIsDisabled = false,
+            minutesPickerIsDisabled = false,
+            secondsPickerIsDisabled = false,
             hourLimit,
             minuteLimit,
             secondLimit,
@@ -174,7 +174,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         label={
                             hourLabel ?? (!use12HourPicker ? "h" : undefined)
                         }
-                        isDisabled={hourPickerIsDisabled}
+                        isDisabled={hoursPickerIsDisabled}
                         initialValue={initialHours}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
@@ -204,7 +204,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         ref={minutesDurationScrollRef}
                         numberOfItems={59}
                         label={minuteLabel ?? "m"}
-                        isDisabled={minutePickerIsDisabled}
+                        isDisabled={minutesPickerIsDisabled}
                         initialValue={initialMinutes}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
@@ -232,7 +232,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         ref={secondsDurationScrollRef}
                         numberOfItems={59}
                         label={secondLabel ?? "s"}
-                        isDisabled={secondPickerIsDisabled}
+                        isDisabled={secondsPickerIsDisabled}
                         initialValue={initialSeconds}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
