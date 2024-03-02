@@ -76,6 +76,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,
+            hourPickerIsDisabled = false,
+            minutePickerIsDisabled = false,
+            secondPickerIsDisabled = false,
             hourLimit,
             minuteLimit,
             secondLimit,
@@ -221,6 +224,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             hideHours={hideHours}
                             hideMinutes={hideMinutes}
                             hideSeconds={hideSeconds}
+                            hourPickerIsDisabled={hourPickerIsDisabled}
+                            minutePickerIsDisabled={minutePickerIsDisabled}
+                            secondPickerIsDisabled={secondPickerIsDisabled}
                             hourLimit={hourLimit}
                             minuteLimit={minuteLimit}
                             secondLimit={secondLimit}

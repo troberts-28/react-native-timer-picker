@@ -48,6 +48,9 @@ export interface TimerPickerProps {
     hideHours?: boolean;
     hideMinutes?: boolean;
     hideSeconds?: boolean;
+    hourPickerIsDisabled?: boolean;
+    minutePickerIsDisabled?: boolean;
+    secondPickerIsDisabled?: boolean;
     hourLimit?: LimitType;
     minuteLimit?: LimitType;
     secondLimit?: LimitType;
@@ -76,6 +79,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,
+            hourPickerIsDisabled = false,
+            minutePickerIsDisabled = false,
+            secondPickerIsDisabled = false,
             hourLimit,
             minuteLimit,
             secondLimit,
@@ -168,6 +174,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         label={
                             hourLabel ?? (!use12HourPicker ? "h" : undefined)
                         }
+                        isDisabled={hourPickerIsDisabled}
                         initialValue={initialHours}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
@@ -197,6 +204,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         ref={minutesDurationScrollRef}
                         numberOfItems={59}
                         label={minuteLabel ?? "m"}
+                        isDisabled={minutePickerIsDisabled}
                         initialValue={initialMinutes}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
@@ -224,6 +232,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         ref={secondsDurationScrollRef}
                         numberOfItems={59}
                         label={secondLabel ?? "s"}
+                        isDisabled={secondPickerIsDisabled}
                         initialValue={initialSeconds}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
