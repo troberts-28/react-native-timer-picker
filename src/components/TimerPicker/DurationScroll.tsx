@@ -55,6 +55,7 @@ interface DurationScrollProps {
     onDurationChange: (duration: number) => void;
     padNumbersWithZero?: boolean;
     disableInfiniteScroll?: boolean;
+    isDisabled?: boolean;
     limit?: LimitType;
     aggressivelyGetLatestDuration: boolean;
     is12HourPicker?: boolean;
@@ -83,6 +84,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             padNumbersWithZero = false,
             disableInfiniteScroll = false,
             limit,
+            isDisabled,
             aggressivelyGetLatestDuration,
             allowFontScaling = false,
             is12HourPicker,
@@ -336,11 +338,16 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         return (
             <View
                 testID={testID}
-                style={{
-                    height:
-                        styles.pickerItemContainer.height * numberOfItemsToShow,
-                    overflow: "visible",
-                }}>
+                pointerEvents={isDisabled ? "none" : undefined}
+                style={[
+                    {
+                        height:
+                            styles.pickerItemContainer.height *
+                            numberOfItemsToShow,
+                        overflow: "visible",
+                    },
+                    isDisabled && styles.disabledPickerContainer,
+                ]}>
                 <FlatList
                     ref={flatListRef}
                     data={data}
@@ -353,6 +360,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     decelerationRate={0.88}
                     scrollEventThrottle={16}
                     snapToAlignment="start"
+                    scrollEnabled={!isDisabled}
                     // used in place of snapToOffset due to bug on Android
                     snapToOffsets={[...Array(data.length)].map(
                         (_, i) => i * styles.pickerItemContainer.height
