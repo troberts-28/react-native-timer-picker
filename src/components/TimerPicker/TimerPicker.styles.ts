@@ -5,12 +5,12 @@ export interface CustomTimerPickerStyles {
     theme?: "light" | "dark";
     backgroundColor?: string;
     text?: TextStyle;
-    pickerContainer?: ViewStyle;
+    pickerContainer?: ViewStyle & { backgroundColor?: string };
     pickerLabelContainer?: ViewStyle;
     pickerLabel?: TextStyle;
     pickerAmPmContainer?: ViewStyle;
     pickerAmPmLabel?: TextStyle;
-    pickerItemContainer?: ViewStyle;
+    pickerItemContainer?: ViewStyle & { height?: number };
     pickerItem?: TextStyle;
     disabledPickerContainer?: ViewStyle;
     disabledPickerItem?: TextStyle;
