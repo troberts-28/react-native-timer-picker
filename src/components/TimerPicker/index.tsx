@@ -38,9 +38,11 @@ export interface TimerPickerProps {
         minutes: number;
         seconds: number;
     }) => void;
-    initialHours?: number;
-    initialMinutes?: number;
-    initialSeconds?: number;
+    initialValue?: {
+        hours?: number;
+        minutes?: number;
+        seconds?: number;
+    };
     aggressivelyGetLatestDuration?: boolean;
     use12HourPicker?: boolean;
     amLabel?: string;
@@ -73,9 +75,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
         {
             allowFontScaling = false,
             onDurationChange,
-            initialHours = 0,
-            initialMinutes = 0,
-            initialSeconds = 0,
+            initialValue,
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,
@@ -115,9 +115,21 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             [checkedPadWithNItems, customStyles]
         );
 
-        const [selectedHours, setSelectedHours] = useState(initialHours);
-        const [selectedMinutes, setSelectedMinutes] = useState(initialMinutes);
-        const [selectedSeconds, setSelectedSeconds] = useState(initialSeconds);
+        const safeInitialValue = {
+            hours: initialValue?.hours ?? 0,
+            minutes: initialValue?.minutes ?? 0,
+            seconds: initialValue?.seconds ?? 0,
+        };
+
+        const [selectedHours, setSelectedHours] = useState(
+            safeInitialValue.hours
+        );
+        const [selectedMinutes, setSelectedMinutes] = useState(
+            safeInitialValue.minutes
+        );
+        const [selectedSeconds, setSelectedSeconds] = useState(
+            safeInitialValue.seconds
+        );
 
         useEffect(() => {
             onDurationChange?.({
@@ -134,9 +146,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
 
         useImperativeHandle(ref, () => ({
             reset: (options) => {
-                setSelectedHours(initialHours);
-                setSelectedMinutes(initialMinutes);
-                setSelectedSeconds(initialSeconds);
+                setSelectedHours(safeInitialValue.hours);
+                setSelectedMinutes(safeInitialValue.minutes);
+                setSelectedSeconds(safeInitialValue.seconds);
                 hoursDurationScrollRef.current?.reset(options);
                 minutesDurationScrollRef.current?.reset(options);
                 secondsDurationScrollRef.current?.reset(options);
@@ -175,7 +187,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             hourLabel ?? (!use12HourPicker ? "h" : undefined)
                         }
                         isDisabled={hoursPickerIsDisabled}
-                        initialValue={initialHours}
+                        initialValue={safeInitialValue.hours}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
@@ -205,7 +217,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         numberOfItems={59}
                         label={minuteLabel ?? "m"}
                         isDisabled={minutesPickerIsDisabled}
-                        initialValue={initialMinutes}
+                        initialValue={safeInitialValue.minutes}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
@@ -233,7 +245,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         numberOfItems={59}
                         label={secondLabel ?? "s"}
                         isDisabled={secondsPickerIsDisabled}
-                        initialValue={initialSeconds}
+                        initialValue={safeInitialValue.seconds}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
