@@ -30,6 +30,7 @@ Works with Expo and bare React Native apps.
 -   [Contributing 🧑‍🤝‍🧑](#contributing-)
     -   [Dev Setup](#dev-setup)
     -   [GitHub Guidelines](#github-guidelines)
+-   [Limitations ⚠](#limitations-)
 -   [License 📝](#license-)
 
 <br>
@@ -481,6 +482,12 @@ There are two permenant branches: `main` and `develop`. You should never work di
 1. Create a new branch off `develop` for your work using the pattern `feature/{DESCRIPTION}`.
 2. When you think your work is ready for review, submit a PR from your branch back to `develop`.
 3. Once the PR is resolved, your work will be merged into `develop`, and will be included in the next major/minor release.
+
+<br>
+
+## Limitations ⚠
+
+Nesting the `TimerPicker` component inside a vertical ScrollView is not supported. React Native will throw an error and the picker will not be scrollable. The modal component works fine in this scenario however.
 
 <br>
 
