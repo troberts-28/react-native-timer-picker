@@ -369,16 +369,18 @@ The following custom styles can be supplied to re-style the component in any way
 |          theme          | Theme of the component                       | "light" \| "dark" |
 |     backgroundColor     | Main background color                        |      string       |
 |          text           | Base text style                              |     TextStyle     |
-|     pickerContainer     | Main container for the picker                |     ViewStyle     |
+|     pickerContainer     | Main container for the picker                |     ViewStyle & { backgroundColor?: string }     |
 |  pickerLabelContainer   | Container for the picker's labels            |     ViewStyle     |
 |       pickerLabel       | Style for the picker's labels                |     TextStyle     |
 |   pickerAmPmContainer   | Style for the picker's labels                |     ViewStyle     |
 |     pickerAmPmLabel     | Style for the picker's labels                |     TextStyle     |
-|   pickerItemContainer   | Container for each number in the picker      |     ViewStyle     |
+|   pickerItemContainer   | Container for each number in the picker      |     ViewStyle & { height?: number }     |
 |       pickerItem        | Style for each individual picker number      |     TextStyle     |
 |   disabledPickerItem    | Style for any numbers outside any set limits |     TextStyle     |
 | disabledPickerContainer | Style for disabled pickers                   |     ViewStyle     |
 |  pickerGradientOverlay  | Style for the gradient overlay (fade out)    |     ViewStyle     |
+
+Note the minor limitations to the allowed styles for `pickerContainer` and `pickerItemContainer`. These are made because these styles are used for internal calculations and all possible `backgroundColor`/`height` types are not supported.
 
 ### TimerPickerModal ⏰
 
