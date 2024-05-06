@@ -70,9 +70,11 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             onCancel,
             onDurationChange,
             closeOnOverlayPress,
-            initialHours = 0,
-            initialMinutes = 0,
-            initialSeconds = 0,
+            initialValue = {
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+            },
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,
@@ -114,33 +116,21 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
 
         const timerPickerRef = useRef<TimerPickerRef>(null);
 
-        const [selectedDuration, setSelectedDuration] = useState({
-            hours: initialHours,
-            minutes: initialMinutes,
-            seconds: initialSeconds,
-        });
-        const [confirmedDuration, setConfirmedDuration] = useState({
-            hours: initialHours,
-            minutes: initialMinutes,
-            seconds: initialSeconds,
-        });
+        const [selectedDuration, setSelectedDuration] = useState(initialValue);
+        const [confirmedDuration, setConfirmedDuration] =
+            useState(initialValue);
 
         const reset = (options?: { animated?: boolean }) => {
-            const initialDuration = {
-                hours: initialHours,
-                minutes: initialMinutes,
-                seconds: initialSeconds,
-            };
-            setSelectedDuration(initialDuration);
-            setConfirmedDuration(initialDuration);
+            setSelectedDuration(initialValue);
+            setConfirmedDuration(initialValue);
             timerPickerRef.current?.reset(options);
         };
 
-        // reset state if the initial times change
+        // reset state if the initial value changes
         useEffect(() => {
             reset();
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [initialHours, initialMinutes, initialSeconds]);
+        }, [initialValue.hours, initialValue.minutes, initialValue.seconds]);
 
         const hideModalHandler = () => {
             setSelectedDuration({
@@ -217,9 +207,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                         <TimerPicker
                             ref={timerPickerRef}
                             onDurationChange={durationChangeHandler}
-                            initialHours={confirmedDuration.hours}
-                            initialMinutes={confirmedDuration.minutes}
-                            initialSeconds={confirmedDuration.seconds}
+                            initialValue={confirmedDuration}
                             aggressivelyGetLatestDuration={true}
                             hideHours={hideHours}
                             hideMinutes={hideMinutes}
