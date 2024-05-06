@@ -39,9 +39,9 @@ export interface TimerPickerProps {
         seconds: number;
     }) => void;
     initialValue?: {
-        hours: number;
-        minutes: number;
-        seconds: number;
+        hours?: number;
+        minutes?: number;
+        seconds?: number;
     };
     aggressivelyGetLatestDuration?: boolean;
     use12HourPicker?: boolean;
@@ -75,11 +75,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
         {
             allowFontScaling = false,
             onDurationChange,
-            initialValue = {
-                hours: 0,
-                minutes: 0,
-                seconds: 0,
-            },
+            initialValue,
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,
@@ -119,12 +115,20 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             [checkedPadWithNItems, customStyles]
         );
 
-        const [selectedHours, setSelectedHours] = useState(initialValue.hours);
+        const safeInitialValue = {
+            hours: initialValue?.hours ?? 0,
+            minutes: initialValue?.minutes ?? 0,
+            seconds: initialValue?.seconds ?? 0,
+        };
+
+        const [selectedHours, setSelectedHours] = useState(
+            safeInitialValue.hours
+        );
         const [selectedMinutes, setSelectedMinutes] = useState(
-            initialValue.minutes
+            safeInitialValue.minutes
         );
         const [selectedSeconds, setSelectedSeconds] = useState(
-            initialValue.seconds
+            safeInitialValue.seconds
         );
 
         useEffect(() => {
@@ -142,9 +146,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
 
         useImperativeHandle(ref, () => ({
             reset: (options) => {
-                setSelectedHours(initialValue.hours);
-                setSelectedMinutes(initialValue.minutes);
-                setSelectedSeconds(initialValue.seconds);
+                setSelectedHours(safeInitialValue.hours);
+                setSelectedMinutes(safeInitialValue.minutes);
+                setSelectedSeconds(safeInitialValue.seconds);
                 hoursDurationScrollRef.current?.reset(options);
                 minutesDurationScrollRef.current?.reset(options);
                 secondsDurationScrollRef.current?.reset(options);
@@ -183,7 +187,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             hourLabel ?? (!use12HourPicker ? "h" : undefined)
                         }
                         isDisabled={hoursPickerIsDisabled}
-                        initialValue={initialValue.hours}
+                        initialValue={safeInitialValue.hours}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
@@ -213,7 +217,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         numberOfItems={59}
                         label={minuteLabel ?? "m"}
                         isDisabled={minutesPickerIsDisabled}
-                        initialValue={initialValue.minutes}
+                        initialValue={safeInitialValue.minutes}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
@@ -241,7 +245,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         numberOfItems={59}
                         label={secondLabel ?? "s"}
                         isDisabled={secondsPickerIsDisabled}
-                        initialValue={initialValue.seconds}
+                        initialValue={safeInitialValue.seconds}
                         allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
