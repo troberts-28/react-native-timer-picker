@@ -30,6 +30,7 @@ Works with Expo and bare React Native apps.
 -   [Contributing 🧑‍🤝‍🧑](#contributing-)
     -   [Dev Setup](#dev-setup)
     -   [GitHub Guidelines](#github-guidelines)
+-   [Limitations ⚠](#limitations-)
 -   [License 📝](#license-)
 
 <br>
@@ -368,16 +369,18 @@ The following custom styles can be supplied to re-style the component in any way
 |          theme          | Theme of the component                       | "light" \| "dark" |
 |     backgroundColor     | Main background color                        |      string       |
 |          text           | Base text style                              |     TextStyle     |
-|     pickerContainer     | Main container for the picker                |     ViewStyle     |
+|     pickerContainer     | Main container for the picker                |     ViewStyle & { backgroundColor?: string }     |
 |  pickerLabelContainer   | Container for the picker's labels            |     ViewStyle     |
 |       pickerLabel       | Style for the picker's labels                |     TextStyle     |
 |   pickerAmPmContainer   | Style for the picker's labels                |     ViewStyle     |
 |     pickerAmPmLabel     | Style for the picker's labels                |     TextStyle     |
-|   pickerItemContainer   | Container for each number in the picker      |     ViewStyle     |
+|   pickerItemContainer   | Container for each number in the picker      |     ViewStyle & { height?: number }     |
 |       pickerItem        | Style for each individual picker number      |     TextStyle     |
 |   disabledPickerItem    | Style for any numbers outside any set limits |     TextStyle     |
 | disabledPickerContainer | Style for disabled pickers                   |     ViewStyle     |
 |  pickerGradientOverlay  | Style for the gradient overlay (fade out)    |     ViewStyle     |
+
+Note the minor limitations to the allowed styles for `pickerContainer` and `pickerItemContainer`. These are made because these styles are used for internal calculations and all possible `backgroundColor`/`height` types are not supported.
 
 ### TimerPickerModal ⏰
 
@@ -481,6 +484,12 @@ There are two permenant branches: `main` and `develop`. You should never work di
 1. Create a new branch off `develop` for your work using the pattern `feature/{DESCRIPTION}`.
 2. When you think your work is ready for review, submit a PR from your branch back to `develop`.
 3. Once the PR is resolved, your work will be merged into `develop`, and will be included in the next major/minor release.
+
+<br>
+
+## Limitations ⚠
+
+Nesting the `TimerPicker` component inside a vertical ScrollView is not supported. React Native will throw an error and the picker will not be scrollable. The modal component works fine in this scenario however.
 
 <br>
 
