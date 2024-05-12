@@ -176,6 +176,7 @@ export default function App() {
                     LinearGradient={LinearGradient}
                     Haptics={Haptics}
                     Audio={Audio}
+                    clickSoundAsset={require("./assets/custom_click.mp3")}
                     styles={{
                         theme: "light",
                     }}

@@ -49,6 +49,14 @@ export type LimitType = {
     min?: number;
 };
 
+export type SoundAssetType =
+    | number
+    | {
+          uri: string;
+          overrideFileExtensionAndroid?: string;
+          headers?: Record<string, string>;
+      };
+
 interface DurationScrollProps {
     allowFontScaling?: boolean;
     numberOfItems: number;
@@ -73,6 +81,7 @@ interface DurationScrollProps {
     Haptics?: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Audio?: any;
+    clickSoundAsset?: SoundAssetType;
     testID?: string;
     styles: ReturnType<typeof generateStyles>;
 }
@@ -103,6 +112,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             LinearGradient,
             Haptics,
             Audio,
+            clickSoundAsset,
             testID,
             styles,
         },
@@ -153,8 +163,8 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             const loadSound = async () => {
                 if (Audio) {
                     const { sound } = await Audio.Sound.createAsync(
-                        // eslint-disable-next-line @typescript-eslint/no-var-requires
-                        require("../../assets/select_click.mp3"),
+                        clickSoundAsset ??
+                            require("../../assets/select_click.mp3"),
                         { shouldPlay: false }
                     );
                     setClickSound(sound);

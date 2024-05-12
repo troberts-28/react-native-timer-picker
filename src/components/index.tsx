@@ -96,6 +96,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             LinearGradient,
             Haptics,
             Audio,
+            clickSoundAsset,
             modalProps,
             containerProps,
             contentContainerProps,
@@ -239,6 +240,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             LinearGradient={LinearGradient}
                             Haptics={Haptics}
                             Audio={Audio}
+                            clickSoundAsset={clickSoundAsset}
                             pickerContainerProps={pickerContainerProps}
                             pickerGradientOverlayProps={
                                 pickerGradientOverlayProps
