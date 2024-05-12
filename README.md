@@ -9,10 +9,15 @@ A simple, flexible, performant duration picker component for React Native apps �
 
 Great for timers, alarms and duration inputs ⏰🕰️⏳
 
-Works with Expo and bare React Native apps.
+Works with Expo and bare React Native apps ✅
+
+Includes iOS-style haptic and audio feedback 🍏
 
 -   [Demos 📱](#demos-)
 -   [Peer Dependencies 👶](#peer-dependencies-)
+    -   [Linear Gradient](#linear-gradient)
+    -   [Haptic Feedback](#haptic-feedback)
+    -   [Audio Feedback (Click Sound)](#audio-feedback-click-sound)
 -   [Installation 🚀](#installation-)
 -   [Examples 😎](#examples-)
     -   [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
@@ -54,12 +59,30 @@ Works with Expo and bare React Native apps.
 
 This component will work in your React Native Project **without any peer dependencies**.
 
+### Linear Gradient
+
 If you want the numbers to fade in/out at the top and bottom of the picker, you will need to install either:
 
 -   [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient) (if using Expo)
 -   [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient) (if using in a bare React Native project)
 
 **To enable the linear gradient, you need to supply the component as a prop to either TimerPickerModal or TimerPicker.**
+
+### Haptic Feedback
+
+This is currently only supported on Expo with the [expo-haptics](https://www.npmjs.com/package/expo-haptics) module:
+
+`import * as Haptics from "expo-haptics";`
+
+**To enable the haptic feedback, you need to supply the imported `Haptics` as a prop to either TimerPickerModal or TimerPicker.**
+
+### Audio Feedback (Click Sound)
+
+This is currently only supported on Expo with the [expo-av](https://www.npmjs.com/package/expo-av) module:
+
+`import { Audio } from "expo-av";`
+
+**To enable the audio feedback, you need to supply the imported `Audio` as a prop to either TimerPickerModal or TimerPicker.**
 
 <br>
 
@@ -88,6 +111,8 @@ yarn add react-native-timer-picker
 ```jsx
 import { TimerPickerModal } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
+import { Audio } from "expo-av"; // for audio feedback (click sound as you scroll)
+import * as Haptics from "expo-haptics"; // for haptic feedback
 
 ....
 const [showPicker, setShowPicker] = useState(false);
@@ -142,7 +167,9 @@ return (
             modalTitle="Set Alarm"
             onCancel={() => setShowPicker(false)}
             closeOnOverlayPress
+            Audio={Audio}
             LinearGradient={LinearGradient}
+            Haptics={Haptics}
             styles={{
                 theme: "dark",
             }}
@@ -162,6 +189,8 @@ return (
 ```jsx
 import { TimerPickerModal } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
+import { Audio } from "expo-av"; // for audio feedback (click sound as you scroll)
+import * as Haptics from "expo-haptics"; // for haptic feedback
 
 ....
 const [showPicker, setShowPicker] = useState(false);
@@ -216,7 +245,10 @@ return (
             onCancel={() => setShowPicker(false)}
             closeOnOverlayPress
             use12HourPicker
+            Audio={Audio}
+            clickSoundAsset={require("./assets/custom_click.mp3")}
             LinearGradient={LinearGradient}
+            Haptics={Haptics}
             styles={{
                 theme: "light",
             }}
@@ -233,6 +265,8 @@ return (
 ```jsx
 import { TimerPicker } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
+import { Audio } from "expo-av"; // for audio feedback (click sound as you scroll)
+import * as Haptics from "expo-haptics"; // for haptic feedback
 
 ....
 const [showPicker, setShowPicker] = useState(false);
@@ -247,7 +281,9 @@ return (
             hourLabel=":"
             minuteLabel=":"
             secondLabel=""
+            Audio={Audio}
             LinearGradient={LinearGradient}
+            Haptics={Haptics}
             styles={{
                 theme: "dark",
                 backgroundColor: "#202020",
@@ -285,6 +321,8 @@ return (
 ```jsx
 import { TimerPicker } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
+import { Audio } from "expo-av"; // for audio feedback (click sound as you scroll)
+import * as Haptics from "expo-haptics"; // for haptic feedback
 
 ....
 const [showPicker, setShowPicker] = useState(false);
@@ -299,7 +337,9 @@ return (
             hideHours
             minuteLabel="min"
             secondLabel="sec"
+            Audio={Audio}
             LinearGradient={LinearGradient}
+            Haptics={Haptics}
             styles={{
                 theme: "light",
                 pickerItem: {
@@ -333,16 +373,16 @@ return (
 |               Prop               | Description                                                                     |                                                                                              Type                                                                                               | Default | Required |
 | :------------------------------: | :------------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-----: | :------: |
 |         onDurationChange         | Callback when the duration changes                                              |                                                            `(duration: { hours: number, minutes: number, seconds: number }) => void`                                                            |    -    |  false   |
-|           initialValue           | Initial value for the picker                                                         |                                                                                             `{ hours?: number, minutes?: number, seconds?: number }`                                                                                              |    -    |  false   |
+|           initialValue           | Initial value for the picker                                                    |                                                                    `{ hours?: number, minutes?: number, seconds?: number }`                                                                     |    -    |  false   |
 |            hideHours             | Hide the hours picker                                                           |                                                                                             Boolean                                                                                             |  false  |  false   |
 |           hideMinutes            | Hide the minutes picker                                                         |                                                                                             Boolean                                                                                             |  false  |  false   |
 |           hideSeconds            | Hide the seconds picker                                                         |                                                                                             Boolean                                                                                             |  false  |  false   |
 |      hoursPickerIsDisabled       | Disable the hours picker picker                                                 |                                                                                             Boolean                                                                                             |  false  |  false   |
 |     minutesPickerIsDisabled      | Disable the minutes picker picker                                               |                                                                                             Boolean                                                                                             |  false  |  false   |
 |     secondsPickerIsDisabled      | Disable the seconds picker picker                                               |                                                                                             Boolean                                                                                             |  false  |  false   |
-|            hourLimit             | Limit on the hours it is possible to select                                     |                                                                                 `{ max?: Number, min?: Number }`                                                                                  |    -    |  false   |
-|           minuteLimit            | Limit on the minutes it is possible to select                                   |                                                                                 `{ max?: Number, min?: Number }`                                                                                  |    -    |  false   |
-|           secondLimit            | Limit on the seconds it is possible to select                                   |                                                                                 `{ max?: Number, min?: Number }`                                                                                  |    -    |  false   |
+|            hourLimit             | Limit on the hours it is possible to select                                     |                                                                                `{ max?: Number, min?: Number }`                                                                                 |    -    |  false   |
+|           minuteLimit            | Limit on the minutes it is possible to select                                   |                                                                                `{ max?: Number, min?: Number }`                                                                                 |    -    |  false   |
+|           secondLimit            | Limit on the seconds it is possible to select                                   |                                                                                `{ max?: Number, min?: Number }`                                                                                 |    -    |  false   |
 |            hourLabel             | Label for the hours picker                                                      |                                                                                  String \| React.ReactElement                                                                                   |    h    |  false   |
 |           minuteLabel            | Label for the minutes picker                                                    |                                                                                  String \| React.ReactElement                                                                                   |    m    |  false   |
 |           secondLabel            | Label for the seconds picker                                                    |                                                                                  String \| React.ReactElement                                                                                   |    s    |  false   |
@@ -354,6 +394,8 @@ return (
 |             pmLabel              | Set the PM label if using the 12-hour picker                                    |                                                                                             String                                                                                              |   pm    |  false   |
 |      disableInfiniteScroll       | Disable the infinite scroll feature                                             |                                                                                             Boolean                                                                                             |  false  |  false   |
 |          LinearGradient          | Linear Gradient Component                                                       | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default |    -    |  false   |
+|          Audio          | Audio Class                                                       | [expo-av](https://www.npmjs.com/package/expo-av).Audio |    -    |  false   |
+|          Haptics          | Haptics Namespace                                                       | [expo-haptics](https://www.npmjs.com/package/expo-haptics) |    -    |  false   |
 |       pickerContainerProps       | Props for the picker container                                                  |                                                                               `React.ComponentProps<typeof View>`                                                                               |    -    |  false   |
 |    pickerGradientOverlayProps    | Props for both gradient overlays                                                |                                                                                 `Partial<LinearGradientProps>`                                                                                  |    -    |  false   |
 |  topPickerGradientOverlayProps   | Props for the top gradient overlay                                              |                                                                                 `Partial<LinearGradientProps>`                                                                                  |    -    |  false   |
@@ -362,23 +404,23 @@ return (
 
 #### Custom Styles 👗
 
-The following custom styles can be supplied to re-style the component in any way. Various styles are applied by default - you can take a look at these [here](src/components/TimerPicker/TimerPicker.styles.ts).
+The following custom styles can be supplied to re-style the component in any way. Various styles are applied by default - you can take a look at these [here](src/components/TimerPicker/styles.ts).
 
-|       Style Prop        | Description                                  |       Type        |
-| :---------------------: | :------------------------------------------- | :---------------: |
-|          theme          | Theme of the component                       | "light" \| "dark" |
-|     backgroundColor     | Main background color                        |      string       |
-|          text           | Base text style                              |     TextStyle     |
-|     pickerContainer     | Main container for the picker                |     ViewStyle & { backgroundColor?: string }     |
-|  pickerLabelContainer   | Container for the picker's labels            |     ViewStyle     |
-|       pickerLabel       | Style for the picker's labels                |     TextStyle     |
-|   pickerAmPmContainer   | Style for the picker's labels                |     ViewStyle     |
-|     pickerAmPmLabel     | Style for the picker's labels                |     TextStyle     |
-|   pickerItemContainer   | Container for each number in the picker      |     ViewStyle & { height?: number }     |
-|       pickerItem        | Style for each individual picker number      |     TextStyle     |
-|   disabledPickerItem    | Style for any numbers outside any set limits |     TextStyle     |
-| disabledPickerContainer | Style for disabled pickers                   |     ViewStyle     |
-|  pickerGradientOverlay  | Style for the gradient overlay (fade out)    |     ViewStyle     |
+|       Style Prop        | Description                                  |                   Type                   |
+| :---------------------: | :------------------------------------------- | :--------------------------------------: |
+|          theme          | Theme of the component                       |            "light" \| "dark"             |
+|     backgroundColor     | Main background color                        |                  string                  |
+|          text           | Base text style                              |                TextStyle                 |
+|     pickerContainer     | Main container for the picker                | ViewStyle & { backgroundColor?: string } |
+|  pickerLabelContainer   | Container for the picker's labels            |                ViewStyle                 |
+|       pickerLabel       | Style for the picker's labels                |                TextStyle                 |
+|   pickerAmPmContainer   | Style for the picker's labels                |                ViewStyle                 |
+|     pickerAmPmLabel     | Style for the picker's labels                |                TextStyle                 |
+|   pickerItemContainer   | Container for each number in the picker      |     ViewStyle & { height?: number }      |
+|       pickerItem        | Style for each individual picker number      |                TextStyle                 |
+|   disabledPickerItem    | Style for any numbers outside any set limits |                TextStyle                 |
+| disabledPickerContainer | Style for disabled pickers                   |                ViewStyle                 |
+|  pickerGradientOverlay  | Style for the gradient overlay (fade out)    |                ViewStyle                 |
 
 Note the minor limitations to the allowed styles for `pickerContainer` and `pickerItemContainer`. These are made because these styles are used for internal calculations and all possible `backgroundColor`/`height` types are not supported.
 
@@ -407,7 +449,7 @@ The TimerPickerModal component accepts all [TimerPicker props](#timerpicker-️)
 
 #### Custom Styles 👕
 
-The following custom styles can be supplied to re-style the component in any way. You can also supply all of the styles specified in [CustomTimerPickerStyles](#custom-styles-). Various styles are applied by default - you can take a look at these [here](src/components/TimerPickerModal.styles.ts).
+The following custom styles can be supplied to re-style the component in any way. You can also supply all of the styles specified in [CustomTimerPickerStyles](#custom-styles-). Various styles are applied by default - you can take a look at these [here](src/components/TimerPickerModal/styles.ts).
 
 |    Style Prop    | Description                                |   Type    |
 | :--------------: | :----------------------------------------- | :-------: |

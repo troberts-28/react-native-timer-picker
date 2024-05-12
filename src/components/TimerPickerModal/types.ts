@@ -1,7 +1,8 @@
 import type { MutableRefObject } from "react";
 
-import type { Modal, View, TouchableOpacity, Text } from "react-native";
+import type { View, TouchableOpacity, Text } from "react-native";
 
+import type Modal from "../Modal";
 import type { TimerPickerProps } from "../TimerPicker/types";
 
 import type { CustomTimerPickerModalStyles } from "./styles";
