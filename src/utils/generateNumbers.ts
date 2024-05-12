@@ -3,10 +3,10 @@ import { padNumber } from "./padNumber";
 export const generateNumbers = (
     numberOfItems: number,
     options: {
-        repeatNTimes?: number;
-        padNumbersWithZero?: boolean;
         disableInfiniteScroll?: boolean;
+        padNumbersWithZero?: boolean;
         padWithNItems: number;
+        repeatNTimes?: number;
     }
 ) => {
     if (numberOfItems <= 0) {
@@ -29,10 +29,10 @@ export const generateNumbers = (
 };
 
 export const generate12HourNumbers = (options: {
-    repeatNTimes?: number;
-    padNumbersWithZero?: boolean;
     disableInfiniteScroll?: boolean;
+    padNumbersWithZero?: boolean;
     padWithNItems: number;
+    repeatNTimes?: number;
 }) => {
     let numbers: string[] = [];
 

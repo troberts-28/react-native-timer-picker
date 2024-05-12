@@ -3,121 +3,56 @@ import React, {
     useCallback,
     forwardRef,
     useImperativeHandle,
-    MutableRefObject,
     useState,
     useEffect,
 } from "react";
-import {
-    View,
-    Text,
-    FlatList,
+
+import { View, Text, FlatList } from "react-native";
+import type {
     ViewabilityConfigCallbackPairs,
     ViewToken,
     NativeSyntheticEvent,
     NativeScrollEvent,
 } from "react-native";
 
+import { colorToRgba } from "../../utils/colorToRgba";
 import {
     generate12HourNumbers,
     generateNumbers,
 } from "../../utils/generateNumbers";
-import { colorToRgba } from "../../utils/colorToRgba";
-import { generateStyles } from "./TimerPicker.styles";
 import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
 import { getScrollIndex } from "../../utils/getScrollIndex";
 
-export interface DurationScrollRef {
-    reset: (options?: { animated?: boolean }) => void;
-    setValue: (value: number, options?: { animated?: boolean }) => void;
-    latestDuration: MutableRefObject<number>;
-}
-
-type LinearGradientPoint = {
-    x: number;
-    y: number;
-};
-
-export type LinearGradientProps = React.ComponentProps<typeof View> & {
-    colors: string[];
-    locations?: number[] | null;
-    start?: LinearGradientPoint | null;
-    end?: LinearGradientPoint | null;
-};
-
-export type LimitType = {
-    max?: number;
-    min?: number;
-};
-
-export type SoundAssetType =
-    | number
-    | {
-          uri: string;
-          overrideFileExtensionAndroid?: string;
-          headers?: Record<string, string>;
-      };
-
-interface DurationScrollProps {
-    allowFontScaling?: boolean;
-    numberOfItems: number;
-    label?: string | React.ReactElement;
-    initialValue?: number;
-    onDurationChange: (duration: number) => void;
-    padNumbersWithZero?: boolean;
-    disableInfiniteScroll?: boolean;
-    isDisabled?: boolean;
-    limit?: LimitType;
-    aggressivelyGetLatestDuration: boolean;
-    is12HourPicker?: boolean;
-    amLabel?: string;
-    pmLabel?: string;
-    padWithNItems: number;
-    pickerGradientOverlayProps?: Partial<LinearGradientProps>;
-    topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
-    bottomPickerGradientOverlayProps?: Partial<LinearGradientProps>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    LinearGradient?: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Haptics?: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Audio?: any;
-    clickSoundAsset?: SoundAssetType;
-    testID?: string;
-    styles: ReturnType<typeof generateStyles>;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const KEY_EXTRACTOR = (_: any, index: number) => index.toString();
+import type { DurationScrollProps, DurationScrollRef } from "./types";
 
 const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
-    (
-        {
-            numberOfItems,
-            label,
-            initialValue = 0,
-            onDurationChange,
-            padNumbersWithZero = false,
-            disableInfiniteScroll = false,
-            limit,
-            isDisabled,
+    (props, ref) => {
+        const {
             aggressivelyGetLatestDuration,
             allowFontScaling = false,
-            is12HourPicker,
             amLabel,
-            pmLabel,
+            Audio,
+            bottomPickerGradientOverlayProps,
+            clickSoundAsset,
+            disableInfiniteScroll = false,
+            Haptics,
+            initialValue = 0,
+            is12HourPicker,
+            isDisabled,
+            label,
+            limit,
+            LinearGradient,
+            numberOfItems,
+            onDurationChange,
+            padNumbersWithZero = false,
             padWithNItems,
             pickerGradientOverlayProps,
-            topPickerGradientOverlayProps,
-            bottomPickerGradientOverlayProps,
-            LinearGradient,
-            Haptics,
-            Audio,
-            clickSoundAsset,
-            testID,
+            pmLabel,
             styles,
-        },
-        ref
-    ): React.ReactElement => {
+            testID,
+            topPickerGradientOverlayProps,
+        } = props;
+
         const data = !is12HourPicker
             ? generateNumbers(numberOfItems, {
                   padNumbersWithZero,
@@ -232,11 +167,11 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         </Text>
                         {is12HourPicker ? (
                             <View
-                                style={styles.pickerAmPmContainer}
-                                pointerEvents="none">
+                                pointerEvents="none"
+                                style={styles.pickerAmPmContainer}>
                                 <Text
-                                    style={[styles.pickerAmPmLabel]}
-                                    allowFontScaling={allowFontScaling}>
+                                    allowFontScaling={allowFontScaling}
+                                    style={[styles.pickerAmPmLabel]}>
                                     {isAm ? amLabel : pmLabel}
                                 </Text>
                             </View>
@@ -420,7 +355,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
         return (
             <View
-                testID={testID}
                 pointerEvents={isDisabled ? "none" : undefined}
                 style={[
                     {
@@ -430,34 +364,35 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         overflow: "visible",
                     },
                     isDisabled && styles.disabledPickerContainer,
-                ]}>
+                ]}
+                testID={testID}>
                 <FlatList
                     ref={flatListRef}
                     data={data}
+                    decelerationRate={0.88}
                     getItemLayout={getItemLayout}
                     initialScrollIndex={initialScrollIndex}
-                    windowSize={numberOfItemsToShow}
+                    keyExtractor={(_, index) => index.toString()}
+                    onMomentumScrollEnd={onMomentumScrollEnd}
+                    onScroll={onScroll}
                     renderItem={renderItem}
-                    keyExtractor={KEY_EXTRACTOR}
-                    showsVerticalScrollIndicator={false}
-                    decelerationRate={0.88}
-                    scrollEventThrottle={16}
-                    snapToAlignment="start"
                     scrollEnabled={!isDisabled}
+                    scrollEventThrottle={16}
+                    showsVerticalScrollIndicator={false}
+                    snapToAlignment="start"
                     // used in place of snapToOffset due to bug on Android
                     snapToOffsets={[...Array(data.length)].map(
                         (_, i) => i * styles.pickerItemContainer.height
                     )}
+                    testID="duration-scroll-flatlist"
                     viewabilityConfigCallbackPairs={
                         !disableInfiniteScroll
                             ? viewabilityConfigCallbackPairs?.current
                             : undefined
                     }
-                    onMomentumScrollEnd={onMomentumScrollEnd}
-                    onScroll={onScroll}
-                    testID="duration-scroll-flatlist"
+                    windowSize={numberOfItemsToShow}
                 />
-                <View style={styles.pickerLabelContainer} pointerEvents="none">
+                <View pointerEvents="none" style={styles.pickerLabelContainer}>
                     {typeof label === "string" ? (
                         <Text
                             allowFontScaling={allowFontScaling}
@@ -481,9 +416,9 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                                     opacity: 0,
                                 }),
                             ]}
-                            start={{ x: 1, y: 0.3 }}
                             end={{ x: 1, y: 1 }}
                             pointerEvents="none"
+                            start={{ x: 1, y: 0.3 }}
                             {...pickerGradientOverlayProps}
                             {...topPickerGradientOverlayProps}
                             style={[styles.pickerGradientOverlay, { top: 0 }]}
@@ -499,9 +434,9 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                                 styles.pickerContainer.backgroundColor ??
                                     "white",
                             ]}
-                            start={{ x: 1, y: 0 }}
                             end={{ x: 1, y: 0.7 }}
                             pointerEvents="none"
+                            start={{ x: 1, y: 0 }}
                             {...pickerGradientOverlayProps}
                             {...bottomPickerGradientOverlayProps}
                             style={[

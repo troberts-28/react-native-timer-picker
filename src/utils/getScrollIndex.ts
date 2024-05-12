@@ -1,10 +1,10 @@
 export const getScrollIndex = (variables: {
-    value: number;
+    disableInfiniteScroll?: boolean;
     numberOfItems: number;
     padWithNItems: number;
-    disableInfiniteScroll?: boolean;
+    value: number;
 }) => {
-    const { value, numberOfItems, padWithNItems, disableInfiniteScroll } =
+    const { disableInfiniteScroll, numberOfItems, padWithNItems, value } =
         variables;
 
     return (
