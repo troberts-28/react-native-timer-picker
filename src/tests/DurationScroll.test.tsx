@@ -1,5 +1,7 @@
 import React from "react";
+
 import { render } from "@testing-library/react-native";
+
 import DurationScroll from "../components/TimerPicker/DurationScroll";
 
 describe("DurationScroll", () => {
@@ -43,8 +45,8 @@ describe("DurationScroll", () => {
     it("renders the label if provided", () => {
         const { getByText } = render(
             <DurationScroll
-                numberOfItems={59}
                 label="Duration"
+                numberOfItems={59}
                 onDurationChange={onDurationChangeMock}
                 padWithNItems={1}
                 styles={emptyStyles}

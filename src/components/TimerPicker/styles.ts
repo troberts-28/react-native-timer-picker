@@ -1,20 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { StyleSheet, TextStyle, ViewStyle } from "react-native";
+import { StyleSheet } from "react-native";
+import type { TextStyle, ViewStyle } from "react-native";
 
 export interface CustomTimerPickerStyles {
-    theme?: "light" | "dark";
     backgroundColor?: string;
-    text?: TextStyle;
-    pickerContainer?: ViewStyle & { backgroundColor?: string };
-    pickerLabelContainer?: ViewStyle;
-    pickerLabel?: TextStyle;
-    pickerAmPmContainer?: ViewStyle;
-    pickerAmPmLabel?: TextStyle;
-    pickerItemContainer?: ViewStyle & { height?: number };
-    pickerItem?: TextStyle;
     disabledPickerContainer?: ViewStyle;
     disabledPickerItem?: TextStyle;
+    pickerAmPmContainer?: ViewStyle;
+    pickerAmPmLabel?: TextStyle;
+    pickerContainer?: ViewStyle & { backgroundColor?: string };
     pickerGradientOverlay?: ViewStyle;
+    pickerItem?: TextStyle;
+    pickerItemContainer?: ViewStyle & { height?: number };
+    pickerLabel?: TextStyle;
+    pickerLabelContainer?: ViewStyle;
+    text?: TextStyle;
+    theme?: "light" | "dark";
 }
 
 const DARK_MODE_BACKGROUND_COLOR = "#232323";

@@ -1,4 +1,4 @@
-import type { LimitType } from "../components/TimerPicker/DurationScroll";
+import type { LimitType } from "../components/DurationScroll/types";
 
 export const getAdjustedLimit = (
     limit: LimitType | undefined,

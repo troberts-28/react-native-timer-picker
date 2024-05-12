@@ -1,5 +1,4 @@
 import React, {
-    MutableRefObject,
     forwardRef,
     useEffect,
     useImperativeHandle,
@@ -7,114 +6,44 @@ import React, {
     useRef,
     useState,
 } from "react";
+
 import { View } from "react-native";
 
-import DurationScroll, {
-    DurationScrollRef,
-    LimitType,
-    SoundAssetType,
-} from "./DurationScroll";
+import DurationScroll from "../DurationScroll";
+import type { DurationScrollRef } from "../DurationScroll/types";
 
-import { generateStyles, CustomTimerPickerStyles } from "./TimerPicker.styles";
-import { LinearGradientProps } from "./DurationScroll";
-
-export interface TimerPickerRef {
-    reset: (options?: { animated?: boolean }) => void;
-    setValue: (
-        value: {
-            hours: number;
-            minutes: number;
-            seconds: number;
-        },
-        options?: { animated?: boolean }
-    ) => void;
-    latestDuration: {
-        hours: MutableRefObject<number> | undefined;
-        minutes: MutableRefObject<number> | undefined;
-        seconds: MutableRefObject<number> | undefined;
-    };
-}
-
-export interface TimerPickerProps {
-    allowFontScaling?: boolean;
-    onDurationChange?: (duration: {
-        hours: number;
-        minutes: number;
-        seconds: number;
-    }) => void;
-    initialValue?: {
-        hours?: number;
-        minutes?: number;
-        seconds?: number;
-    };
-    aggressivelyGetLatestDuration?: boolean;
-    use12HourPicker?: boolean;
-    amLabel?: string;
-    pmLabel?: string;
-    hideHours?: boolean;
-    hideMinutes?: boolean;
-    hideSeconds?: boolean;
-    hoursPickerIsDisabled?: boolean;
-    minutesPickerIsDisabled?: boolean;
-    secondsPickerIsDisabled?: boolean;
-    hourLimit?: LimitType;
-    minuteLimit?: LimitType;
-    secondLimit?: LimitType;
-    hourLabel?: string | React.ReactElement;
-    minuteLabel?: string | React.ReactElement;
-    secondLabel?: string | React.ReactElement;
-    padWithNItems?: number;
-    disableInfiniteScroll?: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    LinearGradient?: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Haptics?: any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Audio?: any;
-    clickSoundAsset?: SoundAssetType;
-    pickerContainerProps?: React.ComponentProps<typeof View>;
-    pickerGradientOverlayProps?: Partial<LinearGradientProps>;
-    topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
-    bottomPickerGradientOverlayProps?: Partial<LinearGradientProps>;
-    styles?: CustomTimerPickerStyles;
-}
+import { generateStyles } from "./styles";
+import type { TimerPickerProps, TimerPickerRef } from "./types";
 
 const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
-    (
-        {
+    (props, ref) => {
+        const {
+            aggressivelyGetLatestDuration = false,
             allowFontScaling = false,
-            onDurationChange,
-            initialValue,
+            amLabel = "am",
+            disableInfiniteScroll = false,
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,
-            hoursPickerIsDisabled = false,
-            minutesPickerIsDisabled = false,
-            secondsPickerIsDisabled = false,
-            hourLimit,
-            minuteLimit,
-            secondLimit,
             hourLabel,
+            hourLimit,
+            hoursPickerIsDisabled = false,
+            initialValue,
             minuteLabel,
-            secondLabel,
+            minuteLimit,
+            minutesPickerIsDisabled = false,
+            onDurationChange,
             padWithNItems = 1,
-            disableInfiniteScroll = false,
-            aggressivelyGetLatestDuration = false,
-            use12HourPicker = false,
-            amLabel = "am",
-            pmLabel = "pm",
-            LinearGradient,
-            Haptics,
-            Audio,
-            clickSoundAsset,
             pickerContainerProps,
-            pickerGradientOverlayProps,
-            topPickerGradientOverlayProps,
-            bottomPickerGradientOverlayProps,
+            pmLabel = "pm",
+            secondLabel,
+            secondLimit,
+            secondsPickerIsDisabled = false,
             styles: customStyles,
-        },
-        ref
-    ): React.ReactElement => {
+            use12HourPicker = false,
+            ...otherProps
+        } = props;
+
         const checkedPadWithNItems =
             padWithNItems >= 0 ? Math.round(padWithNItems) : 0;
 
@@ -194,98 +123,68 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 {!hideHours ? (
                     <DurationScroll
                         ref={hoursDurationScrollRef}
-                        numberOfItems={23}
-                        label={
-                            hourLabel ?? (!use12HourPicker ? "h" : undefined)
-                        }
-                        isDisabled={hoursPickerIsDisabled}
-                        initialValue={safeInitialValue.hours}
-                        allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
                         }
-                        onDurationChange={setSelectedHours}
-                        pickerGradientOverlayProps={pickerGradientOverlayProps}
-                        topPickerGradientOverlayProps={
-                            topPickerGradientOverlayProps
-                        }
-                        bottomPickerGradientOverlayProps={
-                            bottomPickerGradientOverlayProps
-                        }
-                        disableInfiniteScroll={disableInfiniteScroll}
-                        padWithNItems={checkedPadWithNItems}
-                        limit={hourLimit}
-                        LinearGradient={LinearGradient}
-                        Haptics={Haptics}
-                        Audio={Audio}
-                        clickSoundAsset={clickSoundAsset}
-                        is12HourPicker={use12HourPicker}
+                        allowFontScaling={allowFontScaling}
                         amLabel={amLabel}
+                        disableInfiniteScroll={disableInfiniteScroll}
+                        initialValue={safeInitialValue.hours}
+                        is12HourPicker={use12HourPicker}
+                        isDisabled={hoursPickerIsDisabled}
+                        label={
+                            hourLabel ?? (!use12HourPicker ? "h" : undefined)
+                        }
+                        limit={hourLimit}
+                        numberOfItems={23}
+                        onDurationChange={setSelectedHours}
+                        padWithNItems={checkedPadWithNItems}
                         pmLabel={pmLabel}
                         styles={styles}
                         testID="duration-scroll-hour"
+                        {...otherProps}
                     />
                 ) : null}
                 {!hideMinutes ? (
                     <DurationScroll
                         ref={minutesDurationScrollRef}
-                        numberOfItems={59}
-                        label={minuteLabel ?? "m"}
-                        isDisabled={minutesPickerIsDisabled}
-                        initialValue={safeInitialValue.minutes}
-                        allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
                         }
+                        allowFontScaling={allowFontScaling}
+                        disableInfiniteScroll={disableInfiniteScroll}
+                        initialValue={safeInitialValue.minutes}
+                        isDisabled={minutesPickerIsDisabled}
+                        label={minuteLabel ?? "m"}
+                        limit={minuteLimit}
+                        numberOfItems={59}
                         onDurationChange={setSelectedMinutes}
                         padNumbersWithZero
-                        pickerGradientOverlayProps={pickerGradientOverlayProps}
-                        topPickerGradientOverlayProps={
-                            topPickerGradientOverlayProps
-                        }
-                        bottomPickerGradientOverlayProps={
-                            bottomPickerGradientOverlayProps
-                        }
-                        disableInfiniteScroll={disableInfiniteScroll}
                         padWithNItems={checkedPadWithNItems}
-                        limit={minuteLimit}
-                        LinearGradient={LinearGradient}
-                        Haptics={Haptics}
-                        Audio={Audio}
-                        clickSoundAsset={clickSoundAsset}
                         styles={styles}
                         testID="duration-scroll-minute"
+                        {...otherProps}
                     />
                 ) : null}
                 {!hideSeconds ? (
                     <DurationScroll
                         ref={secondsDurationScrollRef}
-                        numberOfItems={59}
-                        label={secondLabel ?? "s"}
-                        isDisabled={secondsPickerIsDisabled}
-                        initialValue={safeInitialValue.seconds}
-                        allowFontScaling={allowFontScaling}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
                         }
+                        allowFontScaling={allowFontScaling}
+                        disableInfiniteScroll={disableInfiniteScroll}
+                        initialValue={safeInitialValue.seconds}
+                        isDisabled={secondsPickerIsDisabled}
+                        label={secondLabel ?? "s"}
+                        limit={secondLimit}
+                        numberOfItems={59}
                         onDurationChange={setSelectedSeconds}
                         padNumbersWithZero
-                        pickerGradientOverlayProps={pickerGradientOverlayProps}
-                        topPickerGradientOverlayProps={
-                            topPickerGradientOverlayProps
-                        }
-                        bottomPickerGradientOverlayProps={
-                            bottomPickerGradientOverlayProps
-                        }
-                        disableInfiniteScroll={disableInfiniteScroll}
                         padWithNItems={checkedPadWithNItems}
-                        limit={secondLimit}
-                        LinearGradient={LinearGradient}
-                        Haptics={Haptics}
-                        Audio={Audio}
-                        clickSoundAsset={clickSoundAsset}
                         styles={styles}
                         testID="duration-scroll-second"
+                        {...otherProps}
                     />
                 ) : null}
             </View>

@@ -1,6 +1,8 @@
 import React from "react";
-import { Text } from "react-native";
+
 import { render, fireEvent } from "@testing-library/react-native";
+import { Text } from "react-native";
+
 import Modal from "../components/Modal";
 
 describe("Modal", () => {

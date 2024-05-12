@@ -1,5 +1,7 @@
 import React from "react";
+
 import { render, fireEvent } from "@testing-library/react-native";
+
 import TimerPickerModal from "../components";
 
 describe("TimerPickerModal", () => {
@@ -51,8 +53,8 @@ describe("TimerPickerModal", () => {
         const { getByTestId } = render(
             <TimerPickerModal
                 {...defaultProps}
-                setIsVisible={setIsVisibleMock}
                 closeOnOverlayPress
+                setIsVisible={setIsVisibleMock}
             />
         );
         const overlay = getByTestId("modal-backdrop");

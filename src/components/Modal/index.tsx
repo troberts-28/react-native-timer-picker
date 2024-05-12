@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useEffect, useRef } from "react";
+
 import {
     Animated,
     Easing,
@@ -8,34 +8,24 @@ import {
     useWindowDimensions,
 } from "react-native";
 
-import { styles } from "./Modal.styles";
+import { styles } from "./styles";
+import type { ModalProps } from "./types";
 
-interface ModalProps {
-    children?: React.ReactElement;
-    onOverlayPress?: () => void;
-    onHide?: () => void;
-    isVisible?: boolean;
-    animationDuration?: number;
-    overlayOpacity?: number;
-    modalProps?: any;
-    contentStyle?: any;
-    overlayStyle?: any;
-    testID?: string;
-}
+export const Modal = (props: ModalProps) => {
+    const {
+        animationDuration = 300,
+        children,
+        contentStyle,
+        isVisible = false,
+        modalProps,
+        onHide,
+        onOverlayPress,
+        overlayOpacity = 0.4,
+        overlayStyle,
+        testID = "modal",
+    } = props;
 
-export const Modal = ({
-    children,
-    onOverlayPress,
-    onHide,
-    isVisible = false,
-    animationDuration = 300,
-    overlayOpacity = 0.4,
-    modalProps,
-    contentStyle,
-    overlayStyle,
-    testID = "modal",
-}: ModalProps): React.ReactElement => {
-    const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+    const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 
     const isMounted = useRef(false);
     const animatedOpacity = useRef(new Animated.Value(0));
@@ -105,8 +95,8 @@ export const Modal = ({
 
     return (
         <ReactNativeModal
-            transparent
             animationType="fade"
+            transparent
             visible={isVisible}
             {...modalProps}
             testID={testID}>
@@ -123,8 +113,8 @@ export const Modal = ({
                 />
             </TouchableWithoutFeedback>
             <Animated.View
-                style={[styles.content, contentAnimatedStyle, contentStyle]}
-                pointerEvents="box-none">
+                pointerEvents="box-none"
+                style={[styles.content, contentAnimatedStyle, contentStyle]}>
                 {children}
             </Animated.View>
         </ReactNativeModal>
