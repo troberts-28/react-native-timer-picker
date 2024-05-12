@@ -21,6 +21,8 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
+import * as Haptics from "expo-haptics";
+import { Audio } from "expo-av";
 
 import { TimerPicker, TimerPickerModal } from "../src";
 
@@ -113,6 +115,8 @@ export default function App() {
                     onCancel={() => setShowPickerExample1(false)}
                     closeOnOverlayPress
                     LinearGradient={LinearGradient}
+                    Haptics={Haptics}
+                    Audio={Audio}
                     styles={{
                         theme: "dark",
                     }}
@@ -170,6 +174,8 @@ export default function App() {
                     closeOnOverlayPress
                     use12HourPicker
                     LinearGradient={LinearGradient}
+                    Haptics={Haptics}
+                    Audio={Audio}
                     styles={{
                         theme: "light",
                     }}
@@ -192,6 +198,8 @@ export default function App() {
                     minuteLabel=":"
                     secondLabel=""
                     LinearGradient={LinearGradient}
+                    Haptics={Haptics}
+                    Audio={Audio}
                     styles={{
                         theme: "dark",
                         backgroundColor: "#202020",
@@ -206,7 +214,7 @@ export default function App() {
                             marginRight: 6,
                         },
                         pickerItemContainer: {
-                            width: 100
+                            width: 100,
                         },
                         pickerLabelContainer: {
                             right: -20,
@@ -235,6 +243,8 @@ export default function App() {
                     minuteLabel="min"
                     secondLabel="sec"
                     LinearGradient={LinearGradient}
+                    Haptics={Haptics}
+                    Audio={Audio}
                     styles={{
                         theme: "light",
                         pickerItem: {
@@ -402,5 +412,5 @@ const styles = StyleSheet.create({
     },
     chevronPressable_pressed: {
         opacity: 0.7,
-    }
+    },
 });

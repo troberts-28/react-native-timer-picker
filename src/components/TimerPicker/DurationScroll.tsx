@@ -4,6 +4,8 @@ import React, {
     forwardRef,
     useImperativeHandle,
     MutableRefObject,
+    useState,
+    useEffect,
 } from "react";
 import {
     View,
@@ -67,6 +69,10 @@ interface DurationScrollProps {
     bottomPickerGradientOverlayProps?: Partial<LinearGradientProps>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     LinearGradient?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Haptics?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Audio?: any;
     testID?: string;
     styles: ReturnType<typeof generateStyles>;
 }
@@ -95,6 +101,8 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             topPickerGradientOverlayProps,
             bottomPickerGradientOverlayProps,
             LinearGradient,
+            Haptics,
+            Audio,
             testID,
             styles,
         },
@@ -125,9 +133,41 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             disableInfiniteScroll,
         });
 
+        // keep track of the latest duration as it scrolls
         const latestDuration = useRef(0);
+        // keep track of the last index scrolled past for haptic/audio feedback
+        const lastFeedbackIndex = useRef(0);
 
         const flatListRef = useRef<FlatList | null>(null);
+
+        const [clickSound, setClickSound] = useState<
+            | {
+                  replayAsync: () => Promise<void>;
+                  unloadAsync: () => Promise<void>;
+              }
+            | undefined
+        >();
+
+        // Preload the sound when the component mounts
+        useEffect(() => {
+            const loadSound = async () => {
+                if (Audio) {
+                    const { sound } = await Audio.Sound.createAsync(
+                        // eslint-disable-next-line @typescript-eslint/no-var-requires
+                        require("../../assets/select_click.mp3"),
+                        { shouldPlay: false }
+                    );
+                    setClickSound(sound);
+                }
+            };
+            loadSound();
+
+            // Unload sound when component unmounts
+            return () => {
+                clickSound?.unloadAsync();
+            };
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [Audio]);
 
         useImperativeHandle(ref, () => ({
             reset: (options) => {
@@ -211,30 +251,60 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
         const onScroll = useCallback(
             (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-                // this function is only used when the picker is in a modal
+                // this function is only used when the picker is in a modal and/or has Haptic/Audio feedback
                 // it is used to ensure that the modal gets the latest duration on clicking
                 // the confirm button, even if the scrollview is still scrolling
-                const newIndex = Math.round(
-                    e.nativeEvent.contentOffset.y /
-                        styles.pickerItemContainer.height
-                );
-                let newDuration =
-                    (disableInfiniteScroll
-                        ? newIndex
-                        : newIndex + padWithNItems) %
-                    (numberOfItems + 1);
-
-                // check limits
-                if (newDuration > adjustedLimited.max) {
-                    newDuration = adjustedLimited.max;
-                } else if (newDuration < adjustedLimited.min) {
-                    newDuration = adjustedLimited.min;
+                if (!aggressivelyGetLatestDuration && !Haptics && !Audio) {
+                    return;
                 }
-                latestDuration.current = newDuration;
+
+                if (aggressivelyGetLatestDuration) {
+                    const newIndex = Math.round(
+                        e.nativeEvent.contentOffset.y /
+                            styles.pickerItemContainer.height
+                    );
+                    let newDuration =
+                        (disableInfiniteScroll
+                            ? newIndex
+                            : newIndex + padWithNItems) %
+                        (numberOfItems + 1);
+
+                    if (newDuration !== latestDuration.current) {
+                        // check limits
+                        if (newDuration > adjustedLimited.max) {
+                            newDuration = adjustedLimited.max;
+                        } else if (newDuration < adjustedLimited.min) {
+                            newDuration = adjustedLimited.min;
+                        }
+
+                        latestDuration.current = newDuration;
+                    }
+                }
+
+                if (Haptics || Audio) {
+                    const feedbackIndex = Math.round(
+                        (e.nativeEvent.contentOffset.y +
+                            styles.pickerItemContainer.height / 2) /
+                            styles.pickerItemContainer.height
+                    );
+
+                    if (feedbackIndex !== lastFeedbackIndex.current) {
+                        lastFeedbackIndex.current = feedbackIndex;
+
+                        // fire haptic feedback if available
+                        Haptics?.selectionAsync();
+
+                        // play click sound if available
+                        clickSound?.replayAsync();
+                    }
+                }
             },
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             [
                 adjustedLimited.max,
                 adjustedLimited.min,
+                aggressivelyGetLatestDuration,
+                clickSound,
                 disableInfiniteScroll,
                 numberOfItems,
                 padWithNItems,
@@ -371,9 +441,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             : undefined
                     }
                     onMomentumScrollEnd={onMomentumScrollEnd}
-                    onScroll={
-                        aggressivelyGetLatestDuration ? onScroll : undefined
-                    }
+                    onScroll={onScroll}
                     testID="duration-scroll-flatlist"
                 />
                 <View style={styles.pickerLabelContainer} pointerEvents="none">

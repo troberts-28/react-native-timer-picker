@@ -63,6 +63,10 @@ export interface TimerPickerProps {
     disableInfiniteScroll?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     LinearGradient?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Haptics?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Audio?: any;
     pickerContainerProps?: React.ComponentProps<typeof View>;
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
@@ -95,6 +99,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             amLabel = "am",
             pmLabel = "pm",
             LinearGradient,
+            Haptics,
+            Audio,
             pickerContainerProps,
             pickerGradientOverlayProps,
             topPickerGradientOverlayProps,
@@ -204,6 +210,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padWithNItems={checkedPadWithNItems}
                         limit={hourLimit}
                         LinearGradient={LinearGradient}
+                        Haptics={Haptics}
+                        Audio={Audio}
                         is12HourPicker={use12HourPicker}
                         amLabel={amLabel}
                         pmLabel={pmLabel}
@@ -235,6 +243,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padWithNItems={checkedPadWithNItems}
                         limit={minuteLimit}
                         LinearGradient={LinearGradient}
+                        Haptics={Haptics}
+                        Audio={Audio}
                         styles={styles}
                         testID="duration-scroll-minute"
                     />
@@ -263,6 +273,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padWithNItems={checkedPadWithNItems}
                         limit={secondLimit}
                         LinearGradient={LinearGradient}
+                        Haptics={Haptics}
+                        Audio={Audio}
                         styles={styles}
                         testID="duration-scroll-second"
                     />
