@@ -21,6 +21,8 @@ import {
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { LinearGradient } from "expo-linear-gradient";
+import * as Haptics from "expo-haptics";
+import { Audio } from "expo-av";
 
 import { TimerPicker, TimerPickerModal } from "../src";
 
@@ -113,6 +115,8 @@ export default function App() {
                     onCancel={() => setShowPickerExample1(false)}
                     closeOnOverlayPress
                     LinearGradient={LinearGradient}
+                    Haptics={Haptics}
+                    Audio={Audio}
                     styles={{
                         theme: "dark",
                     }}
@@ -170,6 +174,9 @@ export default function App() {
                     closeOnOverlayPress
                     use12HourPicker
                     LinearGradient={LinearGradient}
+                    Haptics={Haptics}
+                    Audio={Audio}
+                    clickSoundAsset={require("./assets/custom_click.mp3")}
                     styles={{
                         theme: "light",
                     }}
@@ -192,6 +199,8 @@ export default function App() {
                     minuteLabel=":"
                     secondLabel=""
                     LinearGradient={LinearGradient}
+                    Haptics={Haptics}
+                    Audio={Audio}
                     styles={{
                         theme: "dark",
                         backgroundColor: "#202020",
@@ -206,7 +215,7 @@ export default function App() {
                             marginRight: 6,
                         },
                         pickerItemContainer: {
-                            width: 100
+                            width: 100,
                         },
                         pickerLabelContainer: {
                             right: -20,
@@ -235,6 +244,8 @@ export default function App() {
                     minuteLabel="min"
                     secondLabel="sec"
                     LinearGradient={LinearGradient}
+                    Haptics={Haptics}
+                    Audio={Audio}
                     styles={{
                         theme: "light",
                         pickerItem: {
@@ -276,7 +287,7 @@ export default function App() {
                         style={({ pressed }) => [
                             styles.chevronPressable,
                             { right: 8 },
-                            pressed && styles.chevronPressable._pressed,
+                            pressed && styles.chevronPressable_pressed,
                         ]}>
                         <Ionicons
                             color={
@@ -306,7 +317,7 @@ export default function App() {
                         style={({ pressed }) => [
                             styles.chevronPressable,
                             { left: 8 },
-                            pressed && styles.chevronPressable._pressed,
+                            pressed && styles.chevronPressable_pressed,
                         ]}>
                         <Ionicons
                             color={
@@ -399,8 +410,8 @@ const styles = StyleSheet.create({
         top: 0,
         bottom: 0,
         padding: 8,
-        _pressed: {
-            opacity: 0.7,
-        },
+    },
+    chevronPressable_pressed: {
+        opacity: 0.7,
     },
 });

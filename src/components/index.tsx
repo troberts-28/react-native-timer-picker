@@ -94,6 +94,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             cancelButtonText = "Cancel",
             modalTitle,
             LinearGradient,
+            Haptics,
+            Audio,
+            clickSoundAsset,
             modalProps,
             containerProps,
             contentContainerProps,
@@ -235,6 +238,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             amLabel={amLabel}
                             pmLabel={pmLabel}
                             LinearGradient={LinearGradient}
+                            Haptics={Haptics}
+                            Audio={Audio}
+                            clickSoundAsset={clickSoundAsset}
                             pickerContainerProps={pickerContainerProps}
                             pickerGradientOverlayProps={
                                 pickerGradientOverlayProps

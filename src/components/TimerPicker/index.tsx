@@ -9,7 +9,11 @@ import React, {
 } from "react";
 import { View } from "react-native";
 
-import DurationScroll, { DurationScrollRef, LimitType } from "./DurationScroll";
+import DurationScroll, {
+    DurationScrollRef,
+    LimitType,
+    SoundAssetType,
+} from "./DurationScroll";
 
 import { generateStyles, CustomTimerPickerStyles } from "./TimerPicker.styles";
 import { LinearGradientProps } from "./DurationScroll";
@@ -63,6 +67,11 @@ export interface TimerPickerProps {
     disableInfiniteScroll?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     LinearGradient?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Haptics?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Audio?: any;
+    clickSoundAsset?: SoundAssetType;
     pickerContainerProps?: React.ComponentProps<typeof View>;
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
@@ -95,6 +104,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             amLabel = "am",
             pmLabel = "pm",
             LinearGradient,
+            Haptics,
+            Audio,
+            clickSoundAsset,
             pickerContainerProps,
             pickerGradientOverlayProps,
             topPickerGradientOverlayProps,
@@ -204,6 +216,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padWithNItems={checkedPadWithNItems}
                         limit={hourLimit}
                         LinearGradient={LinearGradient}
+                        Haptics={Haptics}
+                        Audio={Audio}
+                        clickSoundAsset={clickSoundAsset}
                         is12HourPicker={use12HourPicker}
                         amLabel={amLabel}
                         pmLabel={pmLabel}
@@ -235,6 +250,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padWithNItems={checkedPadWithNItems}
                         limit={minuteLimit}
                         LinearGradient={LinearGradient}
+                        Haptics={Haptics}
+                        Audio={Audio}
+                        clickSoundAsset={clickSoundAsset}
                         styles={styles}
                         testID="duration-scroll-minute"
                     />
@@ -263,6 +281,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padWithNItems={checkedPadWithNItems}
                         limit={secondLimit}
                         LinearGradient={LinearGradient}
+                        Haptics={Haptics}
+                        Audio={Audio}
+                        clickSoundAsset={clickSoundAsset}
                         styles={styles}
                         testID="duration-scroll-second"
                     />
