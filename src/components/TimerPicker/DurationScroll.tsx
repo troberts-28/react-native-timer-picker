@@ -289,13 +289,16 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     );
 
                     if (feedbackIndex !== lastFeedbackIndex.current) {
+                        // this check stops the feedback firing when the component mounts
+                        if (lastFeedbackIndex.current) {
+                            // fire haptic feedback if available
+                            Haptics?.selectionAsync();
+
+                            // play click sound if available
+                            clickSound?.replayAsync();
+                        }
+
                         lastFeedbackIndex.current = feedbackIndex;
-
-                        // fire haptic feedback if available
-                        Haptics?.selectionAsync();
-
-                        // play click sound if available
-                        clickSound?.replayAsync();
                     }
                 }
             },
