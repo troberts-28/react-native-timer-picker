@@ -5,10 +5,13 @@ import React, {
     useRef,
     useState,
 } from "react";
+
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Audio } from "expo-av";
+import * as Haptics from "expo-haptics";
+import { LinearGradient } from "expo-linear-gradient";
 import {
     LayoutAnimation,
-    NativeScrollEvent,
-    NativeSyntheticEvent,
     Platform,
     Pressable,
     ScrollView,
@@ -19,8 +22,9 @@ import {
     View,
     useWindowDimensions,
 } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { LinearGradient } from "expo-linear-gradient";
+import type {
+    NativeScrollEvent,
+    NativeSyntheticEvent} from "react-native";
 
 import { TimerPicker, TimerPickerModal } from "../src";
 
@@ -103,22 +107,24 @@ export default function App() {
                     </View>
                 </TouchableOpacity>
                 <TimerPickerModal
-                    visible={showPickerExample1}
-                    setIsVisible={setShowPickerExample1}
+                    Audio={Audio}
+                    closeOnOverlayPress
+                    Haptics={Haptics}
+                    LinearGradient={LinearGradient}
+                    modalProps={{
+                        overlayOpacity: 0.2,
+                    }}
+                    modalTitle="Set Alarm"
+                    onCancel={() => setShowPickerExample1(false)}
                     onConfirm={(pickedDuration) => {
                         setAlarmStringExample1(formatTime(pickedDuration));
                         setShowPickerExample1(false);
                     }}
-                    modalTitle="Set Alarm"
-                    onCancel={() => setShowPickerExample1(false)}
-                    closeOnOverlayPress
-                    LinearGradient={LinearGradient}
+                    setIsVisible={setShowPickerExample1}
                     styles={{
                         theme: "dark",
                     }}
-                    modalProps={{
-                        overlayOpacity: 0.2,
-                    }}
+                    visible={showPickerExample1}
                 />
             </View>
         );
@@ -159,20 +165,23 @@ export default function App() {
                     </View>
                 </TouchableOpacity>
                 <TimerPickerModal
-                    visible={showPickerExample2}
-                    setIsVisible={setShowPickerExample2}
+                    Audio={Audio}
+                    clickSoundAsset={require("./assets/custom_click.mp3")}
+                    closeOnOverlayPress
+                    Haptics={Haptics}
+                    LinearGradient={LinearGradient}
+                    modalTitle="Set Alarm"
+                    onCancel={() => setShowPickerExample2(false)}
                     onConfirm={(pickedDuration) => {
                         setAlarmStringExample2(formatTime(pickedDuration));
                         setShowPickerExample2(false);
                     }}
-                    modalTitle="Set Alarm"
-                    onCancel={() => setShowPickerExample2(false)}
-                    closeOnOverlayPress
-                    use12HourPicker
-                    LinearGradient={LinearGradient}
+                    setIsVisible={setShowPickerExample2}
                     styles={{
                         theme: "light",
                     }}
+                    use12HourPicker
+                    visible={showPickerExample2}
                 />
             </View>
         );
@@ -187,11 +196,13 @@ export default function App() {
                     { width: screenWidth },
                 ]}>
                 <TimerPicker
-                    padWithNItems={2}
+                    Audio={Audio}
+                    Haptics={Haptics}
                     hourLabel=":"
-                    minuteLabel=":"
-                    secondLabel=""
                     LinearGradient={LinearGradient}
+                    minuteLabel=":"
+                    padWithNItems={2}
+                    secondLabel=""
                     styles={{
                         theme: "dark",
                         backgroundColor: "#202020",
@@ -206,7 +217,7 @@ export default function App() {
                             marginRight: 6,
                         },
                         pickerItemContainer: {
-                            width: 100
+                            width: 100,
                         },
                         pickerLabelContainer: {
                             right: -20,
@@ -230,11 +241,13 @@ export default function App() {
                     { width: screenWidth },
                 ]}>
                 <TimerPicker
-                    padWithNItems={3}
+                    Audio={Audio}
+                    Haptics={Haptics}
                     hideHours
-                    minuteLabel="min"
-                    secondLabel="sec"
                     LinearGradient={LinearGradient}
+                    minuteLabel="min"
+                    padWithNItems={3}
+                    secondLabel="sec"
                     styles={{
                         theme: "light",
                         pickerItem: {
@@ -276,7 +289,7 @@ export default function App() {
                         style={({ pressed }) => [
                             styles.chevronPressable,
                             { right: 8 },
-                            pressed && styles.chevronPressable._pressed,
+                            pressed && styles.chevronPressable_pressed,
                         ]}>
                         <Ionicons
                             color={
@@ -306,7 +319,7 @@ export default function App() {
                         style={({ pressed }) => [
                             styles.chevronPressable,
                             { left: 8 },
-                            pressed && styles.chevronPressable._pressed,
+                            pressed && styles.chevronPressable_pressed,
                         ]}>
                         <Ionicons
                             color={
@@ -328,8 +341,8 @@ export default function App() {
             <ScrollView
                 ref={scrollViewRef}
                 horizontal
-                pagingEnabled
-                onMomentumScrollEnd={onMomentumScrollEnd}>
+                onMomentumScrollEnd={onMomentumScrollEnd}
+                pagingEnabled>
                 {renderExample1}
                 {renderExample2}
                 {renderExample3}
@@ -399,8 +412,8 @@ const styles = StyleSheet.create({
         top: 0,
         bottom: 0,
         padding: 8,
-        _pressed: {
-            opacity: 0.7,
-        },
+    },
+    chevronPressable_pressed: {
+        opacity: 0.7,
     },
 });

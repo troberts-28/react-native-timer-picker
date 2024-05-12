@@ -1,5 +1,4 @@
 import React, {
-    MutableRefObject,
     forwardRef,
     useCallback,
     useEffect,
@@ -7,107 +6,40 @@ import React, {
     useRef,
     useState,
 } from "react";
+
 import { View, Text, TouchableOpacity } from "react-native";
 
-import TimerPicker, { TimerPickerProps, TimerPickerRef } from "./TimerPicker";
-import Modal from "./Modal";
+import Modal from "../Modal";
+import TimerPicker from "../TimerPicker";
+import type { TimerPickerRef } from "../TimerPicker/types";
 
-import {
-    generateStyles,
-    CustomTimerPickerModalStyles,
-} from "./TimerPickerModal.styles";
-
-export interface TimerPickerModalRef {
-    reset: (options?: { animated?: boolean }) => void;
-    setValue: (
-        value: {
-            hours: number;
-            minutes: number;
-            seconds: number;
-        },
-        options?: { animated?: boolean }
-    ) => void;
-    latestDuration: {
-        hours: MutableRefObject<number> | undefined;
-        minutes: MutableRefObject<number> | undefined;
-        seconds: MutableRefObject<number> | undefined;
-    };
-}
-
-export interface TimerPickerModalProps extends TimerPickerProps {
-    visible: boolean;
-    setIsVisible: (isVisible: boolean) => void;
-    onConfirm: ({
-        hours,
-        minutes,
-        seconds,
-    }: {
-        hours: number;
-        minutes: number;
-        seconds: number;
-    }) => void;
-    onCancel?: () => void;
-    closeOnOverlayPress?: boolean;
-    hideCancelButton?: boolean;
-    confirmButtonText?: string;
-    cancelButtonText?: string;
-    modalTitle?: string;
-    modalProps?: React.ComponentProps<typeof Modal>;
-    containerProps?: React.ComponentProps<typeof View>;
-    contentContainerProps?: React.ComponentProps<typeof View>;
-    buttonContainerProps?: React.ComponentProps<typeof View>;
-    buttonTouchableOpacityProps?: React.ComponentProps<typeof TouchableOpacity>;
-    modalTitleProps?: React.ComponentProps<typeof Text>;
-    styles?: CustomTimerPickerModalStyles;
-}
+import { generateStyles } from "./styles";
+import type { TimerPickerModalRef, TimerPickerModalProps } from "./types";
 
 const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
-    (
-        {
-            visible,
-            setIsVisible,
-            onConfirm,
-            onCancel,
-            onDurationChange,
-            closeOnOverlayPress,
-            initialValue,
-            hideHours = false,
-            hideMinutes = false,
-            hideSeconds = false,
-            hoursPickerIsDisabled = false,
-            minutesPickerIsDisabled = false,
-            secondsPickerIsDisabled = false,
-            hourLimit,
-            minuteLimit,
-            secondLimit,
-            hourLabel,
-            minuteLabel,
-            secondLabel,
-            padWithNItems = 1,
-            disableInfiniteScroll = false,
-            allowFontScaling = false,
-            use12HourPicker,
-            amLabel,
-            pmLabel,
-            hideCancelButton = false,
-            confirmButtonText = "Confirm",
-            cancelButtonText = "Cancel",
-            modalTitle,
-            LinearGradient,
-            modalProps,
-            containerProps,
-            contentContainerProps,
-            pickerContainerProps,
+    (props, ref) => {
+        const {
             buttonContainerProps,
             buttonTouchableOpacityProps,
+            cancelButtonText,
+            closeOnOverlayPress,
+            confirmButtonText,
+            containerProps,
+            contentContainerProps,
+            hideCancelButton,
+            initialValue,
+            modalProps,
+            modalTitle,
             modalTitleProps,
-            pickerGradientOverlayProps,
-            topPickerGradientOverlayProps,
-            bottomPickerGradientOverlayProps,
+            onCancel,
+            onConfirm,
+            onDurationChange,
+            setIsVisible,
             styles: customStyles,
-        },
-        ref
-    ): React.ReactElement => {
+            visible,
+            ...otherProps
+        } = props;
+
         const styles = generateStyles(customStyles);
 
         const timerPickerRef = useRef<TimerPickerRef>(null);
@@ -213,39 +145,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                         ) : null}
                         <TimerPicker
                             ref={timerPickerRef}
-                            onDurationChange={durationChangeHandler}
                             initialValue={confirmedDuration}
-                            aggressivelyGetLatestDuration={true}
-                            hideHours={hideHours}
-                            hideMinutes={hideMinutes}
-                            hideSeconds={hideSeconds}
-                            hoursPickerIsDisabled={hoursPickerIsDisabled}
-                            minutesPickerIsDisabled={minutesPickerIsDisabled}
-                            secondsPickerIsDisabled={secondsPickerIsDisabled}
-                            hourLimit={hourLimit}
-                            minuteLimit={minuteLimit}
-                            secondLimit={secondLimit}
-                            hourLabel={hourLabel}
-                            minuteLabel={minuteLabel}
-                            secondLabel={secondLabel}
-                            padWithNItems={padWithNItems}
-                            disableInfiniteScroll={disableInfiniteScroll}
-                            allowFontScaling={allowFontScaling}
-                            use12HourPicker={use12HourPicker}
-                            amLabel={amLabel}
-                            pmLabel={pmLabel}
-                            LinearGradient={LinearGradient}
-                            pickerContainerProps={pickerContainerProps}
-                            pickerGradientOverlayProps={
-                                pickerGradientOverlayProps
-                            }
-                            topPickerGradientOverlayProps={
-                                topPickerGradientOverlayProps
-                            }
-                            bottomPickerGradientOverlayProps={
-                                bottomPickerGradientOverlayProps
-                            }
-                            styles={customStyles}
+                            {...otherProps}
+                            onDurationChange={durationChangeHandler}
                         />
                         <View
                             {...buttonContainerProps}

@@ -1,5 +1,7 @@
 import React from "react";
+
 import { render } from "@testing-library/react-native";
+
 import TimerPicker from "../components/TimerPicker";
 
 describe("TimerPicker", () => {

@@ -1,15 +1,15 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { StyleSheet, TextStyle, ViewStyle } from "react-native";
+import { StyleSheet } from "react-native";
+import type { TextStyle, ViewStyle } from "react-native";
 
-import type { CustomTimerPickerStyles } from "./TimerPicker/TimerPicker.styles";
+import type { CustomTimerPickerStyles } from "../TimerPicker/styles";
 
 export interface CustomTimerPickerModalStyles extends CustomTimerPickerStyles {
-    container?: ViewStyle;
-    contentContainer?: ViewStyle;
-    buttonContainer?: ViewStyle;
     button?: TextStyle;
+    buttonContainer?: ViewStyle;
     cancelButton?: TextStyle;
     confirmButton?: TextStyle;
+    container?: ViewStyle;
+    contentContainer?: ViewStyle;
     modalTitle?: TextStyle;
 }
 
