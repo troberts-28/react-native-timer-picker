@@ -22,9 +22,7 @@ import {
     View,
     useWindowDimensions,
 } from "react-native";
-import type {
-    NativeScrollEvent,
-    NativeSyntheticEvent} from "react-native";
+import type { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 
 import { TimerPicker, TimerPickerModal } from "../src";
 
@@ -205,6 +203,7 @@ export default function App() {
                     secondLabel=""
                     styles={{
                         theme: "dark",
+                        backgroundColor: "#202020",
                         pickerItem: {
                             fontSize: 34,
                         },
