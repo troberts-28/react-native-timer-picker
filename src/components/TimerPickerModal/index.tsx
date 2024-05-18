@@ -21,12 +21,12 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
         const {
             buttonContainerProps,
             buttonTouchableOpacityProps,
-            cancelButtonText,
+            cancelButtonText = "Cancel",
             closeOnOverlayPress,
-            confirmButtonText,
+            confirmButtonText = "Confirm",
             containerProps,
             contentContainerProps,
-            hideCancelButton,
+            hideCancelButton = false,
             initialValue,
             modalProps,
             modalTitle,
@@ -82,6 +82,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
 
         const confirmHandler = () => {
             const latestDuration = timerPickerRef.current?.latestDuration;
+
             const newDuration = {
                 hours: latestDuration?.hours?.current ?? selectedDuration.hours,
                 minutes:
@@ -147,15 +148,17 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             ref={timerPickerRef}
                             initialValue={confirmedDuration}
                             {...otherProps}
+                            aggressivelyGetLatestDuration
                             onDurationChange={durationChangeHandler}
+                            styles={customStyles}
                         />
                         <View
                             {...buttonContainerProps}
                             style={styles.buttonContainer}>
                             {!hideCancelButton ? (
                                 <TouchableOpacity
-                                    onPress={cancelHandler}
-                                    {...buttonTouchableOpacityProps}>
+                                    {...buttonTouchableOpacityProps}
+                                    onPress={cancelHandler}>
                                     <Text
                                         style={[
                                             styles.button,
@@ -166,8 +169,8 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                                 </TouchableOpacity>
                             ) : null}
                             <TouchableOpacity
-                                onPress={confirmHandler}
-                                {...buttonTouchableOpacityProps}>
+                                {...buttonTouchableOpacityProps}
+                                onPress={confirmHandler}>
                                 <Text
                                     style={[
                                         styles.button,
