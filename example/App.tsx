@@ -205,7 +205,6 @@ export default function App() {
                     secondLabel=""
                     styles={{
                         theme: "dark",
-                        backgroundColor: "#202020",
                         pickerItem: {
                             fontSize: 34,
                         },
