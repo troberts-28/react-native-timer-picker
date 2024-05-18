@@ -57,7 +57,7 @@ Includes iOS-style haptic and audio feedback 🍏
 
 ## Peer Dependencies 👶
 
-This component will work in your React Native Project **without any peer dependencies**.
+This component will work in your React Native Project **_without any peer dependencies_**.
 
 ### Linear Gradient
 
@@ -74,7 +74,7 @@ This is currently only supported on Expo with the [expo-haptics](https://www.npm
 
 `import * as Haptics from "expo-haptics";`
 
-**To enable the haptic feedback, you need to supply the imported `Haptics` as a prop to either TimerPickerModal or TimerPicker.**
+**To enable haptic feedback, you need to supply the imported `Haptics` namespace as a prop to either TimerPickerModal or TimerPicker.**
 
 ### Audio Feedback (Click Sound)
 
@@ -82,7 +82,7 @@ This is currently only supported on Expo with the [expo-av](https://www.npmjs.co
 
 `import { Audio } from "expo-av";`
 
-**To enable the audio feedback, you need to supply the imported `Audio` as a prop to either TimerPickerModal or TimerPicker.**
+**To enable audio feedback, you need to supply the imported `Audio` class as a prop to either TimerPickerModal or TimerPicker.**
 
 <br>
 
@@ -394,8 +394,9 @@ return (
 |             pmLabel              | Set the PM label if using the 12-hour picker                                    |                                                                                             String                                                                                              |   pm    |  false   |
 |      disableInfiniteScroll       | Disable the infinite scroll feature                                             |                                                                                             Boolean                                                                                             |  false  |  false   |
 |          LinearGradient          | Linear Gradient Component                                                       | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default |    -    |  false   |
-|          Audio          | Audio Class                                                       | [expo-av](https://www.npmjs.com/package/expo-av).Audio |    -    |  false   |
-|          Haptics          | Haptics Namespace                                                       | [expo-haptics](https://www.npmjs.com/package/expo-haptics) |    -    |  false   |
+|          Haptics          | Haptics Namespace (required for Haptic feedback)                                                     | [expo-haptics](https://www.npmjs.com/package/expo-haptics) |    -    |  false   |
+|          Audio          | Audio Class (required for audio feedback i.e. click sound)                                                     | [expo-av](https://www.npmjs.com/package/expo-av).Audio |    -    |  false   |
+|          clickSoundAsset          | Custom sound asset for click sound                                              | require(.../somefolderpath) or {uri: www.someurl}    |    -    |  false   |
 |       pickerContainerProps       | Props for the picker container                                                  |                                                                               `React.ComponentProps<typeof View>`                                                                               |    -    |  false   |
 |    pickerGradientOverlayProps    | Props for both gradient overlays                                                |                                                                                 `Partial<LinearGradientProps>`                                                                                  |    -    |  false   |
 |  topPickerGradientOverlayProps   | Props for the top gradient overlay                                              |                                                                                 `Partial<LinearGradientProps>`                                                                                  |    -    |  false   |
