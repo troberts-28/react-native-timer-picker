@@ -98,8 +98,11 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             const loadSound = async () => {
                 if (Audio) {
                     const { sound } = await Audio.Sound.createAsync(
-                        clickSoundAsset ??
-                            require("../../assets/select_click.mp3"),
+                        clickSoundAsset ?? {
+                            // use a hosted sound as a fallback (do not use local asset due to loader issues
+                            // in some environments when including mp3 in library)
+                            uri: "https://drive.google.com/uc?export=download&id=10e1YkbNsRh-vGx1jmS1Nntz8xzkBp4_I",
+                        },
                         { shouldPlay: false }
                     );
                     setClickSound(sound);
