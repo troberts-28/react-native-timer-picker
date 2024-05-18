@@ -84,6 +84,9 @@ This is currently only supported on Expo with the [expo-av](https://www.npmjs.co
 
 **To enable audio feedback, you need to supply the imported `Audio` class as a prop to either TimerPickerModal or TimerPicker.**
 
+Please note that the default click sound uses a hosted mp3 file. To make the click sound work offline, you need to supply your own
+sound asset through the `clickSoundAsset` prop. You can download the default click sound [here](https://drive.google.com/uc?export=download&id=10e1YkbNsRh-vGx1jmS1Nntz8xzkBp4_I).
+
 <br>
 
 ## Installation 🚀
@@ -246,6 +249,7 @@ return (
             closeOnOverlayPress
             use12HourPicker
             Audio={Audio}
+            // supply your own custom click sound asset
             clickSoundAsset={require("./assets/custom_click.mp3")}
             LinearGradient={LinearGradient}
             Haptics={Haptics}
@@ -396,7 +400,7 @@ return (
 |          LinearGradient          | Linear Gradient Component                                                       | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default |    -    |  false   |
 |          Haptics          | Haptics Namespace (required for Haptic feedback)                                                     | [expo-haptics](https://www.npmjs.com/package/expo-haptics) |    -    |  false   |
 |          Audio          | Audio Class (required for audio feedback i.e. click sound)                                                     | [expo-av](https://www.npmjs.com/package/expo-av).Audio |    -    |  false   |
-|          clickSoundAsset          | Custom sound asset for click sound                                              | require(.../somefolderpath) or {uri: www.someurl}    |    -    |  false   |
+|          clickSoundAsset          | Custom sound asset for click sound (required for offline click sound - download default [here](https://drive.google.com/uc?export=download&id=10e1YkbNsRh-vGx1jmS1Nntz8xzkBp4_I))                                              | require(.../somefolderpath) or {uri: www.someurl}    |    -    |  false   |
 |       pickerContainerProps       | Props for the picker container                                                  |                                                                               `React.ComponentProps<typeof View>`                                                                               |    -    |  false   |
 |    pickerGradientOverlayProps    | Props for both gradient overlays                                                |                                                                                 `Partial<LinearGradientProps>`                                                                                  |    -    |  false   |
 |  topPickerGradientOverlayProps   | Props for the top gradient overlay                                              |                                                                                 `Partial<LinearGradientProps>`                                                                                  |    -    |  false   |
