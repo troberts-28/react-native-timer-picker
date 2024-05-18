@@ -30,9 +30,10 @@ export const generateStyles = (
         },
         contentContainer: {
             backgroundColor:
-                customStyles?.backgroundColor ?? customStyles?.theme === "dark"
+                customStyles?.backgroundColor ??
+                (customStyles?.theme === "dark"
                     ? DARK_MODE_BACKGROUND_COLOR
-                    : LIGHT_MODE_BACKGROUND_COLOR,
+                    : LIGHT_MODE_BACKGROUND_COLOR),
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 20,
@@ -75,7 +76,7 @@ export const generateStyles = (
         },
         modalTitle: {
             fontSize: 24,
-            fontWeight: "bold",
+            fontWeight: "600",
             marginBottom: 15,
             color:
                 customStyles?.theme === "dark"
