@@ -6,6 +6,7 @@ import type {
     LinearGradientProps,
     SoundAssetType,
     LimitType,
+    FlatListType,
 } from "../DurationScroll/types";
 
 import type { CustomTimerPickerStyles } from "./styles";
@@ -69,4 +70,5 @@ export interface TimerPickerProps {
     styles?: CustomTimerPickerStyles;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
     use12HourPicker?: boolean;
+    FlatListComponent?: FlatListType;
 }

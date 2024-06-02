@@ -51,6 +51,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             styles,
             testID,
             topPickerGradientOverlayProps,
+            FlatListComponent = FlatList,
         } = props;
 
         const data = !is12HourPicker
@@ -369,7 +370,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     isDisabled && styles.disabledPickerContainer,
                 ]}
                 testID={testID}>
-                <FlatList
+                <FlatListComponent
                     ref={flatListRef}
                     data={data}
                     decelerationRate={0.88}
