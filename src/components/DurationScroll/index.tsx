@@ -7,7 +7,7 @@ import React, {
     useEffect,
 } from "react";
 
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList as RNFlatList } from "react-native";
 import type {
     ViewabilityConfigCallbackPairs,
     ViewToken,
@@ -35,6 +35,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             bottomPickerGradientOverlayProps,
             clickSoundAsset,
             disableInfiniteScroll = false,
+            FlatList = RNFlatList,
             Haptics,
             initialValue = 0,
             is12HourPicker,
@@ -51,7 +52,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             styles,
             testID,
             topPickerGradientOverlayProps,
-            FlatListComponent = FlatList,
         } = props;
 
         const data = !is12HourPicker
@@ -84,7 +84,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         // keep track of the last index scrolled past for haptic/audio feedback
         const lastFeedbackIndex = useRef(0);
 
-        const flatListRef = useRef<FlatList | null>(null);
+        const flatListRef = useRef<RNFlatList | null>(null);
 
         const [clickSound, setClickSound] = useState<
             | {
@@ -370,7 +370,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     isDisabled && styles.disabledPickerContainer,
                 ]}
                 testID={testID}>
-                <FlatListComponent
+                <FlatList
                     ref={flatListRef}
                     data={data}
                     decelerationRate={0.88}

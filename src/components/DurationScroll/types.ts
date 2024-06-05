@@ -3,21 +3,22 @@ import type { MutableRefObject } from "react";
 
 import type {
     View,
-    FlatList,
+    FlatList as RNFlatList,
     FlatListProps as RNFlatListProps,
 } from "react-native";
 
 import type { generateStyles } from "../TimerPicker/styles";
 
-export type FlatListType = <ItemT = any>(
+export type CustomFlatList = <ItemT = any>(
     props: React.PropsWithChildren<
-        RNFlatListProps<ItemT> & React.RefAttributes<FlatList<ItemT>>
+        RNFlatListProps<ItemT> & React.RefAttributes<RNFlatList<ItemT>>
     >,
-    ref: React.ForwardedRef<FlatList<ItemT>>
+    ref: React.ForwardedRef<RNFlatList<ItemT>>
 ) => React.ReactElement | null;
 
 export interface DurationScrollProps {
     Audio?: any;
+    FlatList?: CustomFlatList;
     Haptics?: any;
     LinearGradient?: any;
     aggressivelyGetLatestDuration: boolean;
@@ -40,7 +41,6 @@ export interface DurationScrollProps {
     styles: ReturnType<typeof generateStyles>;
     testID?: string;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
-    FlatListComponent?: FlatListType;
 }
 
 export interface DurationScrollRef {

@@ -6,7 +6,7 @@ import type {
     LinearGradientProps,
     SoundAssetType,
     LimitType,
-    FlatListType,
+    CustomFlatList,
 } from "../DurationScroll/types";
 
 import type { CustomTimerPickerStyles } from "./styles";
@@ -31,6 +31,7 @@ export interface TimerPickerRef {
 export interface TimerPickerProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Audio?: any;
+    FlatList?: CustomFlatList;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Haptics?: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,5 +71,4 @@ export interface TimerPickerProps {
     styles?: CustomTimerPickerStyles;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
     use12HourPicker?: boolean;
-    FlatListComponent?: FlatListType;
 }
