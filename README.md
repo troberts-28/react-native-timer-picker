@@ -124,6 +124,30 @@ const [alarmString, setAlarmString] = useState<
         string | null
     >(null);
 
+const formatTime = ({
+    hours,
+    minutes,
+    seconds,
+}: {
+    hours?: number;
+    minutes?: number;
+    seconds?: number;
+}) => {
+    const timeParts = [];
+
+    if (hours !== undefined) {
+        timeParts.push(hours.toString().padStart(2, "0"));
+    }
+    if (minutes !== undefined) {
+        timeParts.push(minutes.toString().padStart(2, "0"));
+    }
+    if (seconds !== undefined) {
+        timeParts.push(seconds.toString().padStart(2, "0"));
+    }
+
+    return timeParts.join(":");
+};
+
 return (
     <View style={{backgroundColor: "#514242", alignItems: "center", justifyContent: "center"}}>
         <Text style={{fontSize: 18, color: "#F1F1F1"}}>
@@ -201,6 +225,30 @@ const [showPicker, setShowPicker] = useState(false);
 const [alarmString, setAlarmString] = useState<
         string | null
     >(null);
+
+const formatTime = ({
+    hours,
+    minutes,
+    seconds,
+}: {
+    hours?: number;
+    minutes?: number;
+    seconds?: number;
+}) => {
+    const timeParts = [];
+
+    if (hours !== undefined) {
+        timeParts.push(hours.toString().padStart(2, "0"));
+    }
+    if (minutes !== undefined) {
+        timeParts.push(minutes.toString().padStart(2, "0"));
+    }
+    if (seconds !== undefined) {
+        timeParts.push(seconds.toString().padStart(2, "0"));
+    }
+
+    return timeParts.join(":");
+};
 
 return (
     <View style={{backgroundColor: "#F1F1F1", alignItems: "center", justifyContent: "center"}}>
