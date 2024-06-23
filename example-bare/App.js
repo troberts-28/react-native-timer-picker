@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+
 import {
     ScrollView,
     StyleSheet,
@@ -7,7 +8,7 @@ import {
     View,
     useWindowDimensions,
 } from "react-native";
-
+import LinearGradient from "react-native-linear-gradient";
 import { TimerPicker, TimerPickerModal } from "react-native-timer-picker";
 
 import { formatTime } from "./utils/formatTime";
@@ -55,21 +56,22 @@ export default function App() {
                     </View>
                 </TouchableOpacity>
                 <TimerPickerModal
-                    visible={showPickerExample1}
-                    setIsVisible={setShowPickerExample1}
+                    closeOnOverlayPress
+                    LinearGradient={LinearGradient}
+                    modalProps={{
+                        overlayOpacity: 0.2,
+                    }}
+                    modalTitle="Set Alarm"
+                    onCancel={() => setShowPickerExample1(false)}
                     onConfirm={(pickedDuration) => {
                         setAlarmStringExample1(formatTime(pickedDuration));
                         setShowPickerExample1(false);
                     }}
-                    modalTitle="Set Alarm"
-                    onCancel={() => setShowPickerExample1(false)}
-                    closeOnOverlayPress
+                    setIsVisible={setShowPickerExample1}
                     styles={{
                         theme: "dark",
                     }}
-                    modalProps={{
-                        overlayOpacity: 0.2,
-                    }}
+                    visible={showPickerExample1}
                 />
             </View>
         );
@@ -110,18 +112,19 @@ export default function App() {
                     </View>
                 </TouchableOpacity>
                 <TimerPickerModal
-                    visible={showPickerExample2}
-                    setIsVisible={setShowPickerExample2}
+                    closeOnOverlayPress
+                    LinearGradient={LinearGradient}
+                    modalTitle="Set Alarm"
+                    onCancel={() => setShowPickerExample2(false)}
                     onConfirm={(pickedDuration) => {
                         setAlarmStringExample2(formatTime(pickedDuration));
                         setShowPickerExample2(false);
                     }}
-                    modalTitle="Set Alarm"
-                    onCancel={() => setShowPickerExample2(false)}
-                    closeOnOverlayPress
+                    setIsVisible={setShowPickerExample2}
                     styles={{
                         theme: "light",
                     }}
+                    visible={showPickerExample2}
                 />
             </View>
         );
@@ -136,23 +139,24 @@ export default function App() {
                     { width: screenWidth },
                 ]}>
                 <TimerPicker
-                    padWithNItems={2}
-                    hourLabel=":"
-                    minuteLabel=":"
-                    secondLabel=""
+                    disableInfiniteScroll={true}
+                    hideSeconds={true}
+                    hourLabel="hr"
+                    initialHours={0}
+                    initialMinutes={0}
+                    initialSeconds={0}
+                    LinearGradient={LinearGradient}
+                    minuteLabel="min"
                     styles={{
-                        theme: "dark",
-                        backgroundColor: "#202020",
-                        pickerItem: {
-                            fontSize: 34,
-                        },
-                        pickerLabel: {
-                            fontSize: 32,
-                            marginTop: 0,
-                        },
+                        theme: "light",
+                        backgroundColor: "#ffffff",
+                        pickerItem: { fontSize: 18 },
+                        pickerLabel: { fontSize: 18 },
                         pickerContainer: {
-                            marginRight: 6,
+                            justifyContent: "center",
+                            columnGap: 16,
                         },
+                        pickerLabelContainer: { right: -16 },
                     }}
                 />
             </View>
@@ -168,9 +172,10 @@ export default function App() {
                     { width: screenWidth },
                 ]}>
                 <TimerPicker
-                    padWithNItems={3}
                     hideHours
+                    LinearGradient={LinearGradient}
                     minuteLabel="min"
+                    padWithNItems={3}
                     secondLabel="sec"
                     styles={{
                         theme: "light",

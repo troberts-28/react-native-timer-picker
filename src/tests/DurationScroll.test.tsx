@@ -2,7 +2,8 @@ import React from "react";
 
 import { render } from "@testing-library/react-native";
 
-import DurationScroll from "../components/TimerPicker/DurationScroll";
+import DurationScroll from "../components/DurationScroll";
+import type { generateStyles } from "../components/TimerPicker/styles";
 
 describe("DurationScroll", () => {
     const onDurationChangeMock = jest.fn();
@@ -12,12 +13,17 @@ describe("DurationScroll", () => {
         pickerLabel: {},
         pickerItemContainer: {},
         pickerItem: {},
+        pickerAmPmContainer: {},
+        pickerAmPmLabel: {},
+        disabledPickerContainer: {},
+        disabledPickerItem: {},
         pickerGradientOverlay: {},
-    };
+    } as ReturnType<typeof generateStyles>;
 
     it("renders without crashing", () => {
         const { getByTestId } = render(
             <DurationScroll
+                aggressivelyGetLatestDuration={false}
                 numberOfItems={1}
                 onDurationChange={onDurationChangeMock}
                 padWithNItems={0}
@@ -32,6 +38,7 @@ describe("DurationScroll", () => {
     it("renders the correct number of items", () => {
         const { getAllByTestId } = render(
             <DurationScroll
+                aggressivelyGetLatestDuration={false}
                 numberOfItems={2}
                 onDurationChange={onDurationChangeMock}
                 padWithNItems={1}
@@ -45,6 +52,7 @@ describe("DurationScroll", () => {
     it("renders the label if provided", () => {
         const { getByText } = render(
             <DurationScroll
+                aggressivelyGetLatestDuration={false}
                 label="Duration"
                 numberOfItems={59}
                 onDurationChange={onDurationChangeMock}
@@ -55,5 +63,4 @@ describe("DurationScroll", () => {
         const label = getByText("Duration");
         expect(label).toBeDefined();
     });
-
 });

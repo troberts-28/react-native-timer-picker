@@ -11,7 +11,10 @@
     "types": "dist/typescript/src/index.d.ts",
     "scripts": {
         "setup": "yarn && cd example && yarn",
+        "setup-bare": "yarn && cd example-bare && yarn",
         "start": " cd example && yarn start",
+        "start-bare:android": " cd example-bare && yarn android && yarn start",
+        "start-bare:ios": " cd example-bare && yarn ios && yarn start",
         "test": "jest --forceExit --silent",
         "build": "bob build",
         "clean": "rm yarn.lock && rm -rf ./node_modules && yarn install",

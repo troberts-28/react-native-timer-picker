@@ -2,7 +2,7 @@ import React from "react";
 
 import { render, fireEvent } from "@testing-library/react-native";
 
-import TimerPickerModal from "../components";
+import TimerPickerModal from "../components/TimerPickerModal";
 
 describe("TimerPickerModal", () => {
     const mockOnConfirm = jest.fn();
