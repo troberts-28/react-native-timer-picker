@@ -597,6 +597,10 @@ To get this project running locally:
 3. Run `yarn start` to start the example in Expo Go.
 4. Start adding cool stuff! Your changes should be immediately reflected in the Expo Go app.
 
+You can also run the library in bare React Native:
+1. Run `yarn setup-dev`.
+2. Run `yarn start-bare:android` or `start-bare:ios` to start the project on an emulator/device.
+
 ### GitHub Guidelines
 
 There are two permenant branches: `main` and `develop`. You should never work directly on either of these branches.
