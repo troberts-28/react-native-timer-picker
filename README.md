@@ -593,13 +593,16 @@ Contributions to this project are more than welcome.
 To get this project running locally:
 
 1. Clone the Git repo.
-2. Run `yarn setup` from the project root (this installs the dev dependencies and the example's additional dependencies)
-3. Run `yarn start` to start the example in Expo Go.
-4. Start adding cool stuff! Your changes should be immediately reflected in the Expo Go app.
+2. Run `yarn` to install the base dependencies
+3. Run `yarn setup` from the project root (this installs the example's additional dependencies)
+4. Run `yarn start` to start the example in Expo Go.
+5. Start adding cool stuff! Your changes should be immediately reflected in the Expo Go app.
 
 You can also run the library in bare React Native:
-1. Run `yarn setup-dev`.
-2. Run `yarn start-bare:android` or `start-bare:ios` to start the project on an emulator/device.
+1. Clone the Git repo.
+2. Run `yarn` to install the base dependencies
+3. Run `yarn setup-dev`.
+4. Run `yarn start-bare:android` or `start-bare:ios` to start the project on an emulator/device.
 
 ### GitHub Guidelines
 
@@ -608,12 +611,6 @@ There are two permenant branches: `main` and `develop`. You should never work di
 1. Create a new branch off `develop` for your work using the pattern `feature/{DESCRIPTION}`.
 2. When you think your work is ready for review, submit a PR from your branch back to `develop`.
 3. Once the PR is resolved, your work will be merged into `develop`, and will be included in the next major/minor release.
-
-<br>
-
-## Limitations ⚠
-
-Nesting the `TimerPicker` component inside a vertical ScrollView is not supported. React Native will throw an error and the picker will not be scrollable. The modal component works fine in this scenario however.
 
 <br>
 
