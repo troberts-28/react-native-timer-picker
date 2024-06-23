@@ -4,3 +4,5 @@ example/src*
 dist
 *.tgz
 android
+ios
+.yarn

@@ -1,12 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { MutableRefObject } from "react";
 
-import type { View } from "react-native";
+import type {
+    View,
+    FlatList as RNFlatList,
+    FlatListProps as RNFlatListProps,
+} from "react-native";
 
 import type { generateStyles } from "../TimerPicker/styles";
 
+export type CustomFlatList = <ItemT = any>(
+    props: React.PropsWithChildren<
+        RNFlatListProps<ItemT> & React.RefAttributes<RNFlatList<ItemT>>
+    >,
+    ref: React.ForwardedRef<RNFlatList<ItemT>>
+) => React.ReactElement | null;
+
 export interface DurationScrollProps {
     Audio?: any;
+    FlatList?: CustomFlatList;
     Haptics?: any;
     LinearGradient?: any;
     aggressivelyGetLatestDuration: boolean;
