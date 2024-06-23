@@ -27,6 +27,7 @@ Includes iOS-style haptic and audio feedback 🍏
 -   [Props 💅](#props-)
     -   [TimerPicker ⏲️](#timerpicker-️)
         -   [Custom Styles 👗](#custom-styles-)
+        -   [Custom FlatList](#custom-flatlist)
     -   [TimerPickerModal ⏰](#timerpickermodal-)
         -   [Custom Styles 👕](#custom-styles--1)
 -   [Methods 🔄](#methods-)
@@ -432,9 +433,10 @@ Note the minor limitations to the allowed styles for `pickerContainer` and `pick
 
 
 #### Custom FlatList
-The library offers the chance of providing a custom component for the `<FlatList />` instead of the default one from `react-native`, this allows for more flexibility and integration with libraries like [react-native-gesture-handler](react-native-gesture-handler) or other components built on top of it, like [https://ui.gorhom.dev/components/bottom-sheet](https://ui.gorhom.dev/components/bottom-sheet).
 
-E.g. you want to place the timer picker within that bottom-sheet component, the scrolling detection from the bottom-sheet itself [would interfere](https://ui.gorhom.dev/components/bottom-sheet/troubleshooting#adding-horizontal-flatlist-or-scrollview-is-not-working-properly-on-android) with the one inside the timer picker, but it can be easily solved by providing the `FlatList` component from `react-native-gestire-handler` like this:
+The library offers the ability to provide a custom component for the `<FlatList />`, instead of the default React Native component. This allows for more flexibility and integration with libraries like [react-native-gesture-handler](react-native-gesture-handler) or other components built on top of it, like [https://ui.gorhom.dev/components/bottom-sheet](https://ui.gorhom.dev/components/bottom-sheet).
+
+E.g. if you want to place the timer picker within that bottom-sheet component, the scrolling detection from the bottom-sheet [would interfere](https://ui.gorhom.dev/components/bottom-sheet/troubleshooting#adding-horizontal-flatlist-or-scrollview-is-not-working-properly-on-android) with the one inside the timer picker, but it can be easily solved by providing the `FlatList` component from `react-native-gesture-handler` like this:
 
 ```Jsx
 import { FlatList } from 'react-native-gesture-handler';
@@ -449,10 +451,8 @@ import { TimerPicker } from "react-native-timer-picker";
 
 ```
 
-And it will work as expected.
-
 **Important**:
-The custom component needs to have the same interface as `react-native` `<FlatList />` in order for it to work as expected, a complete reference of the current usage can be found [here](/src/components/DurationScroll/index.tsx)
+The custom component needs to have the same interface as React Native's `<FlatList />` in order for it to work as expected. A complete reference of the current usage can be found [here](/src/components/DurationScroll/index.tsx)
 
 ### TimerPickerModal ⏰
 
