@@ -10,12 +10,12 @@
     },
     "dependencies": {
         "@expo/vector-icons": "^14.0.0",
-        "expo": "~51.0.8",
+        "expo": "~51.0.14",
         "expo-av": "~14.0.5",
         "expo-haptics": "~13.0.1",
         "expo-linear-gradient": "~13.0.2",
         "react": "18.2.0",
-        "react-native": "0.74.1"
+        "react-native": "0.74.2"
     },
     "devDependencies": {
         "@babel/core": "^7.24.0",
