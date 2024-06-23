@@ -377,6 +377,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     getItemLayout={getItemLayout}
                     initialScrollIndex={initialScrollIndex}
                     keyExtractor={(_, index) => index.toString()}
+                    nestedScrollEnabled
                     onMomentumScrollEnd={onMomentumScrollEnd}
                     onScroll={onScroll}
                     renderItem={renderItem}
