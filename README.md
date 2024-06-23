@@ -400,6 +400,7 @@ return (
 |          LinearGradient          | Linear Gradient Component                                                       | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default |    -    |  false   |
 |          Haptics          | Haptics Namespace (required for Haptic feedback)                                                     | [expo-haptics](https://www.npmjs.com/package/expo-haptics) |    -    |  false   |
 |          Audio          | Audio Class (required for audio feedback i.e. click sound)                                                     | [expo-av](https://www.npmjs.com/package/expo-av).Audio |    -    |  false   |
+|          FlatList          | FlatList component used internally to implement each picker (hour, minutes and seconds). More info [below](#custom-flatlist)                           | [react-native](https://reactnative.dev/docs/flatlist).FlatList |    `FlatList` from `react-native`    |  false   |
 |          clickSoundAsset          | Custom sound asset for click sound (required for offline click sound - download default [here](https://drive.google.com/uc?export=download&id=10e1YkbNsRh-vGx1jmS1Nntz8xzkBp4_I))                                              | require(.../somefolderpath) or {uri: www.someurl}    |    -    |  false   |
 |       pickerContainerProps       | Props for the picker container                                                  |                                                                               `React.ComponentProps<typeof View>`                                                                               |    -    |  false   |
 |    pickerGradientOverlayProps    | Props for both gradient overlays                                                |                                                                                 `Partial<LinearGradientProps>`                                                                                  |    -    |  false   |
@@ -428,6 +429,30 @@ The following custom styles can be supplied to re-style the component in any way
 |  pickerGradientOverlay  | Style for the gradient overlay (fade out)    |                ViewStyle                 |
 
 Note the minor limitations to the allowed styles for `pickerContainer` and `pickerItemContainer`. These are made because these styles are used for internal calculations and all possible `backgroundColor`/`height` types are not supported.
+
+
+#### Custom FlatList
+The library offers the chance of providing a custom component for the `<FlatList />` instead of the default one from `react-native`, this allows for more flexibility and integration with libraries like [react-native-gesture-handler](react-native-gesture-handler) or other components built on top of it, like [https://ui.gorhom.dev/components/bottom-sheet](https://ui.gorhom.dev/components/bottom-sheet).
+
+E.g. you want to place the timer picker within that bottom-sheet component, the scrolling detection from the bottom-sheet itself [would interfere](https://ui.gorhom.dev/components/bottom-sheet/troubleshooting#adding-horizontal-flatlist-or-scrollview-is-not-working-properly-on-android) with the one inside the timer picker, but it can be easily solved by providing the `FlatList` component from `react-native-gestire-handler` like this:
+
+```Jsx
+import { FlatList } from 'react-native-gesture-handler';
+import { TimerPicker } from "react-native-timer-picker";
+
+// ...
+
+<TimerPicker
+    {...props}
+    FlatList={FlatList}
+/>
+
+```
+
+And it will work as expected.
+
+**Important**:
+The custom component needs to have the same interface as `react-native` `<FlatList />` in order for it to work as expected, a complete reference of the current usage can be found [here](/src/components/DurationScroll/index.tsx)
 
 ### TimerPickerModal ⏰
 
