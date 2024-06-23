@@ -23,9 +23,6 @@ import {
     useWindowDimensions,
 } from "react-native";
 import type { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { FlatList as CustomFlatList } from "react-native-gesture-handler";
-import { ScrollView as CustomScrollView } from "react-native-gesture-handler";
 
 import { TimerPicker, TimerPickerModal } from "../src";
 
@@ -190,17 +187,14 @@ export default function App() {
 
     const renderExample3 = useMemo(() => {
         return (
-            <CustomScrollView
-                contentContainerStyle={[
+            <View
+                style={[
                     styles.container,
                     styles.page3Container,
-                    { height: 4000 },
-                ]}
-                nestedScrollEnabled
-                style={[{ width: screenWidth, flex: 1 }]}>
+                    { width: screenWidth },
+                ]}>
                 <TimerPicker
                     Audio={Audio}
-                    FlatList={CustomFlatList}
                     Haptics={Haptics}
                     hourLabel=":"
                     LinearGradient={LinearGradient}
@@ -232,7 +226,7 @@ export default function App() {
                         },
                     }}
                 />
-            </CustomScrollView>
+            </View>
         );
     }, [screenWidth]);
 
@@ -341,7 +335,7 @@ export default function App() {
     }, [currentPageIndex, screenWidth]);
 
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <>
             <ScrollView
                 ref={scrollViewRef}
                 horizontal
@@ -353,7 +347,7 @@ export default function App() {
                 {renderExample4}
             </ScrollView>
             {renderNavigationArrows}
-        </GestureHandlerRootView>
+        </>
     );
 }
 
