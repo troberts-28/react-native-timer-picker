@@ -22,7 +22,6 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             allowFontScaling = false,
             amLabel = "am",
             disableInfiniteScroll = false,
-            FlatList,
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,

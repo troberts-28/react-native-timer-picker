@@ -1,6 +1,7 @@
 import React from "react";
 
 import { render } from "@testing-library/react-native";
+import { FlatList } from "react-native";
 
 import TimerPicker from "../components/TimerPicker";
 
@@ -25,5 +26,16 @@ describe("TimerPicker", () => {
         const secondPicker = queryByTestId("duration-scroll-second");
         expect(minutePicker).toBeNull();
         expect(secondPicker).toBeNull();
+    });
+
+    it("uses the custom FlatList component when provided", () => {
+        const CustomFlatList = (props) => (
+            <FlatList {...props} testID="custom-flat-list" />
+        );
+        const { queryAllByTestId } = render(
+            <TimerPicker FlatList={CustomFlatList} />
+        );
+        const customFlatList = queryAllByTestId("custom-flat-list");
+        expect(customFlatList).toHaveLength(3);
     });
 });
