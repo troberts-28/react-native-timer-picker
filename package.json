@@ -35,7 +35,6 @@
         "registry": "https://registry.npmjs.org/"
     },
     "files": [
-        "src",
         "dist",
         "!**/__tests__",
         "!**/__fixtures__",
