@@ -61,6 +61,9 @@ export interface TimerPickerProps {
         minutes: number;
         seconds: number;
     }) => void;
+    padHoursWithZero?: boolean;
+    padMinutesWithZero?: boolean;
+    padSecondsWithZero?: boolean;
     padWithNItems?: number;
     pickerContainerProps?: React.ComponentProps<typeof View>;
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
