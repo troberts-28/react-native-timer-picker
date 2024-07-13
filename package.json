@@ -6,9 +6,12 @@
         "url": "https://github.com/troberts-28"
     },
     "license": "MIT",
-    "version": "1.10.0",
+    "version": "1.10.1",
     "main": "dist/commonjs/index.js",
-    "types": "dist/typescript/src/index.d.ts",
+    "module": "dist/module/index.js",
+    "types": "dist/typescript/index.d.ts",
+    "typings": "dist/typescript/index.d.ts",
+
     "scripts": {
         "setup": "yarn && cd example && yarn",
         "setup-bare": "yarn && cd example-bare && yarn",
@@ -125,10 +128,6 @@
         "react-test-renderer": "^18.0.0",
         "typescript": "^4.7.4"
     },
-    "react-native": "src/index.ts",
-    "source": "src/index.ts",
-    "module": "dist/module/index.js",
-    "typings": "./dist/typescript/index.d.ts",
     "react-native-builder-bob": {
         "source": "src",
         "output": "dist",
