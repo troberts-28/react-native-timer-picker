@@ -107,6 +107,7 @@ export default function App() {
                 <TimerPickerModal
                     Audio={Audio}
                     closeOnOverlayPress
+                    disableInfiniteScroll
                     Haptics={Haptics}
                     LinearGradient={LinearGradient}
                     modalProps={{
@@ -118,6 +119,9 @@ export default function App() {
                         setAlarmStringExample1(formatTime(pickedDuration));
                         setShowPickerExample1(false);
                     }}
+                    repeatHourNumbersNTimes={1}
+                    repeatMinuteNumbersNTimes={1}
+                    repeatSecondNumbersNTimes={1}
                     setIsVisible={setShowPickerExample1}
                     styles={{
                         theme: "dark",
