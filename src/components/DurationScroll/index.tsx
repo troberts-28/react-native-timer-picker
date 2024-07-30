@@ -84,14 +84,12 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         const initialScrollIndex = useMemo(
             () =>
                 getScrollIndex({
-                    disableInfiniteScroll,
                     numberOfItems,
                     padWithNItems,
                     repeatNumbersNTimes,
                     value: initialValue,
                 }),
             [
-                disableInfiniteScroll,
                 initialValue,
                 numberOfItems,
                 padWithNItems,
@@ -156,7 +154,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 flatListRef.current?.scrollToIndex({
                     animated: options?.animated ?? false,
                     index: getScrollIndex({
-                        disableInfiniteScroll,
                         numberOfItems,
                         padWithNItems,
                         repeatNumbersNTimes,
