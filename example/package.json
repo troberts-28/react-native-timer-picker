@@ -10,7 +10,7 @@
     },
     "dependencies": {
         "@expo/vector-icons": "^14.0.0",
-        "expo": "~51.0.20",
+        "expo": "~51.0.23",
         "expo-av": "~14.0.5",
         "expo-haptics": "~13.0.1",
         "expo-linear-gradient": "~13.0.2",
