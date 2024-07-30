@@ -5,6 +5,7 @@ import React, {
     useImperativeHandle,
     useState,
     useEffect,
+    useMemo,
 } from "react";
 
 import { View, Text, FlatList as RNFlatList } from "react-native";
@@ -49,35 +50,59 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             padWithNItems,
             pickerGradientOverlayProps,
             pmLabel,
+            repeatNumbersNTimes = 3,
             styles,
             testID,
             topPickerGradientOverlayProps,
         } = props;
 
-        const data = !is12HourPicker
-            ? generateNumbers(numberOfItems, {
-                  padNumbersWithZero,
-                  repeatNTimes: 3,
-                  disableInfiniteScroll,
-                  padWithNItems,
-              })
-            : generate12HourNumbers({
-                  padNumbersWithZero,
-                  repeatNTimes: 3,
-                  disableInfiniteScroll,
-                  padWithNItems,
-              });
+        const data = useMemo(() => {
+            if (is12HourPicker) {
+                return generate12HourNumbers({
+                    padNumbersWithZero,
+                    repeatNTimes: repeatNumbersNTimes,
+                    disableInfiniteScroll,
+                    padWithNItems,
+                });
+            }
+
+            return generateNumbers(numberOfItems, {
+                padNumbersWithZero,
+                repeatNTimes: repeatNumbersNTimes,
+                disableInfiniteScroll,
+                padWithNItems,
+            });
+        }, [
+            disableInfiniteScroll,
+            is12HourPicker,
+            numberOfItems,
+            padNumbersWithZero,
+            padWithNItems,
+            repeatNumbersNTimes,
+        ]);
+
+        const initialScrollIndex = useMemo(
+            () =>
+                getScrollIndex({
+                    numberOfItems,
+                    padWithNItems,
+                    repeatNumbersNTimes,
+                    value: initialValue,
+                }),
+            [
+                initialValue,
+                numberOfItems,
+                padWithNItems,
+                repeatNumbersNTimes,
+            ]
+        );
+
+        const adjustedLimited = useMemo(
+            () => getAdjustedLimit(limit, numberOfItems),
+            [limit, numberOfItems]
+        );
 
         const numberOfItemsToShow = 1 + padWithNItems * 2;
-
-        const adjustedLimited = getAdjustedLimit(limit, numberOfItems);
-
-        const initialScrollIndex = getScrollIndex({
-            value: initialValue,
-            numberOfItems,
-            padWithNItems,
-            disableInfiniteScroll,
-        });
 
         // keep track of the latest duration as it scrolls
         const latestDuration = useRef(0);
@@ -129,10 +154,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 flatListRef.current?.scrollToIndex({
                     animated: options?.animated ?? false,
                     index: getScrollIndex({
-                        value: value,
                         numberOfItems,
                         padWithNItems,
-                        disableInfiniteScroll,
+                        repeatNumbersNTimes,
+                        value: value,
                     }),
                 });
             },
@@ -241,10 +266,18 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         // this check stops the feedback firing when the component mounts
                         if (lastFeedbackIndex.current) {
                             // fire haptic feedback if available
-                            Haptics?.selectionAsync();
+                            try {
+                                Haptics?.selectionAsync();
+                            } catch {
+                                // do nothing
+                            }
 
                             // play click sound if available
-                            clickSound?.replayAsync();
+                            try {
+                                clickSound?.replayAsync();
+                            } catch {
+                                // do nothing
+                            }
                         }
 
                         lastFeedbackIndex.current = feedbackIndex;
@@ -329,15 +362,16 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     });
                 } else if (
                     viewableItems[0]?.index &&
-                    viewableItems[0].index >= numberOfItems * 2.5
+                    viewableItems[0].index >=
+                        numberOfItems * (repeatNumbersNTimes - 0.5)
                 ) {
                     flatListRef.current?.scrollToIndex({
                         animated: false,
-                        index: viewableItems[0].index - numberOfItems,
+                        index: viewableItems[0].index - numberOfItems - 1,
                     });
                 }
             },
-            [numberOfItems]
+            [numberOfItems, repeatNumbersNTimes]
         );
 
         const getItemLayout = useCallback(
@@ -352,7 +386,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         const viewabilityConfigCallbackPairs =
             useRef<ViewabilityConfigCallbackPairs>([
                 {
-                    viewabilityConfig: { viewAreaCoveragePercentThreshold: 25 },
+                    viewabilityConfig: { viewAreaCoveragePercentThreshold: 0 },
                     onViewableItemsChanged: onViewableItemsChanged,
                 },
             ]);
