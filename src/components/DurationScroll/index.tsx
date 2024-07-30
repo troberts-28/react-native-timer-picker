@@ -5,6 +5,7 @@ import React, {
     useImperativeHandle,
     useState,
     useEffect,
+    useMemo,
 } from "react";
 
 import { View, Text, FlatList as RNFlatList } from "react-native";
@@ -55,31 +56,55 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             topPickerGradientOverlayProps,
         } = props;
 
-        const data = !is12HourPicker
-            ? generateNumbers(numberOfItems, {
-                  padNumbersWithZero,
-                  repeatNTimes: repeatNumbersNTimes,
-                  disableInfiniteScroll,
-                  padWithNItems,
-              })
-            : generate12HourNumbers({
-                  padNumbersWithZero,
-                  repeatNTimes: repeatNumbersNTimes,
-                  disableInfiniteScroll,
-                  padWithNItems,
-              });
+        const data = useMemo(() => {
+            if (is12HourPicker) {
+                return generate12HourNumbers({
+                    padNumbersWithZero,
+                    repeatNTimes: repeatNumbersNTimes,
+                    disableInfiniteScroll,
+                    padWithNItems,
+                });
+            }
 
-        const numberOfItemsToShow = 1 + padWithNItems * 2;
-
-        const adjustedLimited = getAdjustedLimit(limit, numberOfItems);
-
-        const initialScrollIndex = getScrollIndex({
+            return generateNumbers(numberOfItems, {
+                padNumbersWithZero,
+                repeatNTimes: repeatNumbersNTimes,
+                disableInfiniteScroll,
+                padWithNItems,
+            });
+        }, [
             disableInfiniteScroll,
+            is12HourPicker,
             numberOfItems,
+            padNumbersWithZero,
             padWithNItems,
             repeatNumbersNTimes,
-            value: initialValue,
-        });
+        ]);
+
+        const initialScrollIndex = useMemo(
+            () =>
+                getScrollIndex({
+                    disableInfiniteScroll,
+                    numberOfItems,
+                    padWithNItems,
+                    repeatNumbersNTimes,
+                    value: initialValue,
+                }),
+            [
+                disableInfiniteScroll,
+                initialValue,
+                numberOfItems,
+                padWithNItems,
+                repeatNumbersNTimes,
+            ]
+        );
+
+        const adjustedLimited = useMemo(
+            () => getAdjustedLimit(limit, numberOfItems),
+            [limit, numberOfItems]
+        );
+
+        const numberOfItemsToShow = 1 + padWithNItems * 2;
 
         // keep track of the latest duration as it scrolls
         const latestDuration = useRef(0);
