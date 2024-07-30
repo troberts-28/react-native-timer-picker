@@ -68,6 +68,9 @@ export interface TimerPickerProps {
     pickerContainerProps?: React.ComponentProps<typeof View>;
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
     pmLabel?: string;
+    repeatHourNumbersNTimes?: number;
+    repeatMinuteNumbersNTimes?: number;
+    repeatSecondNumbersNTimes?: number;
     secondLabel?: string | React.ReactElement;
     secondLimit?: LimitType;
     secondsPickerIsDisabled?: boolean;

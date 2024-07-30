@@ -49,6 +49,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             padWithNItems,
             pickerGradientOverlayProps,
             pmLabel,
+            repeatNumbersNTimes = 3,
             styles,
             testID,
             topPickerGradientOverlayProps,
@@ -57,13 +58,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         const data = !is12HourPicker
             ? generateNumbers(numberOfItems, {
                   padNumbersWithZero,
-                  repeatNTimes: 3,
+                  repeatNTimes: repeatNumbersNTimes,
                   disableInfiniteScroll,
                   padWithNItems,
               })
             : generate12HourNumbers({
                   padNumbersWithZero,
-                  repeatNTimes: 3,
+                  repeatNTimes: repeatNumbersNTimes,
                   disableInfiniteScroll,
                   padWithNItems,
               });
@@ -73,10 +74,11 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         const adjustedLimited = getAdjustedLimit(limit, numberOfItems);
 
         const initialScrollIndex = getScrollIndex({
-            value: initialValue,
+            disableInfiniteScroll,
             numberOfItems,
             padWithNItems,
-            disableInfiniteScroll,
+            repeatNumbersNTimes,
+            value: initialValue,
         });
 
         // keep track of the latest duration as it scrolls
@@ -129,10 +131,11 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 flatListRef.current?.scrollToIndex({
                     animated: options?.animated ?? false,
                     index: getScrollIndex({
-                        value: value,
+                        disableInfiniteScroll,
                         numberOfItems,
                         padWithNItems,
-                        disableInfiniteScroll,
+                        repeatNumbersNTimes,
+                        value: value,
                     }),
                 });
             },
@@ -337,15 +340,16 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     });
                 } else if (
                     viewableItems[0]?.index &&
-                    viewableItems[0].index >= numberOfItems * 2.5
+                    viewableItems[0].index >=
+                        numberOfItems * (repeatNumbersNTimes - 0.5)
                 ) {
                     flatListRef.current?.scrollToIndex({
                         animated: false,
-                        index: viewableItems[0].index - numberOfItems,
+                        index: viewableItems[0].index - numberOfItems - 1,
                     });
                 }
             },
-            [numberOfItems]
+            [numberOfItems, repeatNumbersNTimes]
         );
 
         const getItemLayout = useCallback(
@@ -360,7 +364,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         const viewabilityConfigCallbackPairs =
             useRef<ViewabilityConfigCallbackPairs>([
                 {
-                    viewabilityConfig: { viewAreaCoveragePercentThreshold: 25 },
+                    viewabilityConfig: { viewAreaCoveragePercentThreshold: 0 },
                     onViewableItemsChanged: onViewableItemsChanged,
                 },
             ]);
