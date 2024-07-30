@@ -241,10 +241,18 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         // this check stops the feedback firing when the component mounts
                         if (lastFeedbackIndex.current) {
                             // fire haptic feedback if available
-                            Haptics?.selectionAsync();
+                            try {
+                                Haptics?.selectionAsync();
+                            } catch {
+                                // do nothing
+                            }
 
                             // play click sound if available
-                            clickSound?.replayAsync();
+                            try {
+                                clickSound?.replayAsync();
+                            } catch {
+                                // do nothing
+                            }
                         }
 
                         lastFeedbackIndex.current = feedbackIndex;

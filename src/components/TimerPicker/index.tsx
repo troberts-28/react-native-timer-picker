@@ -59,11 +59,14 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             [checkedPadWithNItems, customStyles]
         );
 
-        const safeInitialValue = {
-            hours: initialValue?.hours ?? 0,
-            minutes: initialValue?.minutes ?? 0,
-            seconds: initialValue?.seconds ?? 0,
-        };
+        const safeInitialValue = useMemo(
+            () => ({
+                hours: initialValue?.hours ?? 0,
+                minutes: initialValue?.minutes ?? 0,
+                seconds: initialValue?.seconds ?? 0,
+            }),
+            [initialValue?.hours, initialValue?.minutes, initialValue?.seconds]
+        );
 
         const [selectedHours, setSelectedHours] = useState(
             safeInitialValue.hours
