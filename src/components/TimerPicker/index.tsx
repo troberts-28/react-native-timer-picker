@@ -39,7 +39,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             padWithNItems = 1,
             pickerContainerProps,
             pmLabel = "pm",
-            repeatHourNumbersNTimes = 3,
+            repeatHourNumbersNTimes = 6,
             repeatMinuteNumbersNTimes = 3,
             repeatSecondNumbersNTimes = 3,
             secondLabel,
