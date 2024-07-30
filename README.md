@@ -27,6 +27,7 @@ Includes iOS-style haptic and audio feedback 🍏
 -   [Props 💅](#props-)
     -   [TimerPicker ⏲️](#timerpicker-️)
         -   [Custom Styles 👗](#custom-styles-)
+        -   [Performance](#performance)
         -   [Custom FlatList](#custom-flatlist)
     -   [TimerPickerModal ⏰](#timerpickermodal-)
         -   [Custom Styles 👕](#custom-styles--1)
@@ -448,6 +449,9 @@ return (
 |         use12HourPicker          | Switch the hour picker to 12-hour format with an AM / PM label                  |                                                                                             Boolean                                                                                             |  false  |  false   |
 |             amLabel              | Set the AM label if using the 12-hour picker                                    |                                                                                             String                                                                                              |   am    |  false   |
 |             pmLabel              | Set the PM label if using the 12-hour picker                                    |                                                                                             String                                                                                              |   pm    |  false   |
+|             repeatHourNumbersNTimes              | Set the number of times the list of hours is repeated in the picker                                   |                                                                                             Number                                                                                              |   6    |  false   |
+|             repeatMinuteNumbersNTimes              | Set the number of times the list of minutes is repeated in the picker                                   |                                                                                             Number                                                                                              |   3    |  false   |
+|             repeatSecondNumbersNTimes              | Set the number of times the list of seconds is repeated in the picker                                   |                                                                                             Number                                                                                              |   3    |  false   |
 |      disableInfiniteScroll       | Disable the infinite scroll feature                                             |                                                                                             Boolean                                                                                             |  false  |  false   |
 |          LinearGradient          | Linear Gradient Component                                                       | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default |    -    |  false   |
 |          Haptics          | Haptics Namespace (required for Haptic feedback)                                                     | [expo-haptics](https://www.npmjs.com/package/expo-haptics) |    -    |  false   |
@@ -481,6 +485,15 @@ The following custom styles can be supplied to re-style the component in any way
 |  pickerGradientOverlay  | Style for the gradient overlay (fade out)    |                ViewStyle                 |
 
 Note the minor limitations to the allowed styles for `pickerContainer` and `pickerItemContainer`. These are made because these styles are used for internal calculations and all possible `backgroundColor`/`height` types are not supported.
+
+
+#### Performance
+
+When the `disableInfiniteScroll` prop is not set, the picker gives the appearance of an infinitely scrolling picker by auto-scrolling forward/back when you near the start/end of the list. When the picker auto-scrolls, a momentary flicker is visible if you are scrolling very slowly.
+
+To mitigate for this, you can modify the `repeatHourNumbersNTimes`, `repeatMinuteNumbersNTimes` and `repeatSecondNumbersNTimes` props. These set the number of times the list of numbers in each picker is repeated. These have a performance trade-off: higher values mean the picker has to auto-scroll less to maintain the infinite scroll, but has to render a longer list of numbers. By default, the props are set to 6, 3 and 3, respectively, which balances that trade-off effectively.
+
+Note that you can avoid the auto-scroll flickering entirely by disabling infinite scroll. You could then set the above props to high values, so that a user has to scroll far down/up the list to reach the end of the list.
 
 
 #### Custom FlatList

@@ -38,6 +38,7 @@ export interface DurationScrollProps {
     padWithNItems: number;
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
     pmLabel?: string;
+    repeatNumbersNTimes?: number;
     styles: ReturnType<typeof generateStyles>;
     testID?: string;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;

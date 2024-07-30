@@ -39,6 +39,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             padWithNItems = 1,
             pickerContainerProps,
             pmLabel = "pm",
+            repeatHourNumbersNTimes = 6,
+            repeatMinuteNumbersNTimes = 3,
+            repeatSecondNumbersNTimes = 3,
             secondLabel,
             secondLimit,
             secondsPickerIsDisabled = false,
@@ -59,11 +62,14 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             [checkedPadWithNItems, customStyles]
         );
 
-        const safeInitialValue = {
-            hours: initialValue?.hours ?? 0,
-            minutes: initialValue?.minutes ?? 0,
-            seconds: initialValue?.seconds ?? 0,
-        };
+        const safeInitialValue = useMemo(
+            () => ({
+                hours: initialValue?.hours ?? 0,
+                minutes: initialValue?.minutes ?? 0,
+                seconds: initialValue?.seconds ?? 0,
+            }),
+            [initialValue?.hours, initialValue?.minutes, initialValue?.seconds]
+        );
 
         const [selectedHours, setSelectedHours] = useState(
             safeInitialValue.hours
@@ -144,6 +150,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padNumbersWithZero={padHoursWithZero}
                         padWithNItems={checkedPadWithNItems}
                         pmLabel={pmLabel}
+                        repeatNumbersNTimes={repeatHourNumbersNTimes}
                         styles={styles}
                         testID="duration-scroll-hour"
                         {...otherProps}
@@ -165,6 +172,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         onDurationChange={setSelectedMinutes}
                         padNumbersWithZero={padMinutesWithZero}
                         padWithNItems={checkedPadWithNItems}
+                        repeatNumbersNTimes={repeatMinuteNumbersNTimes}
                         styles={styles}
                         testID="duration-scroll-minute"
                         {...otherProps}
@@ -186,6 +194,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         onDurationChange={setSelectedSeconds}
                         padNumbersWithZero={padSecondsWithZero}
                         padWithNItems={checkedPadWithNItems}
+                        repeatNumbersNTimes={repeatSecondNumbersNTimes}
                         styles={styles}
                         testID="duration-scroll-second"
                         {...otherProps}
