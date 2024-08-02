@@ -4,15 +4,11 @@ export const getScrollIndex = (variables: {
     repeatNumbersNTimes: number;
     value: number;
 }) => {
-    const {
-        numberOfItems,
-        padWithNItems,
-        repeatNumbersNTimes,
-        value,
-    } = variables;
+    const { numberOfItems, padWithNItems, repeatNumbersNTimes, value } =
+        variables;
 
     return (
-        ((value + numberOfItems) % (numberOfItems * repeatNumbersNTimes)) +
+        ((value + numberOfItems) % (numberOfItems * repeatNumbersNTimes)) -
         (padWithNItems - 1)
     );
 };
