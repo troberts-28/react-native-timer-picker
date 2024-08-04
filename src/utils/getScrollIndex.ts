@@ -7,8 +7,9 @@ export const getScrollIndex = (variables: {
     const { numberOfItems, padWithNItems, repeatNumbersNTimes, value } =
         variables;
 
-    return (
+    return Math.max(
         ((value + numberOfItems) % (numberOfItems * repeatNumbersNTimes)) -
-        (padWithNItems - 1)
+            (padWithNItems - 1),
+        0
     );
 };

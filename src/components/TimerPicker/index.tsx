@@ -50,16 +50,22 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             ...otherProps
         } = props;
 
-        const checkedPadWithNItems =
-            padWithNItems >= 0 ? Math.round(padWithNItems) : 0;
+        const safePadWithNItems = useMemo(() => {
+            if (padWithNItems < 0) {
+                return 0;
+            }
+            // check if large values also work
+
+            return Math.round(padWithNItems);
+        }, [padWithNItems]);
 
         const styles = useMemo(
             () =>
                 generateStyles(customStyles, {
-                    padWithNItems: checkedPadWithNItems,
+                    padWithNItems: safePadWithNItems,
                 }),
 
-            [checkedPadWithNItems, customStyles]
+            [safePadWithNItems, customStyles]
         );
 
         const safeInitialValue = useMemo(
@@ -148,7 +154,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         numberOfItems={23}
                         onDurationChange={setSelectedHours}
                         padNumbersWithZero={padHoursWithZero}
-                        padWithNItems={checkedPadWithNItems}
+                        padWithNItems={safePadWithNItems}
                         pmLabel={pmLabel}
                         repeatNumbersNTimes={repeatHourNumbersNTimes}
                         styles={styles}
@@ -171,7 +177,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         numberOfItems={59}
                         onDurationChange={setSelectedMinutes}
                         padNumbersWithZero={padMinutesWithZero}
-                        padWithNItems={checkedPadWithNItems}
+                        padWithNItems={safePadWithNItems}
                         repeatNumbersNTimes={repeatMinuteNumbersNTimes}
                         styles={styles}
                         testID="duration-scroll-minute"
@@ -193,7 +199,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         numberOfItems={59}
                         onDurationChange={setSelectedSeconds}
                         padNumbersWithZero={padSecondsWithZero}
-                        padWithNItems={checkedPadWithNItems}
+                        padWithNItems={safePadWithNItems}
                         repeatNumbersNTimes={repeatSecondNumbersNTimes}
                         styles={styles}
                         testID="duration-scroll-second"

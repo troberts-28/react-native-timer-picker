@@ -56,11 +56,21 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             topPickerGradientOverlayProps,
         } = props;
 
+        const safeRepeatNumbersNTimes = useMemo(() => {
+            if (!disableInfiniteScroll && repeatNumbersNTimes < 2) {
+                return 2;
+            } else if (repeatNumbersNTimes < 1) {
+                return 1;
+            }
+
+            return Math.round(repeatNumbersNTimes);
+        }, [disableInfiniteScroll, repeatNumbersNTimes]);
+
         const data = useMemo(() => {
             if (is12HourPicker) {
                 return generate12HourNumbers({
                     padNumbersWithZero,
-                    repeatNTimes: repeatNumbersNTimes,
+                    repeatNTimes: safeRepeatNumbersNTimes,
                     disableInfiniteScroll,
                     padWithNItems,
                 });
@@ -68,7 +78,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
             return generateNumbers(numberOfItems, {
                 padNumbersWithZero,
-                repeatNTimes: repeatNumbersNTimes,
+                repeatNTimes: safeRepeatNumbersNTimes,
                 disableInfiniteScroll,
                 padWithNItems,
             });
@@ -78,7 +88,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             numberOfItems,
             padNumbersWithZero,
             padWithNItems,
-            repeatNumbersNTimes,
+            safeRepeatNumbersNTimes,
         ]);
 
         const initialScrollIndex = useMemo(
@@ -86,16 +96,18 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 getScrollIndex({
                     numberOfItems,
                     padWithNItems,
-                    repeatNumbersNTimes,
+                    repeatNumbersNTimes: safeRepeatNumbersNTimes,
                     value: initialValue,
                 }),
             [
                 initialValue,
                 numberOfItems,
                 padWithNItems,
-                repeatNumbersNTimes,
+                safeRepeatNumbersNTimes,
             ]
         );
+
+        console.log(numberOfItems, initialScrollIndex);
 
         const adjustedLimited = useMemo(
             () => getAdjustedLimit(limit, numberOfItems),
@@ -156,7 +168,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     index: getScrollIndex({
                         numberOfItems,
                         padWithNItems,
-                        repeatNumbersNTimes,
+                        repeatNumbersNTimes: safeRepeatNumbersNTimes,
                         value: value,
                     }),
                 });
@@ -311,6 +323,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
                 // check limits
                 if (newDuration > adjustedLimited.max) {
+                    // TODO (NOW): make this work for a quick scroll
                     const targetScrollIndex =
                         newIndex - (newDuration - adjustedLimited.max);
                     flatListRef.current?.scrollToIndex({
@@ -363,7 +376,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 } else if (
                     viewableItems[0]?.index &&
                     viewableItems[0].index >=
-                        numberOfItems * (repeatNumbersNTimes - 0.5)
+                        numberOfItems * (safeRepeatNumbersNTimes - 0.5)
                 ) {
                     flatListRef.current?.scrollToIndex({
                         animated: false,
@@ -371,7 +384,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     });
                 }
             },
-            [numberOfItems, repeatNumbersNTimes]
+            [numberOfItems, safeRepeatNumbersNTimes]
         );
 
         const getItemLayout = useCallback(
