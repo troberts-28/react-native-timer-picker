@@ -145,6 +145,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     setClickSound(sound);
                 }
             };
+
             loadSound();
 
             // Unload sound when component unmounts
@@ -153,27 +154,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             };
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [Audio]);
-
-        useImperativeHandle(ref, () => ({
-            reset: (options) => {
-                flatListRef.current?.scrollToIndex({
-                    animated: options?.animated ?? false,
-                    index: initialScrollIndex,
-                });
-            },
-            setValue: (value, options) => {
-                flatListRef.current?.scrollToIndex({
-                    animated: options?.animated ?? false,
-                    index: getInitialScrollIndex({
-                        numberOfItems,
-                        padWithNItems,
-                        repeatNumbersNTimes: safeRepeatNumbersNTimes,
-                        value: value,
-                    }),
-                });
-            },
-            latestDuration: latestDuration,
-        }));
 
         const renderItem = useCallback(
             ({ item }: { item: string }) => {
@@ -400,6 +380,27 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     onViewableItemsChanged: onViewableItemsChanged,
                 },
             ]);
+
+        useImperativeHandle(ref, () => ({
+            reset: (options) => {
+                flatListRef.current?.scrollToIndex({
+                    animated: options?.animated ?? false,
+                    index: initialScrollIndex,
+                });
+            },
+            setValue: (value, options) => {
+                flatListRef.current?.scrollToIndex({
+                    animated: options?.animated ?? false,
+                    index: getInitialScrollIndex({
+                        numberOfItems,
+                        padWithNItems,
+                        repeatNumbersNTimes: safeRepeatNumbersNTimes,
+                        value: value,
+                    }),
+                });
+            },
+            latestDuration: latestDuration,
+        }));
 
         return (
             <View

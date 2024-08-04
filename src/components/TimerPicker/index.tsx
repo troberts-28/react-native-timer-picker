@@ -55,7 +55,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 return 0;
             }
 
-            const maxPadWithNItems = hideHours ? 30 : 12;
+            const maxPadWithNItems = hideHours ? 15 : 6;
 
             if (padWithNItems > maxPadWithNItems) {
                 return maxPadWithNItems;
