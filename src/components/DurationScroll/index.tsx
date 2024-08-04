@@ -298,7 +298,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
                 // check limits
                 if (newValues.duration > adjustedLimited.max) {
-                    // TODO (NOW): make this work for a quick scroll
                     const targetScrollIndex =
                         newValues.index -
                         (newValues.duration - adjustedLimited.max);
