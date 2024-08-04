@@ -14,7 +14,7 @@ export const generateNumbers = (
     }
 
     let numbers: string[] = [];
-    for (let i = 0; i <= numberOfItems; i++) {
+    for (let i = 0; i < numberOfItems; i++) {
         numbers.push(padNumber(i, { padWithZero: options.padNumbersWithZero }));
     }
 

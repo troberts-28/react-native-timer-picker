@@ -1,4 +1,4 @@
-export const getScrollIndex = (variables: {
+export const getInitialScrollIndex = (variables: {
     numberOfItems: number;
     padWithNItems: number;
     repeatNumbersNTimes: number;
@@ -8,8 +8,9 @@ export const getScrollIndex = (variables: {
         variables;
 
     return Math.max(
-        ((value + numberOfItems) % (numberOfItems * repeatNumbersNTimes)) -
-            (padWithNItems - 1),
+        numberOfItems * Math.floor(repeatNumbersNTimes / 2) +
+            ((value + numberOfItems) % numberOfItems) -
+            padWithNItems,
         0
     );
 };

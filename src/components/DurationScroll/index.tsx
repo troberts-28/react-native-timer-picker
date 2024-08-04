@@ -22,7 +22,8 @@ import {
     generateNumbers,
 } from "../../utils/generateNumbers";
 import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
-import { getScrollIndex } from "../../utils/getScrollIndex";
+import { getDurationAndIndexFromScrollOffset } from "../../utils/getDurationAndIndexFromScrollOffset";
+import { getInitialScrollIndex } from "../../utils/getInitialScrollIndex";
 
 import type { DurationScrollProps, DurationScrollRef } from "./types";
 
@@ -66,7 +67,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             return Math.round(repeatNumbersNTimes);
         }, [disableInfiniteScroll, repeatNumbersNTimes]);
 
-        const data = useMemo(() => {
+        const numbersForFlatList = useMemo(() => {
             if (is12HourPicker) {
                 return generate12HourNumbers({
                     padNumbersWithZero,
@@ -93,7 +94,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
         const initialScrollIndex = useMemo(
             () =>
-                getScrollIndex({
+                getInitialScrollIndex({
                     numberOfItems,
                     padWithNItems,
                     repeatNumbersNTimes: safeRepeatNumbersNTimes,
@@ -106,8 +107,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 safeRepeatNumbersNTimes,
             ]
         );
-
-        console.log(numberOfItems, initialScrollIndex);
 
         const adjustedLimited = useMemo(
             () => getAdjustedLimit(limit, numberOfItems),
@@ -165,7 +164,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             setValue: (value, options) => {
                 flatListRef.current?.scrollToIndex({
                     animated: options?.animated ?? false,
-                    index: getScrollIndex({
+                    index: getInitialScrollIndex({
                         numberOfItems,
                         padWithNItems,
                         repeatNumbersNTimes: safeRepeatNumbersNTimes,
@@ -245,25 +244,23 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 }
 
                 if (aggressivelyGetLatestDuration) {
-                    const newIndex = Math.round(
-                        e.nativeEvent.contentOffset.y /
-                            styles.pickerItemContainer.height
-                    );
-                    let newDuration =
-                        (disableInfiniteScroll
-                            ? newIndex
-                            : newIndex + padWithNItems) %
-                        (numberOfItems + 1);
+                    const newValues = getDurationAndIndexFromScrollOffset({
+                        disableInfiniteScroll,
+                        itemHeight: styles.pickerItemContainer.height,
+                        numberOfItems,
+                        padWithNItems,
+                        yContentOffset: e.nativeEvent.contentOffset.y,
+                    });
 
-                    if (newDuration !== latestDuration.current) {
+                    if (newValues.duration !== latestDuration.current) {
                         // check limits
-                        if (newDuration > adjustedLimited.max) {
-                            newDuration = adjustedLimited.max;
-                        } else if (newDuration < adjustedLimited.min) {
-                            newDuration = adjustedLimited.min;
+                        if (newValues.duration > adjustedLimited.max) {
+                            newValues.duration = adjustedLimited.max;
+                        } else if (newValues.duration < adjustedLimited.min) {
+                            newValues.duration = adjustedLimited.min;
                         }
 
-                        latestDuration.current = newDuration;
+                        latestDuration.current = newValues.duration;
                     }
                 }
 
@@ -311,21 +308,20 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
         const onMomentumScrollEnd = useCallback(
             (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-                const newIndex = Math.round(
-                    e.nativeEvent.contentOffset.y /
-                        styles.pickerItemContainer.height
-                );
-                let newDuration =
-                    (disableInfiniteScroll
-                        ? newIndex
-                        : newIndex + padWithNItems) %
-                    (numberOfItems + 1);
+                const newValues = getDurationAndIndexFromScrollOffset({
+                    disableInfiniteScroll,
+                    itemHeight: styles.pickerItemContainer.height,
+                    numberOfItems,
+                    padWithNItems,
+                    yContentOffset: e.nativeEvent.contentOffset.y,
+                });
 
                 // check limits
-                if (newDuration > adjustedLimited.max) {
+                if (newValues.duration > adjustedLimited.max) {
                     // TODO (NOW): make this work for a quick scroll
                     const targetScrollIndex =
-                        newIndex - (newDuration - adjustedLimited.max);
+                        newValues.index -
+                        (newValues.duration - adjustedLimited.max);
                     flatListRef.current?.scrollToIndex({
                         animated: true,
                         index:
@@ -334,27 +330,28 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                                 ? targetScrollIndex
                                 : adjustedLimited.max - 1,
                     }); // scroll down to max
-                    newDuration = adjustedLimited.max;
-                } else if (newDuration < adjustedLimited.min) {
+                    newValues.duration = adjustedLimited.max;
+                } else if (newValues.duration < adjustedLimited.min) {
                     const targetScrollIndex =
-                        newIndex + (adjustedLimited.min - newDuration);
+                        newValues.index +
+                        (adjustedLimited.min - newValues.duration);
                     flatListRef.current?.scrollToIndex({
                         animated: true,
                         index:
                             // guard against scrolling beyond end of list
-                            targetScrollIndex <= data.length - 1
+                            targetScrollIndex <= numbersForFlatList.length - 1
                                 ? targetScrollIndex
                                 : adjustedLimited.min,
                     }); // scroll up to min
-                    newDuration = adjustedLimited.min;
+                    newValues.duration = adjustedLimited.min;
                 }
 
-                onDurationChange(newDuration);
+                onDurationChange(newValues.duration);
             },
             [
                 adjustedLimited.max,
                 adjustedLimited.min,
-                data.length,
+                numbersForFlatList.length,
                 disableInfiniteScroll,
                 numberOfItems,
                 onDurationChange,
@@ -380,7 +377,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 ) {
                     flatListRef.current?.scrollToIndex({
                         animated: false,
-                        index: viewableItems[0].index - numberOfItems - 1,
+                        index: viewableItems[0].index - numberOfItems,
                     });
                 }
             },
@@ -419,7 +416,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 testID={testID}>
                 <FlatList
                     ref={flatListRef}
-                    data={data}
+                    data={numbersForFlatList}
                     decelerationRate={0.88}
                     getItemLayout={getItemLayout}
                     initialScrollIndex={initialScrollIndex}
@@ -433,7 +430,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     showsVerticalScrollIndicator={false}
                     snapToAlignment="start"
                     // used in place of snapToOffset due to bug on Android
-                    snapToOffsets={[...Array(data.length)].map(
+                    snapToOffsets={[...Array(numbersForFlatList.length)].map(
                         (_, i) => i * styles.pickerItemContainer.height
                     )}
                     testID="duration-scroll-flatlist"

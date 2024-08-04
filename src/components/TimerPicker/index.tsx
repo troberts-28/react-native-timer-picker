@@ -54,10 +54,15 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             if (padWithNItems < 0) {
                 return 0;
             }
-            // check if large values also work
+
+            const maxPadWithNItems = hideHours ? 30 : 12;
+
+            if (padWithNItems > maxPadWithNItems) {
+                return maxPadWithNItems;
+            }
 
             return Math.round(padWithNItems);
-        }, [padWithNItems]);
+        }, [hideHours, padWithNItems]);
 
         const styles = useMemo(
             () =>
@@ -151,7 +156,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             hourLabel ?? (!use12HourPicker ? "h" : undefined)
                         }
                         limit={hourLimit}
-                        numberOfItems={23}
+                        numberOfItems={24}
                         onDurationChange={setSelectedHours}
                         padNumbersWithZero={padHoursWithZero}
                         padWithNItems={safePadWithNItems}
@@ -174,7 +179,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         isDisabled={minutesPickerIsDisabled}
                         label={minuteLabel ?? "m"}
                         limit={minuteLimit}
-                        numberOfItems={59}
+                        numberOfItems={60}
                         onDurationChange={setSelectedMinutes}
                         padNumbersWithZero={padMinutesWithZero}
                         padWithNItems={safePadWithNItems}
@@ -196,7 +201,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         isDisabled={secondsPickerIsDisabled}
                         label={secondLabel ?? "s"}
                         limit={secondLimit}
-                        numberOfItems={59}
+                        numberOfItems={60}
                         onDurationChange={setSelectedSeconds}
                         padNumbersWithZero={padSecondsWithZero}
                         padWithNItems={safePadWithNItems}
