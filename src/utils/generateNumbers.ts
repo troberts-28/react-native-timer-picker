@@ -6,7 +6,7 @@ export const generateNumbers = (
         disableInfiniteScroll?: boolean;
         padNumbersWithZero?: boolean;
         padWithNItems: number;
-        repeatNTimes?: number;
+        repeatNTimes: number;
     }
 ) => {
     if (numberOfItems <= 0) {
@@ -14,14 +14,14 @@ export const generateNumbers = (
     }
 
     let numbers: string[] = [];
-    for (let i = 0; i <= numberOfItems; i++) {
+    for (let i = 0; i < numberOfItems; i++) {
         numbers.push(padNumber(i, { padWithZero: options.padNumbersWithZero }));
     }
 
-    if ((options.repeatNTimes ?? 1) > 1) {
+    if (options.repeatNTimes > 1) {
         numbers = Array(options.repeatNTimes).fill(numbers).flat();
     }
-    if (options.disableInfiniteScroll) {
+    if (options.disableInfiniteScroll || options.repeatNTimes === 1) {
         numbers.push(...Array(options.padWithNItems).fill(""));
         numbers.unshift(...Array(options.padWithNItems).fill(""));
     }
