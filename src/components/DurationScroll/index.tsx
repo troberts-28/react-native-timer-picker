@@ -55,6 +55,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             styles,
             testID,
             topPickerGradientOverlayProps,
+            minutesGap
         } = props;
 
         const safeRepeatNumbersNTimes = useMemo(() => {
@@ -82,6 +83,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 repeatNTimes: safeRepeatNumbersNTimes,
                 disableInfiniteScroll,
                 padWithNItems,
+                minutesGap
             });
         }, [
             disableInfiniteScroll,

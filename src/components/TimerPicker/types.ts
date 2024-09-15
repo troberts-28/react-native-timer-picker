@@ -77,4 +77,5 @@ export interface TimerPickerProps {
     styles?: CustomTimerPickerStyles;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
     use12HourPicker?: boolean;
+    minutesGap?: number //if you want the minutes to have a gap for example: 0,15,30,35,60 ....
 }

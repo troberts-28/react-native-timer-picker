@@ -47,6 +47,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             secondsPickerIsDisabled = false,
             styles: customStyles,
             use12HourPicker = false,
+            minutesGap,
             ...otherProps
         } = props;
 
@@ -178,6 +179,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         initialValue={safeInitialValue.minutes}
                         isDisabled={minutesPickerIsDisabled}
                         label={minuteLabel ?? "m"}
+                        minutesGap={minutesGap}
                         limit={minuteLimit}
                         numberOfItems={60}
                         onDurationChange={setSelectedMinutes}

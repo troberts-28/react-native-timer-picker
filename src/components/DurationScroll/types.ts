@@ -42,6 +42,7 @@ export interface DurationScrollProps {
     styles: ReturnType<typeof generateStyles>;
     testID?: string;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
+    minutesGap?: number
 }
 
 export interface DurationScrollRef {
