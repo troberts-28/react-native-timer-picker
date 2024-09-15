@@ -48,6 +48,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             styles: customStyles,
             use12HourPicker = false,
             minutesGap,
+            hoursGap,
+            secondsGap,
             ...otherProps
         } = props;
 
@@ -163,7 +165,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padWithNItems={safePadWithNItems}
                         pmLabel={pmLabel}
                         repeatNumbersNTimes={repeatHourNumbersNTimes}
-                        minutesGap={minutesGap}
+                        gap={hoursGap}
                         styles={styles}
                         testID="duration-scroll-hour"
                         {...otherProps}
@@ -180,7 +182,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         initialValue={safeInitialValue.minutes}
                         isDisabled={minutesPickerIsDisabled}
                         label={minuteLabel ?? "m"}
-                        minutesGap={minutesGap}
+                        gap={minutesGap}
                         limit={minuteLimit}
                         numberOfItems={60}
                         onDurationChange={setSelectedMinutes}
@@ -209,7 +211,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padNumbersWithZero={padSecondsWithZero}
                         padWithNItems={safePadWithNItems}
                         repeatNumbersNTimes={repeatSecondNumbersNTimes}
-                        minutesGap={minutesGap}
+                        gap={secondsGap}
                         styles={styles}
                         testID="duration-scroll-second"
                         {...otherProps}
