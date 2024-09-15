@@ -83,7 +83,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 repeatNTimes: safeRepeatNumbersNTimes,
                 disableInfiniteScroll,
                 padWithNItems,
-                minutesGap
+                gaps: minutesGap
             });
         }, [
             disableInfiniteScroll,
@@ -128,9 +128,9 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
         const [clickSound, setClickSound] = useState<
             | {
-                  replayAsync: () => Promise<void>;
-                  unloadAsync: () => Promise<void>;
-              }
+                replayAsync: () => Promise<void>;
+                unloadAsync: () => Promise<void>;
+            }
             | undefined
         >();
 
@@ -183,7 +183,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             style={[
                                 styles.pickerItem,
                                 intItem > adjustedLimited.max ||
-                                intItem < adjustedLimited.min
+                                    intItem < adjustedLimited.min
                                     ? styles.disabledPickerItem
                                     : {},
                             ]}>
@@ -252,7 +252,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     const feedbackIndex = Math.round(
                         (e.nativeEvent.contentOffset.y +
                             styles.pickerItemContainer.height / 2) /
-                            styles.pickerItemContainer.height
+                        styles.pickerItemContainer.height
                     );
 
                     if (feedbackIndex !== lastFeedbackIndex.current) {
@@ -356,7 +356,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 } else if (
                     viewableItems[0]?.index &&
                     viewableItems[0].index >=
-                        numberOfItems * (safeRepeatNumbersNTimes - 0.5)
+                    numberOfItems * (safeRepeatNumbersNTimes - 0.5)
                 ) {
                     flatListRef.current?.scrollToIndex({
                         animated: false,
@@ -462,7 +462,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         <LinearGradient
                             colors={[
                                 styles.pickerContainer.backgroundColor ??
-                                    "white",
+                                "white",
                                 colorToRgba({
                                     color:
                                         styles.pickerContainer
@@ -486,7 +486,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                                     opacity: 0,
                                 }),
                                 styles.pickerContainer.backgroundColor ??
-                                    "white",
+                                "white",
                             ]}
                             end={{ x: 1, y: 0.7 }}
                             pointerEvents="none"

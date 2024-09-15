@@ -7,7 +7,7 @@ export const generateNumbers = (
         padNumbersWithZero?: boolean;
         padWithNItems: number;
         repeatNTimes: number;
-        gaps: number
+        gaps?: number
     }
 ) => {
     if (numberOfItems <= 0) {
