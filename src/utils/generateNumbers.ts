@@ -7,7 +7,7 @@ export const generateNumbers = (
         padNumbersWithZero?: boolean;
         padWithNItems: number;
         repeatNTimes: number;
-        gaps?: number
+        interval?: number
     }
 ) => {
     if (numberOfItems <= 0) {
@@ -15,8 +15,9 @@ export const generateNumbers = (
     }
 
     let numbers: string[] = [];
-    for (let i = 0; i < numberOfItems; options.gaps? i= i + options.gaps : i++) {
-        numbers.push(padNumber(i, { padWithZero: options.padNumbersWithZero }));
+    for (let i = 0; i < numberOfItems; i++) {
+        const value = options.interval ? i * options.interval : i;
+        numbers.push(padNumber(value, { padWithZero: options.padNumbersWithZero }))
     }
 
     if (options.repeatNTimes > 1) {

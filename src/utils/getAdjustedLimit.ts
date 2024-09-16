@@ -2,12 +2,13 @@ import type { LimitType } from "../components/DurationScroll/types";
 
 export const getAdjustedLimit = (
     limit: LimitType | undefined,
-    numberOfItems: number
+    numberOfItems: number,
+    interval?: number
 ): {
     max: number;
     min: number;
 } => {
-    const maxIndex = numberOfItems - 1;
+    const maxIndex = interval ? (numberOfItems - 1) * interval :numberOfItems - 1;
 
     if (!limit || (!limit.max && !limit.min)) {
         return {

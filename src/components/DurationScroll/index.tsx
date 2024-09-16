@@ -6,26 +6,26 @@ import React, {
     useState,
     useEffect,
     useMemo,
-} from "react";
+} from "react"
 
-import { View, Text, FlatList as RNFlatList } from "react-native";
+import { View, Text, FlatList as RNFlatList } from "react-native"
 import type {
     ViewabilityConfigCallbackPairs,
     ViewToken,
     NativeSyntheticEvent,
     NativeScrollEvent,
-} from "react-native";
+} from "react-native"
 
-import { colorToRgba } from "../../utils/colorToRgba";
+import { colorToRgba } from "../../utils/colorToRgba"
 import {
     generate12HourNumbers,
     generateNumbers,
-} from "../../utils/generateNumbers";
-import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
-import { getDurationAndIndexFromScrollOffset } from "../../utils/getDurationAndIndexFromScrollOffset";
-import { getInitialScrollIndex } from "../../utils/getInitialScrollIndex";
+} from "../../utils/generateNumbers"
+import { getAdjustedLimit } from "../../utils/getAdjustedLimit"
+import { getDurationAndIndexFromScrollOffset } from "../../utils/getDurationAndIndexFromScrollOffset"
+import { getInitialScrollIndex } from "../../utils/getInitialScrollIndex"
 
-import type { DurationScrollProps, DurationScrollRef } from "./types";
+import type { DurationScrollProps, DurationScrollRef } from "./types"
 
 const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
     (props, ref) => {
@@ -45,7 +45,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             label,
             limit,
             LinearGradient,
-            numberOfItems,
+            maxValue,
             onDurationChange,
             padNumbersWithZero = false,
             padWithNItems,
@@ -55,18 +55,19 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             styles,
             testID,
             topPickerGradientOverlayProps,
-            gap
-        } = props;
-
+            interval
+        } = props
+        const numberOfItems = interval ? (Math.floor(maxValue / interval) + 1) : maxValue
+        
         const safeRepeatNumbersNTimes = useMemo(() => {
             if (!disableInfiniteScroll && repeatNumbersNTimes < 2) {
-                return 2;
+                return 2
             } else if (repeatNumbersNTimes < 1) {
-                return 1;
+                return 1
             }
 
-            return Math.round(repeatNumbersNTimes);
-        }, [disableInfiniteScroll, repeatNumbersNTimes]);
+            return Math.round(repeatNumbersNTimes)
+        }, [disableInfiniteScroll, repeatNumbersNTimes])
 
         const numbersForFlatList = useMemo(() => {
             if (is12HourPicker) {
@@ -75,7 +76,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     repeatNTimes: safeRepeatNumbersNTimes,
                     disableInfiniteScroll,
                     padWithNItems,
-                });
+                })
             }
 
             return generateNumbers(numberOfItems, {
@@ -83,8 +84,8 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 repeatNTimes: safeRepeatNumbersNTimes,
                 disableInfiniteScroll,
                 padWithNItems,
-                gaps: gap
-            });
+                interval
+            })
         }, [
             disableInfiniteScroll,
             is12HourPicker,
@@ -92,7 +93,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             padNumbersWithZero,
             padWithNItems,
             safeRepeatNumbersNTimes,
-        ]);
+        ])
 
         const initialScrollIndex = useMemo(
             () =>
@@ -102,6 +103,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     padWithNItems,
                     repeatNumbersNTimes: safeRepeatNumbersNTimes,
                     value: initialValue,
+                    interval
                 }),
             [
                 disableInfiniteScroll,
@@ -110,29 +112,29 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 padWithNItems,
                 safeRepeatNumbersNTimes,
             ]
-        );
+        )
 
         const adjustedLimited = useMemo(
-            () => getAdjustedLimit(limit, numberOfItems),
+            () => getAdjustedLimit(limit, numberOfItems, interval),
             [limit, numberOfItems]
-        );
+        )
 
-        const numberOfItemsToShow = 1 + padWithNItems * 2;
+        const numberOfItemsToShow = 1 + padWithNItems * 2
 
         // keep track of the latest duration as it scrolls
-        const latestDuration = useRef(0);
+        const latestDuration = useRef(0)
         // keep track of the last index scrolled past for haptic/audio feedback
-        const lastFeedbackIndex = useRef(0);
+        const lastFeedbackIndex = useRef(0)
 
-        const flatListRef = useRef<RNFlatList | null>(null);
+        const flatListRef = useRef<RNFlatList | null>(null)
 
         const [clickSound, setClickSound] = useState<
             | {
-                replayAsync: () => Promise<void>;
-                unloadAsync: () => Promise<void>;
+                replayAsync: () => Promise<void>
+                unloadAsync: () => Promise<void>
             }
             | undefined
-        >();
+        >()
 
         // Preload the sound when the component mounts
         useEffect(() => {
@@ -145,34 +147,33 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             uri: "https://drive.google.com/uc?export=download&id=10e1YkbNsRh-vGx1jmS1Nntz8xzkBp4_I",
                         },
                         { shouldPlay: false }
-                    );
-                    setClickSound(sound);
+                    )
+                    setClickSound(sound)
                 }
-            };
+            }
 
-            loadSound();
+            loadSound()
 
             // Unload sound when component unmounts
             return () => {
-                clickSound?.unloadAsync();
-            };
+                clickSound?.unloadAsync()
+            }
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [Audio]);
+        }, [Audio])
 
         const renderItem = useCallback(
             ({ item }: { item: string }) => {
-                let stringItem = item;
-                let intItem: number;
-                let isAm: boolean | undefined;
+                let stringItem = item
+                let intItem: number
+                let isAm: boolean | undefined
 
                 if (!is12HourPicker) {
-                    intItem = parseInt(item);
+                    intItem = parseInt(item)
                 } else {
-                    isAm = item.includes("AM");
-                    stringItem = item.replace(/\s[AP]M/g, "");
-                    intItem = parseInt(stringItem);
+                    isAm = item.includes("AM")
+                    stringItem = item.replace(/\s[AP]M/g, "")
+                    intItem = parseInt(stringItem)
                 }
-
                 return (
                     <View
                         key={item}
@@ -201,7 +202,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             </View>
                         ) : null}
                     </View>
-                );
+                )
             },
             [
                 adjustedLimited.max,
@@ -216,7 +217,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 styles.pickerItem,
                 styles.pickerItemContainer,
             ]
-        );
+        )
 
         const onScroll = useCallback(
             (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -224,7 +225,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 // it is used to ensure that the modal gets the latest duration on clicking
                 // the confirm button, even if the scrollview is still scrolling
                 if (!aggressivelyGetLatestDuration && !Haptics && !Audio) {
-                    return;
+                    return
                 }
 
                 if (aggressivelyGetLatestDuration) {
@@ -234,17 +235,18 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         numberOfItems,
                         padWithNItems,
                         yContentOffset: e.nativeEvent.contentOffset.y,
-                    });
+                        interval
+                    })
 
                     if (newValues.duration !== latestDuration.current) {
                         // check limits
                         if (newValues.duration > adjustedLimited.max) {
-                            newValues.duration = adjustedLimited.max;
+                            newValues.duration = adjustedLimited.max
                         } else if (newValues.duration < adjustedLimited.min) {
-                            newValues.duration = adjustedLimited.min;
+                            newValues.duration = adjustedLimited.min
                         }
 
-                        latestDuration.current = newValues.duration;
+                        latestDuration.current = newValues.duration
                     }
                 }
 
@@ -253,27 +255,27 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         (e.nativeEvent.contentOffset.y +
                             styles.pickerItemContainer.height / 2) /
                         styles.pickerItemContainer.height
-                    );
+                    )
 
                     if (feedbackIndex !== lastFeedbackIndex.current) {
                         // this check stops the feedback firing when the component mounts
                         if (lastFeedbackIndex.current) {
                             // fire haptic feedback if available
                             try {
-                                Haptics?.selectionAsync();
+                                Haptics?.selectionAsync()
                             } catch {
                                 // do nothing
                             }
 
                             // play click sound if available
                             try {
-                                clickSound?.replayAsync();
+                                clickSound?.replayAsync()
                             } catch {
                                 // do nothing
                             }
                         }
 
-                        lastFeedbackIndex.current = feedbackIndex;
+                        lastFeedbackIndex.current = feedbackIndex
                     }
                 }
             },
@@ -288,7 +290,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 padWithNItems,
                 styles.pickerItemContainer.height,
             ]
-        );
+        )
 
         const onMomentumScrollEnd = useCallback(
             (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -298,13 +300,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     numberOfItems,
                     padWithNItems,
                     yContentOffset: e.nativeEvent.contentOffset.y,
-                });
+                })
 
                 // check limits
                 if (newValues.duration > adjustedLimited.max) {
                     const targetScrollIndex =
                         newValues.index -
-                        (newValues.duration - adjustedLimited.max);
+                        (newValues.duration - adjustedLimited.max)
                     flatListRef.current?.scrollToIndex({
                         animated: true,
                         index:
@@ -312,12 +314,12 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             targetScrollIndex >= 0
                                 ? targetScrollIndex
                                 : adjustedLimited.max - 1,
-                    }); // scroll down to max
-                    newValues.duration = adjustedLimited.max;
+                    }) // scroll down to max
+                    newValues.duration = adjustedLimited.max
                 } else if (newValues.duration < adjustedLimited.min) {
                     const targetScrollIndex =
                         newValues.index +
-                        (adjustedLimited.min - newValues.duration);
+                        (adjustedLimited.min - newValues.duration)
                     flatListRef.current?.scrollToIndex({
                         animated: true,
                         index:
@@ -325,11 +327,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             targetScrollIndex <= numbersForFlatList.length - 1
                                 ? targetScrollIndex
                                 : adjustedLimited.min,
-                    }); // scroll up to min
-                    newValues.duration = adjustedLimited.min;
+                    }) // scroll up to min
+                    newValues.duration = adjustedLimited.min
                 }
-
-                onDurationChange(newValues.duration);
+                onDurationChange(interval ? newValues.duration * interval : newValues.duration)
             },
             [
                 adjustedLimited.max,
@@ -341,7 +342,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 padWithNItems,
                 styles.pickerItemContainer.height,
             ]
-        );
+        )
 
         const onViewableItemsChanged = useCallback(
             ({ viewableItems }: { viewableItems: ViewToken[] }) => {
@@ -352,7 +353,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     flatListRef.current?.scrollToIndex({
                         animated: false,
                         index: viewableItems[0].index + numberOfItems,
-                    });
+                    })
                 } else if (
                     viewableItems[0]?.index &&
                     viewableItems[0].index >=
@@ -361,11 +362,11 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     flatListRef.current?.scrollToIndex({
                         animated: false,
                         index: viewableItems[0].index - numberOfItems,
-                    });
+                    })
                 }
             },
             [numberOfItems, safeRepeatNumbersNTimes]
-        );
+        )
 
         const getItemLayout = useCallback(
             (_: ArrayLike<string> | null | undefined, index: number) => ({
@@ -374,7 +375,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 index,
             }),
             [styles.pickerItemContainer.height]
-        );
+        )
 
         const viewabilityConfigCallbackPairs =
             useRef<ViewabilityConfigCallbackPairs>([
@@ -382,14 +383,14 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     viewabilityConfig: { viewAreaCoveragePercentThreshold: 0 },
                     onViewableItemsChanged: onViewableItemsChanged,
                 },
-            ]);
+            ])
 
         useImperativeHandle(ref, () => ({
             reset: (options) => {
                 flatListRef.current?.scrollToIndex({
                     animated: options?.animated ?? false,
                     index: initialScrollIndex,
-                });
+                })
             },
             setValue: (value, options) => {
                 flatListRef.current?.scrollToIndex({
@@ -401,10 +402,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         repeatNumbersNTimes: safeRepeatNumbersNTimes,
                         value: value,
                     }),
-                });
+                })
             },
             latestDuration: latestDuration,
-        }));
+        }))
 
         return (
             <View
@@ -501,8 +502,8 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     </>
                 ) : null}
             </View>
-        );
+        )
     }
-);
+)
 
-export default React.memo(DurationScroll);
+export default React.memo(DurationScroll)

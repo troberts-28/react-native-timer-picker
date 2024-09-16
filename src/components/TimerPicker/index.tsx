@@ -159,13 +159,13 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             hourLabel ?? (!use12HourPicker ? "h" : undefined)
                         }
                         limit={hourLimit}
-                        numberOfItems={24}
+                        maxValue={24}
                         onDurationChange={setSelectedHours}
                         padNumbersWithZero={padHoursWithZero}
                         padWithNItems={safePadWithNItems}
                         pmLabel={pmLabel}
                         repeatNumbersNTimes={repeatHourNumbersNTimes}
-                        gap={hoursGap}
+                        interval={hoursGap}
                         styles={styles}
                         testID="duration-scroll-hour"
                         {...otherProps}
@@ -182,9 +182,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         initialValue={safeInitialValue.minutes}
                         isDisabled={minutesPickerIsDisabled}
                         label={minuteLabel ?? "m"}
-                        gap={minutesGap}
+                        interval={minutesGap}
                         limit={minuteLimit}
-                        numberOfItems={60}
+                        maxValue={60}
                         onDurationChange={setSelectedMinutes}
                         padNumbersWithZero={padMinutesWithZero}
                         padWithNItems={safePadWithNItems}
@@ -206,12 +206,12 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         isDisabled={secondsPickerIsDisabled}
                         label={secondLabel ?? "s"}
                         limit={secondLimit}
-                        numberOfItems={60}
+                        maxValue={60}
                         onDurationChange={setSelectedSeconds}
                         padNumbersWithZero={padSecondsWithZero}
                         padWithNItems={safePadWithNItems}
                         repeatNumbersNTimes={repeatSecondNumbersNTimes}
-                        gap={secondsGap}
+                        interval={secondsGap}
                         styles={styles}
                         testID="duration-scroll-second"
                         {...otherProps}

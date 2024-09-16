@@ -32,7 +32,7 @@ export interface DurationScrollProps {
     isDisabled?: boolean;
     label?: string | React.ReactElement;
     limit?: LimitType;
-    numberOfItems: number;
+    maxValue: number;
     onDurationChange: (duration: number) => void;
     padNumbersWithZero?: boolean;
     padWithNItems: number;
@@ -42,7 +42,7 @@ export interface DurationScrollProps {
     styles: ReturnType<typeof generateStyles>;
     testID?: string;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
-    gap?: number
+    interval?: number
 }
 
 export interface DurationScrollRef {
