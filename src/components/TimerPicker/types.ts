@@ -35,6 +35,7 @@ export interface TimerPickerProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Haptics?: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    pickerFeedback?: () => void | Promise<void>;
     LinearGradient?: any;
     aggressivelyGetLatestDuration?: boolean;
     allowFontScaling?: boolean;

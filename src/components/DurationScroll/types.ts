@@ -20,6 +20,7 @@ export interface DurationScrollProps {
     Audio?: any;
     FlatList?: CustomFlatList;
     Haptics?: any;
+    pickerFeedback?: () => void | Promise<void>;
     LinearGradient?: any;
     aggressivelyGetLatestDuration: boolean;
     allowFontScaling?: boolean;
