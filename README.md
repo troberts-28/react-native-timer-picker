@@ -29,7 +29,7 @@ Includes iOS-style haptic and audio feedback 🍏
         -   [Custom Styles 👗](#custom-styles-)
         -   [Performance](#performance)
         -   [Custom FlatList](#custom-flatlist)
-        -   [Custom feedback](#custom-feedback)
+        -   [Generic feedback](#generic-feedback)
     -   [TimerPickerModal ⏰](#timerpickermodal-)
         -   [Custom Styles 👕](#custom-styles--1)
 -   [Methods 🔄](#methods-)
