@@ -27,10 +27,12 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             hideSeconds = false,
             hourLabel,
             hourLimit,
+            hourScope = 24,
             hoursPickerIsDisabled = false,
             initialValue,
             minuteLabel,
             minuteLimit,
+            minuteScope = 60,
             minutesPickerIsDisabled = false,
             onDurationChange,
             padHoursWithZero = false,
@@ -44,6 +46,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             repeatSecondNumbersNTimes = 3,
             secondLabel,
             secondLimit,
+            secondScope = 60,
             secondsPickerIsDisabled = false,
             styles: customStyles,
             use12HourPicker = false,
@@ -156,7 +159,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             hourLabel ?? (!use12HourPicker ? "h" : undefined)
                         }
                         limit={hourLimit}
-                        numberOfItems={24}
+                        numberOfItems={hourScope}
                         onDurationChange={setSelectedHours}
                         padNumbersWithZero={padHoursWithZero}
                         padWithNItems={safePadWithNItems}
@@ -179,7 +182,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         isDisabled={minutesPickerIsDisabled}
                         label={minuteLabel ?? "m"}
                         limit={minuteLimit}
-                        numberOfItems={60}
+                        numberOfItems={minuteScope}
                         onDurationChange={setSelectedMinutes}
                         padNumbersWithZero={padMinutesWithZero}
                         padWithNItems={safePadWithNItems}
@@ -201,7 +204,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         isDisabled={secondsPickerIsDisabled}
                         label={secondLabel ?? "s"}
                         limit={secondLimit}
-                        numberOfItems={60}
+                        numberOfItems={secondScope}
                         onDurationChange={setSelectedSeconds}
                         padNumbersWithZero={padSecondsWithZero}
                         padWithNItems={safePadWithNItems}
