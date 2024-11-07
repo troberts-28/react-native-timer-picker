@@ -35,7 +35,6 @@ export interface TimerPickerProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Haptics?: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    pickerFeedback?: () => void | Promise<void>;
     LinearGradient?: any;
     aggressivelyGetLatestDuration?: boolean;
     allowFontScaling?: boolean;
@@ -67,6 +66,7 @@ export interface TimerPickerProps {
     padSecondsWithZero?: boolean;
     padWithNItems?: number;
     pickerContainerProps?: React.ComponentProps<typeof View>;
+    pickerFeedback?: () => void | Promise<void>;
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
     pmLabel?: string;
     repeatHourNumbersNTimes?: number;

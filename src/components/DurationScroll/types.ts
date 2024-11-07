@@ -20,7 +20,6 @@ export interface DurationScrollProps {
     Audio?: any;
     FlatList?: CustomFlatList;
     Haptics?: any;
-    pickerFeedback?: () => void | Promise<void>;
     LinearGradient?: any;
     aggressivelyGetLatestDuration: boolean;
     allowFontScaling?: boolean;
@@ -37,6 +36,7 @@ export interface DurationScrollProps {
     onDurationChange: (duration: number) => void;
     padNumbersWithZero?: boolean;
     padWithNItems: number;
+    pickerFeedback?: () => void | Promise<void>;
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
     pmLabel?: string;
     repeatNumbersNTimes?: number;
