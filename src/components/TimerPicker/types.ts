@@ -47,16 +47,17 @@ export interface TimerPickerProps {
     hideSeconds?: boolean;
     hourLabel?: string | React.ReactElement;
     hourLimit?: LimitType;
-    hourScope?: number;
     hoursPickerIsDisabled?: boolean;
     initialValue?: {
         hours?: number;
         minutes?: number;
         seconds?: number;
     };
+    maximumHours?: number;
+    maximumMinutes?: number;
+    maximumSeconds?: number;
     minuteLabel?: string | React.ReactElement;
     minuteLimit?: LimitType;
-    minuteScope?: number;
     minutesPickerIsDisabled?: boolean;
     onDurationChange?: (duration: {
         hours: number;
@@ -75,7 +76,6 @@ export interface TimerPickerProps {
     repeatSecondNumbersNTimes?: number;
     secondLabel?: string | React.ReactElement;
     secondLimit?: LimitType;
-    secondScope?: number;
     secondsPickerIsDisabled?: boolean;
     styles?: CustomTimerPickerStyles;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
