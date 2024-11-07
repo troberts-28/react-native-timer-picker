@@ -9,13 +9,13 @@
         "web": "npx expo start --web"
     },
     "dependencies": {
-        "@expo/vector-icons": "^14.0.0",
-        "expo": "~51.0.23",
-        "expo-av": "~14.0.5",
+        "@expo/vector-icons": "^14.0.3",
+        "expo": "~51.0.38",
+        "expo-av": "~14.0.7",
         "expo-haptics": "~13.0.1",
         "expo-linear-gradient": "~13.0.2",
         "react": "18.2.0",
-        "react-native": "0.74.3"
+        "react-native": "0.74.5"
     },
     "devDependencies": {
         "@babel/core": "^7.24.0",
