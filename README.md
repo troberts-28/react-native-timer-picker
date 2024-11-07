@@ -524,7 +524,7 @@ The custom component needs to have the same interface as React Native's `<FlatLi
 
 #### Generic feedback
 
-To enable haptic feedback from the non Expo module [react-native-haptic-feedback](https://github.com/mkuczera/react-native-haptic-feedback) or provide feedback in any other form you can use the generic feedback callback `pickerFeedback`.
+To enable haptic feedback from the non-Expo module [react-native-haptic-feedback](https://github.com/mkuczera/react-native-haptic-feedback) or provide feedback in any other form you can use the generic feedback callback prop `pickerFeedback`. This function is called whenever any of the pickers tick onto a new number.
 
 ```Jsx
 import { trigger } from 'react-native-haptic-feedback';
