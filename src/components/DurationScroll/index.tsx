@@ -45,7 +45,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             label,
             limit,
             LinearGradient,
-            numberOfItems,
+            maximumValue,
             onDurationChange,
             padNumbersWithZero = false,
             padWithNItems,
@@ -56,6 +56,8 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             testID,
             topPickerGradientOverlayProps,
         } = props;
+
+        const numberOfItems = maximumValue + 1;
 
         const safeRepeatNumbersNTimes = useMemo(() => {
             if (!disableInfiniteScroll && repeatNumbersNTimes < 2) {
