@@ -5,6 +5,7 @@
         "version": "1.0.0",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "light",
+        "newArchEnabled": true,
         "splash": {
             "image": "./assets/splash.png",
             "resizeMode": "contain",
@@ -22,19 +23,6 @@
         },
         "web": {
             "favicon": "./assets/favicon.png"
-        },
-        "plugins": [
-            [
-                "expo-build-properties",
-                {
-                    "android": {
-                        "newArchEnabled": true
-                    },
-                    "ios": {
-                        "newArchEnabled": true
-                    }
-                }
-            ]
-        ]
+        }
     }
 }
