@@ -49,6 +49,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             onDurationChange,
             padNumbersWithZero = false,
             padWithNItems,
+            pickerFeedback,
             pickerGradientOverlayProps,
             pmLabel,
             repeatNumbersNTimes = 3,
@@ -223,7 +224,12 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 // this function is only used when the picker is in a modal and/or has Haptic/Audio feedback
                 // it is used to ensure that the modal gets the latest duration on clicking
                 // the confirm button, even if the scrollview is still scrolling
-                if (!aggressivelyGetLatestDuration && !Haptics && !Audio) {
+                if (
+                    !aggressivelyGetLatestDuration &&
+                    !Haptics &&
+                    !Audio &&
+                    !pickerFeedback
+                ) {
                     return;
                 }
 
@@ -248,7 +254,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     }
                 }
 
-                if (Haptics || Audio) {
+                if (Haptics || Audio || pickerFeedback) {
                     const feedbackIndex = Math.round(
                         (e.nativeEvent.contentOffset.y +
                             styles.pickerItemContainer.height / 2) /
@@ -268,6 +274,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             // play click sound if available
                             try {
                                 clickSound?.replayAsync();
+                            } catch {
+                                // do nothing
+                            }
+
+                            // fire custom feedback if available
+                            try {
+                                pickerFeedback?.();
                             } catch {
                                 // do nothing
                             }
