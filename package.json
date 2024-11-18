@@ -6,18 +6,22 @@
         "url": "https://github.com/troberts-28"
     },
     "license": "MIT",
-    "version": "1.10.3",
+    "version": "2.0.0",
     "main": "dist/commonjs/index.js",
     "module": "dist/module/index.js",
     "types": "dist/typescript/index.d.ts",
     "typings": "dist/typescript/index.d.ts",
-
+    "packageManager": "yarn@3.6.4",
+    "workspaces": {
+        "packages": [
+            "examples/*"
+        ]
+    },
     "scripts": {
-        "setup": "yarn && cd example && yarn",
-        "setup-bare": "yarn && cd example-bare && yarn",
-        "start": " cd example && yarn start",
-        "start-bare:android": " cd example-bare && yarn android && yarn start",
-        "start-bare:ios": " cd example-bare && yarn ios && yarn start",
+        "setup": "yarn install",
+        "start": " yarn workspace example-expo start",
+        "start-bare:android": "yarn workspace example-bare android && yarn workspace example-bare start",
+        "start-bare:ios": "yarn workspace example-bare android && yarn workspace example-bare start",
         "test": "jest --forceExit --silent",
         "build": "bob build",
         "clean": "rm yarn.lock && rm -rf ./node_modules && yarn install",
@@ -96,13 +100,13 @@
         "testEnvironment": "node",
         "modulePathIgnorePatterns": [
             "<rootDir>/dist/",
-            "<rootDir>/example/"
+            "<rootDir>/examples/"
         ],
         "transformIgnorePatterns": []
     },
     "peerDependencies": {
-        "react": ">=16.8.0",
-        "react-native": ">=0.59.0"
+        "react": ">=18.2.0",
+        "react-native": ">=0.72.0"
     },
     "devDependencies": {
         "@babel/core": "^7.20.0",

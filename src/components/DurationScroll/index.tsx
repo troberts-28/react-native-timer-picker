@@ -40,32 +40,61 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             FlatList = RNFlatList,
             Haptics,
             initialValue = 0,
+            interval,
             is12HourPicker,
             isDisabled,
             label,
             limit,
             LinearGradient,
-            numberOfItems,
+            maximumValue,
             onDurationChange,
             padNumbersWithZero = false,
             padWithNItems,
+            pickerFeedback,
             pickerGradientOverlayProps,
             pmLabel,
             repeatNumbersNTimes = 3,
+            repeatNumbersNTimesNotExplicitlySet,
             styles,
             testID,
             topPickerGradientOverlayProps,
         } = props;
 
+        const numberOfItems = useMemo(() => {
+            // guard against negative maximum values
+            if (maximumValue < 0) {
+                return 1;
+            }
+
+            return Math.floor(maximumValue / interval) + 1;
+        }, [interval, maximumValue]);
+
         const safeRepeatNumbersNTimes = useMemo(() => {
+            // do not repeat numbers if there is only one option
+            if (numberOfItems === 1) {
+                return 1;
+            }
+
             if (!disableInfiniteScroll && repeatNumbersNTimes < 2) {
                 return 2;
             } else if (repeatNumbersNTimes < 1) {
                 return 1;
             }
 
+            // if this variable is not explicitly set, we calculate a reasonable value based on
+            // the number of items in the picker, avoiding regular jumps up/down the list
+            // whilst avoiding rendering too many items in the picker
+            if (repeatNumbersNTimesNotExplicitlySet) {
+                return Math.max(Math.round(180 / numberOfItems), 1);
+            }
+
             return Math.round(repeatNumbersNTimes);
-        }, [disableInfiniteScroll, repeatNumbersNTimes]);
+        }, [
+            disableInfiniteScroll,
+            numberOfItems,
+            repeatNumbersNTimes,
+            repeatNumbersNTimesNotExplicitlySet,
+        ]);
 
         const numbersForFlatList = useMemo(() => {
             if (is12HourPicker) {
@@ -74,6 +103,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     repeatNTimes: safeRepeatNumbersNTimes,
                     disableInfiniteScroll,
                     padWithNItems,
+                    interval,
                 });
             }
 
@@ -82,10 +112,12 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 repeatNTimes: safeRepeatNumbersNTimes,
                 disableInfiniteScroll,
                 padWithNItems,
+                interval,
             });
         }, [
             disableInfiniteScroll,
             is12HourPicker,
+            interval,
             numberOfItems,
             padNumbersWithZero,
             padWithNItems,
@@ -96,6 +128,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             () =>
                 getInitialScrollIndex({
                     disableInfiniteScroll,
+                    interval,
                     numberOfItems,
                     padWithNItems,
                     repeatNumbersNTimes: safeRepeatNumbersNTimes,
@@ -104,6 +137,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             [
                 disableInfiniteScroll,
                 initialValue,
+                interval,
                 numberOfItems,
                 padWithNItems,
                 safeRepeatNumbersNTimes,
@@ -111,8 +145,8 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         );
 
         const adjustedLimited = useMemo(
-            () => getAdjustedLimit(limit, numberOfItems),
-            [limit, numberOfItems]
+            () => getAdjustedLimit(limit, numberOfItems, interval),
+            [interval, limit, numberOfItems]
         );
 
         const numberOfItemsToShow = 1 + padWithNItems * 2;
@@ -221,13 +255,19 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 // this function is only used when the picker is in a modal and/or has Haptic/Audio feedback
                 // it is used to ensure that the modal gets the latest duration on clicking
                 // the confirm button, even if the scrollview is still scrolling
-                if (!aggressivelyGetLatestDuration && !Haptics && !Audio) {
+                if (
+                    !aggressivelyGetLatestDuration &&
+                    !Haptics &&
+                    !Audio &&
+                    !pickerFeedback
+                ) {
                     return;
                 }
 
                 if (aggressivelyGetLatestDuration) {
                     const newValues = getDurationAndIndexFromScrollOffset({
                         disableInfiniteScroll,
+                        interval,
                         itemHeight: styles.pickerItemContainer.height,
                         numberOfItems,
                         padWithNItems,
@@ -246,7 +286,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     }
                 }
 
-                if (Haptics || Audio) {
+                if (Haptics || Audio || pickerFeedback) {
                     const feedbackIndex = Math.round(
                         (e.nativeEvent.contentOffset.y +
                             styles.pickerItemContainer.height / 2) /
@@ -269,6 +309,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             } catch {
                                 // do nothing
                             }
+
+                            // fire custom feedback if available
+                            try {
+                                pickerFeedback?.();
+                            } catch {
+                                // do nothing
+                            }
                         }
 
                         lastFeedbackIndex.current = feedbackIndex;
@@ -282,6 +329,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 aggressivelyGetLatestDuration,
                 clickSound,
                 disableInfiniteScroll,
+                interval,
                 numberOfItems,
                 padWithNItems,
                 styles.pickerItemContainer.height,
@@ -292,6 +340,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             (e: NativeSyntheticEvent<NativeScrollEvent>) => {
                 const newValues = getDurationAndIndexFromScrollOffset({
                     disableInfiniteScroll,
+                    interval,
                     itemHeight: styles.pickerItemContainer.height,
                     numberOfItems,
                     padWithNItems,
@@ -330,19 +379,24 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 onDurationChange(newValues.duration);
             },
             [
+                disableInfiniteScroll,
+                interval,
+                styles.pickerItemContainer.height,
+                numberOfItems,
+                padWithNItems,
                 adjustedLimited.max,
                 adjustedLimited.min,
-                numbersForFlatList.length,
-                disableInfiniteScroll,
-                numberOfItems,
                 onDurationChange,
-                padWithNItems,
-                styles.pickerItemContainer.height,
+                numbersForFlatList.length,
             ]
         );
 
         const onViewableItemsChanged = useCallback(
             ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+                if (numberOfItems === 1) {
+                    return;
+                }
+
                 if (
                     viewableItems[0]?.index &&
                     viewableItems[0].index < numberOfItems * 0.5
@@ -365,6 +419,50 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             [numberOfItems, safeRepeatNumbersNTimes]
         );
 
+        const [
+            viewabilityConfigCallbackPairs,
+            setViewabilityConfigCallbackPairs,
+        ] = useState<ViewabilityConfigCallbackPairs | undefined>(
+            !disableInfiniteScroll
+                ? [
+                      {
+                          viewabilityConfig: {
+                              viewAreaCoveragePercentThreshold: 0,
+                          },
+                          onViewableItemsChanged: onViewableItemsChanged,
+                      },
+                  ]
+                : undefined
+        );
+
+        const [flatListRenderKey, setFlatListRenderKey] = useState(0);
+
+        const initialRender = useRef(true);
+
+        useEffect(() => {
+            // don't run on first render
+            if (initialRender.current) {
+                initialRender.current = false;
+                return;
+            }
+
+            // if the onViewableItemsChanged callback changes, we need to update viewabilityConfigCallbackPairs
+            // which requires the FlatList to be remounted, hence the increase of the FlatList key
+            setFlatListRenderKey((prev) => prev + 1);
+            setViewabilityConfigCallbackPairs(
+                !disableInfiniteScroll
+                    ? [
+                          {
+                              viewabilityConfig: {
+                                  viewAreaCoveragePercentThreshold: 0,
+                              },
+                              onViewableItemsChanged: onViewableItemsChanged,
+                          },
+                      ]
+                    : undefined
+            );
+        }, [disableInfiniteScroll, onViewableItemsChanged]);
+
         const getItemLayout = useCallback(
             (_: ArrayLike<string> | null | undefined, index: number) => ({
                 length: styles.pickerItemContainer.height,
@@ -373,14 +471,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             }),
             [styles.pickerItemContainer.height]
         );
-
-        const viewabilityConfigCallbackPairs =
-            useRef<ViewabilityConfigCallbackPairs>([
-                {
-                    viewabilityConfig: { viewAreaCoveragePercentThreshold: 0 },
-                    onViewableItemsChanged: onViewableItemsChanged,
-                },
-            ]);
 
         useImperativeHandle(ref, () => ({
             reset: (options) => {
@@ -394,6 +484,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     animated: options?.animated ?? false,
                     index: getInitialScrollIndex({
                         disableInfiniteScroll,
+                        interval,
                         numberOfItems,
                         padWithNItems,
                         repeatNumbersNTimes: safeRepeatNumbersNTimes,
@@ -418,6 +509,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 ]}
                 testID={testID}>
                 <FlatList
+                    key={flatListRenderKey}
                     ref={flatListRef}
                     data={numbersForFlatList}
                     decelerationRate={0.88}
@@ -432,15 +524,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     scrollEventThrottle={16}
                     showsVerticalScrollIndicator={false}
                     snapToAlignment="start"
-                    // used in place of snapToOffset due to bug on Android
+                    // used in place of snapToInterval due to bug on Android
                     snapToOffsets={[...Array(numbersForFlatList.length)].map(
                         (_, i) => i * styles.pickerItemContainer.height
                     )}
                     testID="duration-scroll-flatlist"
                     viewabilityConfigCallbackPairs={
-                        !disableInfiniteScroll
-                            ? viewabilityConfigCallbackPairs?.current
-                            : undefined
+                        viewabilityConfigCallbackPairs
                     }
                     windowSize={numberOfItemsToShow}
                 />

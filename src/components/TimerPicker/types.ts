@@ -45,6 +45,7 @@ export interface TimerPickerProps {
     hideHours?: boolean;
     hideMinutes?: boolean;
     hideSeconds?: boolean;
+    hourInterval?: number;
     hourLabel?: string | React.ReactElement;
     hourLimit?: LimitType;
     hoursPickerIsDisabled?: boolean;
@@ -53,6 +54,10 @@ export interface TimerPickerProps {
         minutes?: number;
         seconds?: number;
     };
+    maximumHours?: number;
+    maximumMinutes?: number;
+    maximumSeconds?: number;
+    minuteInterval?: number;
     minuteLabel?: string | React.ReactElement;
     minuteLimit?: LimitType;
     minutesPickerIsDisabled?: boolean;
@@ -66,11 +71,13 @@ export interface TimerPickerProps {
     padSecondsWithZero?: boolean;
     padWithNItems?: number;
     pickerContainerProps?: React.ComponentProps<typeof View>;
+    pickerFeedback?: () => void | Promise<void>;
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
     pmLabel?: string;
     repeatHourNumbersNTimes?: number;
     repeatMinuteNumbersNTimes?: number;
     repeatSecondNumbersNTimes?: number;
+    secondInterval?: number;
     secondLabel?: string | React.ReactElement;
     secondLimit?: LimitType;
     secondsPickerIsDisabled?: boolean;
