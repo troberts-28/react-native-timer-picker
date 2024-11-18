@@ -442,12 +442,12 @@ return (
 |            hourLimit             | Limit on the hours it is possible to select                                                                                                                                       |                                                                                `{ max?: Number, min?: Number }`                                                                                 |               -                |  false   |
 |           minuteLimit            | Limit on the minutes it is possible to select                                                                                                                                     |                                                                                `{ max?: Number, min?: Number }`                                                                                 |               -                |  false   |
 |           secondLimit            | Limit on the seconds it is possible to select                                                                                                                                     |                                                                                `{ max?: Number, min?: Number }`                                                                                 |               -                |  false   |
-|            maximumHours             | The highest value on the hours picker                                     |                                                                                Number                                                                                 |    23    |  false   |
-|           maximumMinutes            | The highest value on the minutes picker                                   |                                                                                Number                                                                                 |    59    |  false   |
-|           maximumSeconds            | The highest value on the seconds picker                                   |                                                                                Number                                                                                 |    59    |  false   |
-|           hourInterval            | The interval between values on the hours picker                                   |                                                                                Number                                                                                 |    1    |  false   |
-|           minuteInterval            | The interval between values on the minutes picker                                   |                                                                                Number                                                                                 |    1    |  false   |
-|           secondInterval            | The interval between values on the seconds picker                                   |                                                                                Number                                                                                 |    1    |  false   |
+|           maximumHours           | The highest value on the hours picker                                                                                                                                             |                                                                                             Number                                                                                              |               23               |  false   |
+|          maximumMinutes          | The highest value on the minutes picker                                                                                                                                           |                                                                                             Number                                                                                              |               59               |  false   |
+|          maximumSeconds          | The highest value on the seconds picker                                                                                                                                           |                                                                                             Number                                                                                              |               59               |  false   |
+|           hourInterval           | The interval between values on the hours picker                                                                                                                                   |                                                                                             Number                                                                                              |               1                |  false   |
+|          minuteInterval          | The interval between values on the minutes picker                                                                                                                                 |                                                                                             Number                                                                                              |               1                |  false   |
+|          secondInterval          | The interval between values on the seconds picker                                                                                                                                 |                                                                                             Number                                                                                              |               1                |  false   |
 |            hourLabel             | Label for the hours picker                                                                                                                                                        |                                                                                  String \| React.ReactElement                                                                                   |               h                |  false   |
 |           minuteLabel            | Label for the minutes picker                                                                                                                                                      |                                                                                  String \| React.ReactElement                                                                                   |               m                |  false   |
 |           secondLabel            | Label for the seconds picker                                                                                                                                                      |                                                                                  String \| React.ReactElement                                                                                   |               s                |  false   |
@@ -639,8 +639,9 @@ To get this project running locally:
 2. Run `yarn setup` from the project root (this installs the project dependencies and the examples' additional dependencies)
 
 You can then start either the Expo example or the bare React Native example:
--  For Expo, run `yarn start` to start the Expo example in Expo Go.
--  For bare React Native, run `yarn start-bare:android` or `start-bare:ios` to start the project on an emulator/device.
+
+-   For Expo, run `yarn start` to start the Expo example in Expo Go.
+-   For bare React Native, run `yarn start-bare:android` or `start-bare:ios` to start the project on an emulator/device.
 
 ### GitHub Guidelines
 
@@ -649,6 +650,12 @@ There are two permenant branches: `main` and `develop`. You should never work di
 1. Create a new branch off `develop` for your work using the pattern `feature/{DESCRIPTION}`.
 2. When you think your work is ready for review, submit a PR from your branch back to `develop`.
 3. Once the PR is resolved, your work will be merged into `develop`, and will be included in the next major/minor release.
+
+<br>
+
+## Limitations ⚠
+
+The project is not compatibile with React Native versions prior to `v0.72.0` due to this [React Native issue](https://github.com/facebook/react-native/issues/36329).
 
 <br>
 
