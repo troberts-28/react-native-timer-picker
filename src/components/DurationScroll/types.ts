@@ -40,6 +40,7 @@ export interface DurationScrollProps {
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
     pmLabel?: string;
     repeatNumbersNTimes?: number;
+    repeatNumbersNTimesNotExplicitlySet: boolean;
     styles: ReturnType<typeof generateStyles>;
     testID?: string;
     topPickerGradientOverlayProps?: Partial<LinearGradientProps>;

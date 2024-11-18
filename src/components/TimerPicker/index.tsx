@@ -42,7 +42,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             padWithNItems = 1,
             pickerContainerProps,
             pmLabel = "pm",
-            repeatHourNumbersNTimes = 7,
+            repeatHourNumbersNTimes = 8,
             repeatMinuteNumbersNTimes = 3,
             repeatSecondNumbersNTimes = 3,
             secondLabel,
@@ -165,6 +165,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padWithNItems={safePadWithNItems}
                         pmLabel={pmLabel}
                         repeatNumbersNTimes={repeatHourNumbersNTimes}
+                        repeatNumbersNTimesNotExplicitlySet={
+                            props?.repeatHourNumbersNTimes === undefined
+                        }
                         styles={styles}
                         testID="duration-scroll-hour"
                         {...otherProps}
@@ -187,6 +190,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padNumbersWithZero={padMinutesWithZero}
                         padWithNItems={safePadWithNItems}
                         repeatNumbersNTimes={repeatMinuteNumbersNTimes}
+                        repeatNumbersNTimesNotExplicitlySet={
+                            props?.repeatMinuteNumbersNTimes === undefined
+                        }
                         styles={styles}
                         testID="duration-scroll-minute"
                         {...otherProps}
@@ -209,6 +215,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         padNumbersWithZero={padSecondsWithZero}
                         padWithNItems={safePadWithNItems}
                         repeatNumbersNTimes={repeatSecondNumbersNTimes}
+                        repeatNumbersNTimesNotExplicitlySet={
+                            props?.repeatSecondNumbersNTimes === undefined
+                        }
                         styles={styles}
                         testID="duration-scroll-second"
                         {...otherProps}

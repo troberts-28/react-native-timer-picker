@@ -53,22 +53,47 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             pickerGradientOverlayProps,
             pmLabel,
             repeatNumbersNTimes = 3,
+            repeatNumbersNTimesNotExplicitlySet,
             styles,
             testID,
             topPickerGradientOverlayProps,
         } = props;
 
-        const numberOfItems = maximumValue + 1;
+        const numberOfItems = useMemo(() => {
+            // guard against negative maximum values
+            if (maximumValue < 0) {
+                return 1;
+            }
+
+            return maximumValue + 1;
+        }, [maximumValue]);
 
         const safeRepeatNumbersNTimes = useMemo(() => {
+            // do not repeat numbers if there is only one option
+            if (numberOfItems === 1) {
+                return 1;
+            }
+
             if (!disableInfiniteScroll && repeatNumbersNTimes < 2) {
                 return 2;
             } else if (repeatNumbersNTimes < 1) {
                 return 1;
             }
 
+            // if this variable is not explicitly set, we calculate a reasonable value based on
+            // the number of items in the picker, avoiding regular jumps up/down the list
+            // whilst avoiding rendering too many items in the picker
+            if (repeatNumbersNTimesNotExplicitlySet) {
+                return Math.round(180 / numberOfItems);
+            }
+
             return Math.round(repeatNumbersNTimes);
-        }, [disableInfiniteScroll, repeatNumbersNTimes]);
+        }, [
+            disableInfiniteScroll,
+            numberOfItems,
+            repeatNumbersNTimes,
+            repeatNumbersNTimesNotExplicitlySet,
+        ]);
 
         const numbersForFlatList = useMemo(() => {
             if (is12HourPicker) {
