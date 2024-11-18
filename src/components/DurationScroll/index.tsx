@@ -412,12 +412,18 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         const [
             viewabilityConfigCallbackPairs,
             setViewabilityConfigCallbackPairs,
-        ] = useState<ViewabilityConfigCallbackPairs>([
-            {
-                viewabilityConfig: { viewAreaCoveragePercentThreshold: 0 },
-                onViewableItemsChanged: onViewableItemsChanged,
-            },
-        ]);
+        ] = useState<ViewabilityConfigCallbackPairs | undefined>(
+            !disableInfiniteScroll
+                ? [
+                      {
+                          viewabilityConfig: {
+                              viewAreaCoveragePercentThreshold: 0,
+                          },
+                          onViewableItemsChanged: onViewableItemsChanged,
+                      },
+                  ]
+                : undefined
+        );
 
         const [flatListRenderKey, setFlatListRenderKey] = useState(0);
 
@@ -433,13 +439,19 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             // if the onViewableItemsChanged callback changes, we need to update viewabilityConfigCallbackPairs
             // which requires the FlatList to be remounted, hence the increase of the FlatList key
             setFlatListRenderKey((prev) => prev + 1);
-            setViewabilityConfigCallbackPairs([
-                {
-                    viewabilityConfig: { viewAreaCoveragePercentThreshold: 0 },
-                    onViewableItemsChanged: onViewableItemsChanged,
-                },
-            ]);
-        }, [onViewableItemsChanged]);
+            setViewabilityConfigCallbackPairs(
+                !disableInfiniteScroll
+                    ? [
+                          {
+                              viewabilityConfig: {
+                                  viewAreaCoveragePercentThreshold: 0,
+                              },
+                              onViewableItemsChanged: onViewableItemsChanged,
+                          },
+                      ]
+                    : undefined
+            );
+        }, [disableInfiniteScroll, onViewableItemsChanged]);
 
         const getItemLayout = useCallback(
             (_: ArrayLike<string> | null | undefined, index: number) => ({
@@ -501,15 +513,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     scrollEventThrottle={16}
                     showsVerticalScrollIndicator={false}
                     snapToAlignment="start"
-                    // used in place of snapToOffset due to bug on Android
+                    // used in place of snapToInterval due to bug on Android
                     snapToOffsets={[...Array(numbersForFlatList.length)].map(
                         (_, i) => i * styles.pickerItemContainer.height
                     )}
                     testID="duration-scroll-flatlist"
                     viewabilityConfigCallbackPairs={
-                        !disableInfiniteScroll
-                            ? viewabilityConfigCallbackPairs
-                            : undefined
+                        viewabilityConfigCallbackPairs
                     }
                     windowSize={numberOfItemsToShow}
                 />
