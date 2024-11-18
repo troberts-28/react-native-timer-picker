@@ -29,6 +29,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             hourLimit,
             hoursPickerIsDisabled = false,
             initialValue,
+            maximumHours = 23,
+            maximumMinutes = 59,
+            maximumSeconds = 59,
             minuteLabel,
             minuteLimit,
             minutesPickerIsDisabled = false,
@@ -39,7 +42,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             padWithNItems = 1,
             pickerContainerProps,
             pmLabel = "pm",
-            repeatHourNumbersNTimes = 7,
+            repeatHourNumbersNTimes = 8,
             repeatMinuteNumbersNTimes = 3,
             repeatSecondNumbersNTimes = 3,
             secondLabel,
@@ -156,12 +159,15 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             hourLabel ?? (!use12HourPicker ? "h" : undefined)
                         }
                         limit={hourLimit}
-                        numberOfItems={24}
+                        maximumValue={maximumHours}
                         onDurationChange={setSelectedHours}
                         padNumbersWithZero={padHoursWithZero}
                         padWithNItems={safePadWithNItems}
                         pmLabel={pmLabel}
                         repeatNumbersNTimes={repeatHourNumbersNTimes}
+                        repeatNumbersNTimesNotExplicitlySet={
+                            props?.repeatHourNumbersNTimes === undefined
+                        }
                         styles={styles}
                         testID="duration-scroll-hour"
                         {...otherProps}
@@ -179,11 +185,14 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         isDisabled={minutesPickerIsDisabled}
                         label={minuteLabel ?? "m"}
                         limit={minuteLimit}
-                        numberOfItems={60}
+                        maximumValue={maximumMinutes}
                         onDurationChange={setSelectedMinutes}
                         padNumbersWithZero={padMinutesWithZero}
                         padWithNItems={safePadWithNItems}
                         repeatNumbersNTimes={repeatMinuteNumbersNTimes}
+                        repeatNumbersNTimesNotExplicitlySet={
+                            props?.repeatMinuteNumbersNTimes === undefined
+                        }
                         styles={styles}
                         testID="duration-scroll-minute"
                         {...otherProps}
@@ -201,11 +210,14 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         isDisabled={secondsPickerIsDisabled}
                         label={secondLabel ?? "s"}
                         limit={secondLimit}
-                        numberOfItems={60}
+                        maximumValue={maximumSeconds}
                         onDurationChange={setSelectedSeconds}
                         padNumbersWithZero={padSecondsWithZero}
                         padWithNItems={safePadWithNItems}
                         repeatNumbersNTimes={repeatSecondNumbersNTimes}
+                        repeatNumbersNTimesNotExplicitlySet={
+                            props?.repeatSecondNumbersNTimes === undefined
+                        }
                         styles={styles}
                         testID="duration-scroll-second"
                         {...otherProps}

@@ -53,6 +53,9 @@ export interface TimerPickerProps {
         minutes?: number;
         seconds?: number;
     };
+    maximumHours?: number;
+    maximumMinutes?: number;
+    maximumSeconds?: number;
     minuteLabel?: string | React.ReactElement;
     minuteLimit?: LimitType;
     minutesPickerIsDisabled?: boolean;
