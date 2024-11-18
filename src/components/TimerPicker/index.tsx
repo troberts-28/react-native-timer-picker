@@ -25,6 +25,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,
+            hourInterval = 1,
             hourLabel,
             hourLimit,
             hoursPickerIsDisabled = false,
@@ -32,6 +33,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             maximumHours = 23,
             maximumMinutes = 59,
             maximumSeconds = 59,
+            minuteInterval = 1,
             minuteLabel,
             minuteLimit,
             minutesPickerIsDisabled = false,
@@ -45,6 +47,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             repeatHourNumbersNTimes = 8,
             repeatMinuteNumbersNTimes = 3,
             repeatSecondNumbersNTimes = 3,
+            secondInterval = 1,
             secondLabel,
             secondLimit,
             secondsPickerIsDisabled = false,
@@ -153,6 +156,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         amLabel={amLabel}
                         disableInfiniteScroll={disableInfiniteScroll}
                         initialValue={safeInitialValue.hours}
+                        interval={hourInterval}
                         is12HourPicker={use12HourPicker}
                         isDisabled={hoursPickerIsDisabled}
                         label={
@@ -182,6 +186,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         allowFontScaling={allowFontScaling}
                         disableInfiniteScroll={disableInfiniteScroll}
                         initialValue={safeInitialValue.minutes}
+                        interval={minuteInterval}
                         isDisabled={minutesPickerIsDisabled}
                         label={minuteLabel ?? "m"}
                         limit={minuteLimit}
@@ -207,6 +212,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         allowFontScaling={allowFontScaling}
                         disableInfiniteScroll={disableInfiniteScroll}
                         initialValue={safeInitialValue.seconds}
+                        interval={secondInterval}
                         isDisabled={secondsPickerIsDisabled}
                         label={secondLabel ?? "s"}
                         limit={secondLimit}
