@@ -630,17 +630,11 @@ Contributions to this project are more than welcome.
 To get this project running locally:
 
 1. Clone the Git repo.
-2. Run `yarn` to install the base dependencies
-3. Run `yarn setup` from the project root (this installs the example's additional dependencies)
-4. Run `yarn start` to start the example in Expo Go.
-5. Start adding cool stuff! Your changes should be immediately reflected in the Expo Go app.
+2. Run `yarn setup` from the project root (this installs the project dependencies and the examples' additional dependencies)
 
-You can also run the library in bare React Native:
-
-1. Clone the Git repo.
-2. Run `yarn` to install the base dependencies
-3. Run `yarn setup-dev`.
-4. Run `yarn start-bare:android` or `start-bare:ios` to start the project on an emulator/device.
+You can then start either the Expo example or the bare React Native example:
+-  For Expo, run `yarn start` to start the Expo example in Expo Go.
+-  For bare React Native, run `yarn start-bare:android` or `start-bare:ios` to start the project on an emulator/device.
 
 ### GitHub Guidelines
 
