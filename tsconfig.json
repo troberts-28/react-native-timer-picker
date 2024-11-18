@@ -14,8 +14,7 @@
         "declaration": true
     },
     "exclude": [
-        "example/*",
-        "example-bare/*",
+        "examples/*",
         "dist/*",
         "src/tests",
         "babel.config.js",
