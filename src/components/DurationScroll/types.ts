@@ -28,6 +28,7 @@ export interface DurationScrollProps {
     clickSoundAsset?: SoundAssetType;
     disableInfiniteScroll?: boolean;
     initialValue?: number;
+    interval: number;
     is12HourPicker?: boolean;
     isDisabled?: boolean;
     label?: string | React.ReactElement;
