@@ -9,6 +9,7 @@ import React, {
 
 import { View, Text, TouchableOpacity } from "react-native";
 
+import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
 import Modal from "../Modal";
 import TimerPicker from "../TimerPicker";
 import type { TimerPickerRef } from "../TimerPicker/types";
@@ -40,15 +41,17 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             ...otherProps
         } = props;
 
-        const styles = generateStyles(customStyles);
+        const styles = generateStyles(customStyles, {
+            hasModalTitle: Boolean(modalTitle),
+        });
 
         const timerPickerRef = useRef<TimerPickerRef>(null);
 
-        const safeInitialValue = {
-            hours: initialValue?.hours ?? 0,
-            minutes: initialValue?.minutes ?? 0,
-            seconds: initialValue?.seconds ?? 0,
-        };
+        const safeInitialValue = getSafeInitialValue({
+            hours: initialValue?.hours,
+            minutes: initialValue?.minutes,
+            seconds: initialValue?.seconds,
+        });
 
         const [selectedDuration, setSelectedDuration] =
             useState(safeInitialValue);
@@ -150,7 +153,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             {...otherProps}
                             aggressivelyGetLatestDuration
                             onDurationChange={durationChangeHandler}
-                            styles={customStyles}
+                            styles={styles.timerPickerStyles}
                         />
                         <View
                             {...buttonContainerProps}
