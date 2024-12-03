@@ -9,6 +9,7 @@ import React, {
 
 import { View, Text, TouchableOpacity } from "react-native";
 
+import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
 import Modal from "../Modal";
 import TimerPicker from "../TimerPicker";
 import type { TimerPickerRef } from "../TimerPicker/types";
@@ -44,11 +45,11 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
 
         const timerPickerRef = useRef<TimerPickerRef>(null);
 
-        const safeInitialValue = {
-            hours: initialValue?.hours ?? 0,
-            minutes: initialValue?.minutes ?? 0,
-            seconds: initialValue?.seconds ?? 0,
-        };
+        const safeInitialValue = getSafeInitialValue({
+            hours: initialValue?.hours,
+            minutes: initialValue?.minutes,
+            seconds: initialValue?.seconds,
+        });
 
         const [selectedDuration, setSelectedDuration] =
             useState(safeInitialValue);

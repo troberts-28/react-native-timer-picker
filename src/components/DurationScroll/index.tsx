@@ -77,7 +77,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
             if (!disableInfiniteScroll && repeatNumbersNTimes < 2) {
                 return 2;
-            } else if (repeatNumbersNTimes < 1) {
+            } else if (repeatNumbersNTimes < 1 || isNaN(repeatNumbersNTimes)) {
                 return 1;
             }
 
