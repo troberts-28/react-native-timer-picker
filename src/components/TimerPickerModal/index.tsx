@@ -41,7 +41,9 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             ...otherProps
         } = props;
 
-        const styles = generateStyles(customStyles);
+        const styles = generateStyles(customStyles, {
+            hasModalTitle: Boolean(modalTitle),
+        });
 
         const timerPickerRef = useRef<TimerPickerRef>(null);
 
@@ -151,7 +153,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                             {...otherProps}
                             aggressivelyGetLatestDuration
                             onDurationChange={durationChangeHandler}
-                            styles={customStyles}
+                            styles={styles.timerPickerStyles}
                         />
                         <View
                             {...buttonContainerProps}
