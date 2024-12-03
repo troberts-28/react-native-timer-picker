@@ -9,6 +9,7 @@ import React, {
 
 import { View } from "react-native";
 
+import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
 import DurationScroll from "../DurationScroll";
 import type { DurationScrollRef } from "../DurationScroll/types";
 
@@ -57,7 +58,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
         } = props;
 
         const safePadWithNItems = useMemo(() => {
-            if (padWithNItems < 0) {
+            if (padWithNItems < 0 || isNaN(padWithNItems)) {
                 return 0;
             }
 
@@ -70,6 +71,16 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             return Math.round(padWithNItems);
         }, [hideHours, padWithNItems]);
 
+        const safeInitialValue = useMemo(
+            () =>
+                getSafeInitialValue({
+                    hours: initialValue?.hours,
+                    minutes: initialValue?.minutes,
+                    seconds: initialValue?.seconds,
+                }),
+            [initialValue?.hours, initialValue?.minutes, initialValue?.seconds]
+        );
+
         const styles = useMemo(
             () =>
                 generateStyles(customStyles, {
@@ -77,15 +88,6 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 }),
 
             [safePadWithNItems, customStyles]
-        );
-
-        const safeInitialValue = useMemo(
-            () => ({
-                hours: initialValue?.hours ?? 0,
-                minutes: initialValue?.minutes ?? 0,
-                seconds: initialValue?.seconds ?? 0,
-            }),
-            [initialValue?.hours, initialValue?.minutes, initialValue?.seconds]
         );
 
         const [selectedHours, setSelectedHours] = useState(

@@ -19,31 +19,54 @@ const LIGHT_MODE_BACKGROUND_COLOR = "#F1F1F1";
 const LIGHT_MODE_TEXT_COLOR = "#1B1B1B";
 
 export const generateStyles = (
-    customStyles: CustomTimerPickerModalStyles | undefined
-) =>
-    StyleSheet.create({
+    customStyles: CustomTimerPickerModalStyles | undefined,
+    variables?: {
+        hasModalTitle: boolean;
+    }
+) => {
+    const {
+        button: customButtonStyle,
+        buttonContainer: customButtonContainerStyle,
+        cancelButton: customCancelButtonStyle,
+        confirmButton: customConfirmButtonStyle,
+        container: customContainerStyle,
+        contentContainer: customContentContainerStyle,
+        modalTitle: customModalTitleStyle,
+        ...customTimerPickerStyles
+    } = customStyles ?? {};
+
+    return StyleSheet.create({
         container: {
             justifyContent: "center",
-            alignItems: "center",
             overflow: "hidden",
-            ...customStyles?.container,
+            ...customContainerStyle,
+            // disable setting alignItems here because it can affect
+            // the FlatList's ability to calculate its layout, which can
+            // stop snapToOffsets working properly
+            alignItems: undefined,
         },
         contentContainer: {
             backgroundColor:
-                customStyles?.backgroundColor ??
-                (customStyles?.theme === "dark"
+                customTimerPickerStyles?.backgroundColor ??
+                (customTimerPickerStyles?.theme === "dark"
                     ? DARK_MODE_BACKGROUND_COLOR
                     : LIGHT_MODE_BACKGROUND_COLOR),
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 20,
-            padding: 20,
-            ...customStyles?.contentContainer,
+            overflow: "hidden",
+            ...customContentContainerStyle,
+            // disable setting padding here because it can affect
+            // the FlatList's ability to calculate its layout, which can
+            // stop snapToOffsets working properly
+            paddingHorizontal: 0,
+            paddingVertical: 0,
         },
         buttonContainer: {
             flexDirection: "row",
             marginTop: 25,
-            ...customStyles?.buttonContainer,
+            marginBottom: 20,
+            ...customButtonContainerStyle,
         },
         button: {
             marginHorizontal: 12,
@@ -53,36 +76,53 @@ export const generateStyles = (
             borderRadius: 10,
             fontSize: 16,
             overflow: "hidden",
-            ...customStyles?.text,
-            ...customStyles?.button,
+            ...customTimerPickerStyles?.text,
+            ...customButtonStyle,
         },
         cancelButton: {
             borderColor: "gray",
             color:
-                customStyles?.theme === "dark" ? DARK_MODE_TEXT_COLOR : "gray",
+                customTimerPickerStyles?.theme === "dark"
+                    ? DARK_MODE_TEXT_COLOR
+                    : "gray",
             backgroundColor:
-                customStyles?.theme === "dark" ? "gray" : undefined,
-            ...customStyles?.text,
-            ...customStyles?.cancelButton,
+                customTimerPickerStyles?.theme === "dark" ? "gray" : undefined,
+            ...customTimerPickerStyles?.text,
+            ...customCancelButtonStyle,
         },
         confirmButton: {
             borderColor: "green",
             color:
-                customStyles?.theme === "dark" ? DARK_MODE_TEXT_COLOR : "green",
+                customTimerPickerStyles?.theme === "dark"
+                    ? DARK_MODE_TEXT_COLOR
+                    : "green",
             backgroundColor:
-                customStyles?.theme === "dark" ? "green" : undefined,
-            ...customStyles?.text,
-            ...customStyles?.confirmButton,
+                customTimerPickerStyles?.theme === "dark" ? "green" : undefined,
+            ...customTimerPickerStyles?.text,
+            ...customConfirmButtonStyle,
         },
         modalTitle: {
             fontSize: 24,
             fontWeight: "600",
+            marginTop: 20,
             marginBottom: 15,
             color:
-                customStyles?.theme === "dark"
+                customTimerPickerStyles?.theme === "dark"
                     ? DARK_MODE_TEXT_COLOR
                     : LIGHT_MODE_TEXT_COLOR,
-            ...customStyles?.text,
-            ...customStyles?.modalTitle,
+            ...customTimerPickerStyles?.text,
+            ...customModalTitleStyle,
+        },
+        timerPickerStyles: {
+            ...customTimerPickerStyles,
+            pickerContainer: {
+                // set padding here instead of on modal content container because it can affect
+                // the FlatList's ability to calculate its layout, which can
+                // stop snapToOffsets working properly
+                paddingHorizontal: 20,
+                paddingTop: !variables?.hasModalTitle ? 20 : 0,
+                ...(customTimerPickerStyles?.pickerContainer ?? {}),
+            },
         },
     });
+};
