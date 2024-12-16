@@ -499,11 +499,11 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             <View
                 pointerEvents={isDisabled ? "none" : undefined}
                 style={[
+                    styles.durationScrollFlatListContainer,
                     {
                         height:
                             styles.pickerItemContainer.height *
                             numberOfItemsToShow,
-                        overflow: "visible",
                     },
                     isDisabled && styles.disabledPickerContainer,
                 ]}
@@ -511,6 +511,9 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 <FlatList
                     key={flatListRenderKey}
                     ref={flatListRef}
+                    contentContainerStyle={
+                        styles.durationScrollFlatListContentContainer
+                    }
                     data={numbersForFlatList}
                     decelerationRate={0.88}
                     getItemLayout={getItemLayout}
@@ -528,6 +531,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     snapToOffsets={[...Array(numbersForFlatList.length)].map(
                         (_, i) => i * styles.pickerItemContainer.height
                     )}
+                    style={styles.durationScrollFlatList}
                     testID="duration-scroll-flatlist"
                     viewabilityConfigCallbackPairs={
                         viewabilityConfigCallbackPairs
