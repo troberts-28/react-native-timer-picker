@@ -40,17 +40,6 @@ export const generateStyles = (
                     : LIGHT_MODE_BACKGROUND_COLOR),
             ...customStyles?.pickerContainer,
         },
-        durationScrollFlatList: {
-            minWidth: 1,
-            ...customStyles?.durationScrollFlatList,
-        },
-        durationScrollFlatListContainer: {
-            overflow: "visible",
-            ...customStyles?.durationScrollFlatListContainer,
-        },
-        durationScrollFlatListContentContainer: {
-            ...customStyles?.durationScrollFlatListContentContainer,
-        },
         pickerLabelContainer: {
             position: "absolute",
             right: 4,
@@ -133,5 +122,16 @@ export const generateStyles = (
                     ? "30%"
                     : (customStyles?.pickerItemContainer?.height ?? 50) * 0.8,
             ...customStyles?.pickerGradientOverlay,
+        },
+        durationScrollFlatList: {
+            minWidth: 1,
+            ...customStyles?.durationScrollFlatList,
+        },
+        durationScrollFlatListContainer: {
+            overflow: "visible",
+            ...customStyles?.durationScrollFlatListContainer,
+        },
+        durationScrollFlatListContentContainer: {
+            ...customStyles?.durationScrollFlatListContentContainer,
         },
     });
