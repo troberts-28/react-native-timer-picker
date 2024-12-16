@@ -495,6 +495,9 @@ The following custom styles can be supplied to re-style the component in any way
 |   disabledPickerItem    | Style for any numbers outside any set limits |                TextStyle                 |
 | disabledPickerContainer | Style for disabled pickers                   |                ViewStyle                 |
 |  pickerGradientOverlay  | Style for the gradient overlay (fade out)    |                ViewStyle                 |
+|  durationScrollFlatList  | Style for the Flatlist in each picker    |                ViewStyle                 |
+|  durationScrollFlatListContainer  | Style for the View that contains the Flatlist in each picker    |                ViewStyle                 |
+|  durationScrollFlatListContentContainer  | Style for the Flatlist's `contentContainerStyle` prop in each picker    |                ViewStyle                 |
 
 Note the minor limitations to the allowed styles for `pickerContainer` and `pickerItemContainer`. These are made because these styles are used for internal calculations and all possible `backgroundColor`/`height` types are not supported.
 
