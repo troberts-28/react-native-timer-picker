@@ -5,6 +5,9 @@ export interface CustomTimerPickerStyles {
     backgroundColor?: string;
     disabledPickerContainer?: ViewStyle;
     disabledPickerItem?: TextStyle;
+    durationScrollFlatList?: ViewStyle;
+    durationScrollFlatListContainer?: ViewStyle;
+    durationScrollFlatListContentContainer?: ViewStyle;
     pickerAmPmContainer?: ViewStyle;
     pickerAmPmLabel?: TextStyle;
     pickerContainer?: ViewStyle & { backgroundColor?: string };
@@ -36,6 +39,17 @@ export const generateStyles = (
                     ? DARK_MODE_BACKGROUND_COLOR
                     : LIGHT_MODE_BACKGROUND_COLOR),
             ...customStyles?.pickerContainer,
+        },
+        durationScrollFlatList: {
+            minWidth: 1,
+            ...customStyles?.durationScrollFlatList,
+        },
+        durationScrollFlatListContainer: {
+            overflow: "visible",
+            ...customStyles?.durationScrollFlatListContainer,
+        },
+        durationScrollFlatListContentContainer: {
+            ...customStyles?.durationScrollFlatListContentContainer,
         },
         pickerLabelContainer: {
             position: "absolute",
