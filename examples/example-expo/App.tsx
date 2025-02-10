@@ -228,7 +228,7 @@ export default function App() {
                             right: -20,
                             top: 0,
                             bottom: 6,
-                            width: 40,
+                            width: 46,
                             alignItems: "center",
                         },
                     }}
