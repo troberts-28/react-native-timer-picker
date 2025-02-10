@@ -2881,6 +2881,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-masked-view/masked-view@npm:0.3.2":
+  version: 0.3.2
+  resolution: "@react-native-masked-view/masked-view@npm:0.3.2"
+  peerDependencies:
+    react: ">=16"
+    react-native: ">=0.57"
+  checksum: e35ab882148df3f9b71f04355d2fb1b24d6f2aaf29043f80758f398bdf905eed67734b36b072fa8b934923ff4e3d80ccb5e37d8376cb1825272078b96a21dadc
+  languageName: node
+  linkType: hard
+
 "@react-native/assets-registry@npm:0.76.2":
   version: 0.76.2
   resolution: "@react-native/assets-registry@npm:0.76.2"
@@ -6326,6 +6336,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.24.0
     "@expo/vector-icons": ^14.0.3
+    "@react-native-masked-view/masked-view": 0.3.2
     "@types/react": ~18.3.12
     "@typescript-eslint/eslint-plugin": ">=5.49.0"
     "@typescript-eslint/parser": ">=5.49.0"
