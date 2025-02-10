@@ -3,6 +3,10 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - opened        # When PR is first created
+      - synchronize   # When new commits are pushed to the PR
+      - reopened      # When a closed PR is reopened
 
 jobs:
   release:
