@@ -125,6 +125,7 @@ export const generateStyles = (
         },
         durationScrollFlatList: {
             minWidth: 1,
+            width: "300%",
             ...customStyles?.durationScrollFlatList,
         },
         durationScrollFlatListContainer: {
