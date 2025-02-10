@@ -7,6 +7,7 @@ import React, {
 } from "react";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaskedView from "@react-native-masked-view/masked-view";
 import { Audio } from "expo-av";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
@@ -28,7 +29,6 @@ import type { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { TimerPicker, TimerPickerModal } from "../../src";
 
 import { formatTime } from "./utils/formatTime";
-import MaskedView from "@react-native-masked-view/masked-view";
 
 if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
