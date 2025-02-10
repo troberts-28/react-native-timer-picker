@@ -23,11 +23,10 @@ export interface CustomTimerPickerStyles {
 const DARK_MODE_BACKGROUND_COLOR = "#232323";
 const DARK_MODE_TEXT_COLOR = "#E9E9E9";
 const LIGHT_MODE_BACKGROUND_COLOR = "#F1F1F1";
-const LIGHT_MODE_TEXT_COLOR = "#1B1B1B";
+const LIGHT_MODE_TEXT_COLOR = "#1B1B1uB";
 
 export const generateStyles = (
     customStyles: CustomTimerPickerStyles | undefined,
-    options: { padWithNItems: number }
 ) =>
     StyleSheet.create({
         pickerContainer: {
@@ -113,14 +112,13 @@ export const generateStyles = (
             opacity: 0.2,
             ...customStyles?.disabledPickerItem,
         },
+        maskedView: {
+            flex: 1,
+        },
         pickerGradientOverlay: {
             position: "absolute",
-            left: 0,
-            right: 0,
-            height:
-                options.padWithNItems === 0
-                    ? "30%"
-                    : (customStyles?.pickerItemContainer?.height ?? 50) * 0.8,
+            width: "100%",
+            height: "100%",
             ...customStyles?.pickerGradientOverlay,
         },
         durationScrollFlatList: {

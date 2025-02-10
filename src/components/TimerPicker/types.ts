@@ -36,10 +36,11 @@ export interface TimerPickerProps {
     Haptics?: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     LinearGradient?: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    MaskedView?: any;
     aggressivelyGetLatestDuration?: boolean;
     allowFontScaling?: boolean;
     amLabel?: string;
-    bottomPickerGradientOverlayProps?: Partial<LinearGradientProps>;
     clickSoundAsset?: SoundAssetType;
     disableInfiniteScroll?: boolean;
     hideHours?: boolean;
@@ -82,6 +83,5 @@ export interface TimerPickerProps {
     secondLimit?: LimitType;
     secondsPickerIsDisabled?: boolean;
     styles?: CustomTimerPickerStyles;
-    topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
     use12HourPicker?: boolean;
 }

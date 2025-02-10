@@ -82,12 +82,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
         );
 
         const styles = useMemo(
-            () =>
-                generateStyles(customStyles, {
-                    padWithNItems: safePadWithNItems,
-                }),
+            () => generateStyles(customStyles),
 
-            [safePadWithNItems, customStyles]
+            [customStyles]
         );
 
         const [selectedHours, setSelectedHours] = useState(
