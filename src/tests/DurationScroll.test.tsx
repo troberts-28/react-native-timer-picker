@@ -24,9 +24,11 @@ describe("DurationScroll", () => {
         const { getByTestId } = render(
             <DurationScroll
                 aggressivelyGetLatestDuration={false}
-                numberOfItems={1}
+                interval={1}
+                maximumValue={1}
                 onDurationChange={onDurationChangeMock}
                 padWithNItems={0}
+                repeatNumbersNTimesNotExplicitlySet={true}
                 styles={emptyStyles}
                 testID="duration-scroll"
             />
@@ -39,24 +41,28 @@ describe("DurationScroll", () => {
         const { getAllByTestId } = render(
             <DurationScroll
                 aggressivelyGetLatestDuration={false}
-                numberOfItems={2}
+                interval={1}
+                maximumValue={23}
                 onDurationChange={onDurationChangeMock}
                 padWithNItems={1}
+                repeatNumbersNTimesNotExplicitlySet={true}
                 styles={emptyStyles}
             />
         );
         const items = getAllByTestId("picker-item");
-        expect(items).toHaveLength(7);
+        expect(items).toHaveLength(10);
     });
 
     it("renders the label if provided", () => {
         const { getByText } = render(
             <DurationScroll
                 aggressivelyGetLatestDuration={false}
+                interval={1}
                 label="Duration"
-                numberOfItems={59}
+                maximumValue={59}
                 onDurationChange={onDurationChangeMock}
                 padWithNItems={1}
+                repeatNumbersNTimesNotExplicitlySet={true}
                 styles={emptyStyles}
             />
         );

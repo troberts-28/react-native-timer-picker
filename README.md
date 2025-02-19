@@ -536,8 +536,10 @@ import { TimerPicker } from "react-native-timer-picker";
 
 ```
 
+Please note that this solution does not work for all bottom-sheet components (e.g. `@tamagui/sheet`) as it depends on the implementation of each component.
+
 **Important**:
-The custom component needs to have the same interface as React Native's `<FlatList />` in order for it to work as expected. A complete reference of the current usage can be found [here](/src/components/DurationScroll/index.tsx)
+The custom component needs to have the same interface as React Native's `<FlatList />` in order for it to work as expected. A complete reference of the current usage can be found [here](/src/components/DurationScroll/index.tsx).
 
 #### Generic feedback
 
