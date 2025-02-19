@@ -60,7 +60,7 @@ Includes iOS-style haptic and audio feedback 🍏
 
 ## Peer Dependencies 👶
 
-This component will work in your React Native Project **_without any peer dependencies_**. However, to enable various features (e.g. fade-out, feedback) you will need to supply various libraries as props. These are detailed below.
+This component will work in your React Native Project **_without any peer dependencies_**. However, to enable certain additional features (e.g. fade-out, feedback) you will need to supply various libraries as props. These are detailed below.
 
 ### Linear Gradient
 
