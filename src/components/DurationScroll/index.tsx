@@ -34,7 +34,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             allowFontScaling = false,
             amLabel,
             Audio,
-            bottomPickerGradientOverlayProps,
             clickSoundAsset,
             disableInfiniteScroll = false,
             FlatList = RNFlatList,
@@ -46,6 +45,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             label,
             limit,
             LinearGradient,
+            MaskedView,
             maximumValue,
             onDurationChange,
             padNumbersWithZero = false,
@@ -57,7 +57,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             repeatNumbersNTimesNotExplicitlySet,
             styles,
             testID,
-            topPickerGradientOverlayProps,
         } = props;
 
         const numberOfItems = useMemo(() => {
@@ -495,6 +494,127 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             latestDuration: latestDuration,
         }));
 
+        const renderContent = useMemo(() => {
+            return (
+                <>
+                    <FlatList
+                        key={flatListRenderKey}
+                        ref={flatListRef}
+                        contentContainerStyle={
+                            styles.durationScrollFlatListContentContainer
+                        }
+                        data={numbersForFlatList}
+                        decelerationRate={0.88}
+                        getItemLayout={getItemLayout}
+                        initialScrollIndex={initialScrollIndex}
+                        keyExtractor={(_, index) => index.toString()}
+                        nestedScrollEnabled
+                        onMomentumScrollEnd={onMomentumScrollEnd}
+                        onScroll={onScroll}
+                        renderItem={renderItem}
+                        scrollEnabled={!isDisabled}
+                        scrollEventThrottle={16}
+                        showsVerticalScrollIndicator={false}
+                        snapToAlignment="start"
+                        // used in place of snapToInterval due to bug on Android
+                        snapToOffsets={[
+                            ...Array(numbersForFlatList.length),
+                        ].map((_, i) => i * styles.pickerItemContainer.height)}
+                        style={styles.durationScrollFlatList}
+                        testID="duration-scroll-flatlist"
+                        viewabilityConfigCallbackPairs={
+                            viewabilityConfigCallbackPairs
+                        }
+                        windowSize={numberOfItemsToShow}
+                    />
+                    <View
+                        pointerEvents="none"
+                        style={styles.pickerLabelContainer}>
+                        {typeof label === "string" ? (
+                            <Text
+                                allowFontScaling={allowFontScaling}
+                                style={styles.pickerLabel}>
+                                {label}
+                            </Text>
+                        ) : (
+                            label ?? null
+                        )}
+                    </View>
+                </>
+            );
+        }, [
+            FlatList,
+            allowFontScaling,
+            flatListRenderKey,
+            getItemLayout,
+            initialScrollIndex,
+            isDisabled,
+            label,
+            numberOfItemsToShow,
+            numbersForFlatList,
+            onMomentumScrollEnd,
+            onScroll,
+            renderItem,
+            styles.durationScrollFlatList,
+            styles.durationScrollFlatListContentContainer,
+            styles.pickerItemContainer.height,
+            styles.pickerLabel,
+            styles.pickerLabelContainer,
+            viewabilityConfigCallbackPairs,
+        ]);
+
+        const renderLinearGradient = useMemo(() => {
+            if (!LinearGradient) {
+                return null;
+            }
+
+            let colors: string[];
+
+            if (MaskedView) {
+                // if using masked view, we only care about the opacity
+                colors = [
+                    "rgba(0,0,0,0)",
+                    "rgba(0,0,0,1)",
+                    "rgba(0,0,0,1)",
+                    "rgba(0,0,0,0)",
+                ];
+            } else {
+                const backgroundColor =
+                    styles.pickerContainer.backgroundColor ?? "white";
+                const transparentBackgroundColor = colorToRgba({
+                    color: backgroundColor,
+                    opacity: 0,
+                });
+                colors = [
+                    backgroundColor,
+                    transparentBackgroundColor,
+                    transparentBackgroundColor,
+                    backgroundColor,
+                ];
+            }
+
+            // calculate the gradient height to cover the top item and bottom item
+            const gradientHeight =
+                padWithNItems > 0 ? 1 / (padWithNItems * 2 + 1) : 0.3;
+
+            return (
+                <LinearGradient
+                    colors={colors}
+                    locations={[0, gradientHeight, 1 - gradientHeight, 1]}
+                    pointerEvents="none"
+                    style={styles.pickerGradientOverlay}
+                    {...pickerGradientOverlayProps}
+                />
+            );
+        }, [
+            LinearGradient,
+            MaskedView,
+            padWithNItems,
+            pickerGradientOverlayProps,
+            styles.pickerContainer.backgroundColor,
+            styles.pickerGradientOverlay,
+        ]);
+
         return (
             <View
                 pointerEvents={isDisabled ? "none" : undefined}
@@ -508,90 +628,18 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     isDisabled && styles.disabledPickerContainer,
                 ]}
                 testID={testID}>
-                <FlatList
-                    key={flatListRenderKey}
-                    ref={flatListRef}
-                    contentContainerStyle={
-                        styles.durationScrollFlatListContentContainer
-                    }
-                    data={numbersForFlatList}
-                    decelerationRate={0.88}
-                    getItemLayout={getItemLayout}
-                    initialScrollIndex={initialScrollIndex}
-                    keyExtractor={(_, index) => index.toString()}
-                    nestedScrollEnabled
-                    onMomentumScrollEnd={onMomentumScrollEnd}
-                    onScroll={onScroll}
-                    renderItem={renderItem}
-                    scrollEnabled={!isDisabled}
-                    scrollEventThrottle={16}
-                    showsVerticalScrollIndicator={false}
-                    snapToAlignment="start"
-                    // used in place of snapToInterval due to bug on Android
-                    snapToOffsets={[...Array(numbersForFlatList.length)].map(
-                        (_, i) => i * styles.pickerItemContainer.height
-                    )}
-                    style={styles.durationScrollFlatList}
-                    testID="duration-scroll-flatlist"
-                    viewabilityConfigCallbackPairs={
-                        viewabilityConfigCallbackPairs
-                    }
-                    windowSize={numberOfItemsToShow}
-                />
-                <View pointerEvents="none" style={styles.pickerLabelContainer}>
-                    {typeof label === "string" ? (
-                        <Text
-                            allowFontScaling={allowFontScaling}
-                            style={styles.pickerLabel}>
-                            {label}
-                        </Text>
-                    ) : (
-                        label ?? null
-                    )}
-                </View>
-                {LinearGradient ? (
+                {MaskedView ? (
+                    <MaskedView
+                        maskElement={renderLinearGradient}
+                        style={[styles.maskedView]}>
+                        {renderContent}
+                    </MaskedView>
+                ) : (
                     <>
-                        <LinearGradient
-                            colors={[
-                                styles.pickerContainer.backgroundColor ??
-                                    "white",
-                                colorToRgba({
-                                    color:
-                                        styles.pickerContainer
-                                            .backgroundColor ?? "white",
-                                    opacity: 0,
-                                }),
-                            ]}
-                            end={{ x: 1, y: 1 }}
-                            pointerEvents="none"
-                            start={{ x: 1, y: 0.3 }}
-                            {...pickerGradientOverlayProps}
-                            {...topPickerGradientOverlayProps}
-                            style={[styles.pickerGradientOverlay, { top: 0 }]}
-                        />
-                        <LinearGradient
-                            colors={[
-                                colorToRgba({
-                                    color:
-                                        styles.pickerContainer
-                                            .backgroundColor ?? "white",
-                                    opacity: 0,
-                                }),
-                                styles.pickerContainer.backgroundColor ??
-                                    "white",
-                            ]}
-                            end={{ x: 1, y: 0.7 }}
-                            pointerEvents="none"
-                            start={{ x: 1, y: 0 }}
-                            {...pickerGradientOverlayProps}
-                            {...bottomPickerGradientOverlayProps}
-                            style={[
-                                styles.pickerGradientOverlay,
-                                { bottom: -1 },
-                            ]}
-                        />
+                        {renderContent}
+                        {renderLinearGradient}
                     </>
-                ) : null}
+                )}
             </View>
         );
     }

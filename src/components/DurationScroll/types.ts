@@ -21,10 +21,10 @@ export interface DurationScrollProps {
     FlatList?: CustomFlatList;
     Haptics?: any;
     LinearGradient?: any;
+    MaskedView?: any;
     aggressivelyGetLatestDuration: boolean;
     allowFontScaling?: boolean;
     amLabel?: string;
-    bottomPickerGradientOverlayProps?: Partial<LinearGradientProps>;
     clickSoundAsset?: SoundAssetType;
     disableInfiniteScroll?: boolean;
     initialValue?: number;
@@ -44,7 +44,6 @@ export interface DurationScrollProps {
     repeatNumbersNTimesNotExplicitlySet: boolean;
     styles: ReturnType<typeof generateStyles>;
     testID?: string;
-    topPickerGradientOverlayProps?: Partial<LinearGradientProps>;
 }
 
 export interface DurationScrollRef {

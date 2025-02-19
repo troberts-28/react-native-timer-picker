@@ -7,10 +7,12 @@ import React, {
 } from "react";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaskedView from "@react-native-masked-view/masked-view";
 import { Audio } from "expo-av";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import {
+    Image,
     LayoutAnimation,
     Platform,
     Pressable,
@@ -118,6 +120,7 @@ export default function App() {
                         setAlarmStringExample1(formatTime(pickedDuration));
                         setShowPickerExample1(false);
                     }}
+                    hideHours
                     setIsVisible={setShowPickerExample1}
                     styles={{
                         theme: "dark",
@@ -187,7 +190,10 @@ export default function App() {
 
     const renderExample3 = useMemo(() => {
         return (
-            <View
+            <LinearGradient
+                colors={["#202020", "#220578"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
                 style={[
                     styles.container,
                     styles.page3Container,
@@ -198,12 +204,13 @@ export default function App() {
                     Haptics={Haptics}
                     hourLabel=":"
                     LinearGradient={LinearGradient}
+                    MaskedView={MaskedView}
                     minuteLabel=":"
                     padWithNItems={2}
                     secondLabel=""
                     styles={{
                         theme: "dark",
-                        backgroundColor: "#202020",
+                        backgroundColor: "transparent",
                         pickerItem: {
                             fontSize: 34,
                         },
@@ -221,12 +228,12 @@ export default function App() {
                             right: -20,
                             top: 0,
                             bottom: 6,
-                            width: 40,
+                            width: 46,
                             alignItems: "center",
                         },
                     }}
                 />
-            </View>
+            </LinearGradient>
         );
     }, [screenWidth]);
 
@@ -363,7 +370,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#F1F1F1",
     },
     page3Container: {
-        backgroundColor: "#202020",
+        flex: 1,
     },
     page4Container: {
         backgroundColor: "#F1F1F1",
