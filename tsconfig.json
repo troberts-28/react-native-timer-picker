@@ -11,7 +11,10 @@
         "esModuleInterop": true,
         "skipLibCheck": true,
         "rootDir": "src",
-        "declaration": true
+        "declaration": true,
+        "paths": {
+            "react": ["./node_modules/@types/react"]
+        }
     },
     "exclude": [
         "examples/*",
