@@ -100,7 +100,7 @@ export default function App() {
                             <View style={styles.buttonContainer}>
                                 <Text
                                     style={[styles.button, styles.buttonDark]}>
-                                    Set Alarm 🔔
+                                    {"Set Alarm 🔔"}
                                 </Text>
                             </View>
                         </TouchableOpacity>
@@ -120,7 +120,6 @@ export default function App() {
                         setAlarmStringExample1(formatTime(pickedDuration));
                         setShowPickerExample1(false);
                     }}
-                    hideHours
                     setIsVisible={setShowPickerExample1}
                     styles={{
                         theme: "dark",
@@ -159,7 +158,7 @@ export default function App() {
                             <View style={styles.buttonContainer}>
                                 <Text
                                     style={[styles.button, styles.buttonLight]}>
-                                    Set Alarm 🔔
+                                    {"Set Alarm 🔔"}
                                 </Text>
                             </View>
                         </TouchableOpacity>

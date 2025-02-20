@@ -22,7 +22,7 @@ Includes iOS-style haptic and audio feedback 🍏
 -   [Examples 😎](#examples-)
     -   [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
     -   [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
-    -   [Timer Picker with Customisation (Dark Mode) 🌒](#timer-picker-with-customisation-dark-mode-)
+    -   [Timer Picker with Transparent Fade-Out (Dark Mode) 🌒](#timer-picker-with-transparent-fade-out-dark-mode-)
     -   [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
 -   [Props 💅](#props-)
     -   [TimerPicker ⏲️](#timerpicker-️)
@@ -74,11 +74,11 @@ If you want the numbers to fade in/out at the top and bottom of the picker, you 
 ### Masked View
 
 To make the numbers fade in/out on a transparent background (e.g. if the picker is rendered on top of a gradient or image), you will need to install the [@react-native-masked-view/masked-view
-](https://www.npmjs.com/package/@react-native-masked-view/masked-view) component. This is as the standard LinearGradient implementation relies on there being a solid background colour.
+](https://www.npmjs.com/package/@react-native-masked-view/masked-view) component. This is as the standard LinearGradient implementation relies on there being a solid background colour. You then just need to set `backgroundColor: "transparent` on the `TimerPicker` styles prop.
 
 `import MaskedView from "@react-native-masked-view/masked-view";`
 
-**To enable the fade-out on a transparent background, you need to supply the imported `MaskedView` component AND one of the LinearGradient components as props to either TimerPickerModal or TimerPicker.**
+**To enable the fade-out on a transparent background, you need to supply the imported `MaskedView` component AND one of the LinearGradient components as props to either TimerPickerModal or TimerPicker. (see [this example](#timer-picker-with-transparent-fade-out-dark-mode-))**
 
 ### Haptic Feedback
 
@@ -194,7 +194,7 @@ return (
                                 borderColor: "#C2C2C2",
                                 color: "#C2C2C2"
                                 }}>
-                            Set Alarm 🔔
+                            {"Set Alarm 🔔"}
                         </Text>
                     </View>
                 </TouchableOpacity>
@@ -328,10 +328,11 @@ return (
 
 <img src="demos/example2.gif" width="250" height="550"/>
 
-### Timer Picker with Customisation (Dark Mode) 🌒
+### Timer Picker with Transparent Fade-Out (Dark Mode) 🌒
 
 ```jsx
 import { TimerPicker } from "react-native-timer-picker";
+import MaskedView from "@react-native-masked-view/masked-view"; // for transparent fade-out
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
 import { Audio } from "expo-av"; // for audio feedback (click sound as you scroll)
 import * as Haptics from "expo-haptics"; // for haptic feedback
@@ -343,7 +344,11 @@ const [alarmString, setAlarmString] = useState<
     >(null);
 
 return (
-    <View style={{backgroundColor: "#202020", alignItems: "center", justifyContent: "center"}}>
+    <LinearGradient
+        colors={["#202020", "#220578"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{alignItems: "center", justifyContent: "center"}}>
         <TimerPicker
             padWithNItems={2}
             hourLabel=":"
@@ -352,9 +357,10 @@ return (
             Audio={Audio}
             LinearGradient={LinearGradient}
             Haptics={Haptics}
+            MaskedView={MaskedView}
             styles={{
                 theme: "dark",
-                backgroundColor: "#202020",
+                backgroundColor: "transparent", // transparent fade-out
                 pickerItem: {
                     fontSize: 34,
                 },
@@ -377,7 +383,7 @@ return (
                 },
             }}
         />
-    </View>
+    </LinearGradient>
 )
 
 ```
