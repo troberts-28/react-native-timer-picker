@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "@expo/vector-icons": "^14.0.3",
+        "@react-native-masked-view/masked-view": "0.3.2",
         "expo": "~52.0.31",
         "expo-av": "~15.0.2",
         "expo-haptics": "~14.0.1",

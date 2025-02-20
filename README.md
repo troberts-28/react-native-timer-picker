@@ -22,7 +22,7 @@ Includes iOS-style haptic and audio feedback 🍏
 -   [Examples 😎](#examples-)
     -   [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
     -   [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
-    -   [Timer Picker with Customisation (Dark Mode) 🌒](#timer-picker-with-customisation-dark-mode-)
+    -   [Timer Picker with Transparent Fade-Out (Dark Mode) 🌒](#timer-picker-with-transparent-fade-out-dark-mode-)
     -   [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
 -   [Props 💅](#props-)
     -   [TimerPicker ⏲️](#timerpicker-️)
@@ -60,7 +60,7 @@ Includes iOS-style haptic and audio feedback 🍏
 
 ## Peer Dependencies 👶
 
-This component will work in your React Native Project **_without any peer dependencies_**.
+This component will work in your React Native Project **_without any peer dependencies_**. However, to enable certain additional features (e.g. fade-out, feedback) you will need to supply various libraries as props. These are detailed below.
 
 ### Linear Gradient
 
@@ -70,6 +70,15 @@ If you want the numbers to fade in/out at the top and bottom of the picker, you 
 -   [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient) (if using in a bare React Native project)
 
 **To enable the linear gradient, you need to supply the component as a prop to either TimerPickerModal or TimerPicker.**
+
+### Masked View
+
+To make the numbers fade in/out on a transparent background (e.g. if the picker is rendered on top of a gradient or image), you will need to install the [@react-native-masked-view/masked-view
+](https://www.npmjs.com/package/@react-native-masked-view/masked-view) component. This is as the standard LinearGradient implementation relies on there being a solid background colour. You then just need to set `backgroundColor: "transparent` on the `TimerPicker` styles prop.
+
+`import MaskedView from "@react-native-masked-view/masked-view";`
+
+**To enable the fade-out on a transparent background, you need to supply the imported `MaskedView` component AND one of the LinearGradient components as props to either TimerPickerModal or TimerPicker. (see [this example](#timer-picker-with-transparent-fade-out-dark-mode-))**
 
 ### Haptic Feedback
 
@@ -185,7 +194,7 @@ return (
                                 borderColor: "#C2C2C2",
                                 color: "#C2C2C2"
                                 }}>
-                            Set Alarm 🔔
+                            {"Set Alarm 🔔"}
                         </Text>
                     </View>
                 </TouchableOpacity>
@@ -319,10 +328,11 @@ return (
 
 <img src="demos/example2.gif" width="250" height="550"/>
 
-### Timer Picker with Customisation (Dark Mode) 🌒
+### Timer Picker with Transparent Fade-Out (Dark Mode) 🌒
 
 ```jsx
 import { TimerPicker } from "react-native-timer-picker";
+import MaskedView from "@react-native-masked-view/masked-view"; // for transparent fade-out
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
 import { Audio } from "expo-av"; // for audio feedback (click sound as you scroll)
 import * as Haptics from "expo-haptics"; // for haptic feedback
@@ -334,7 +344,11 @@ const [alarmString, setAlarmString] = useState<
     >(null);
 
 return (
-    <View style={{backgroundColor: "#202020", alignItems: "center", justifyContent: "center"}}>
+    <LinearGradient
+        colors={["#202020", "#220578"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{alignItems: "center", justifyContent: "center"}}>
         <TimerPicker
             padWithNItems={2}
             hourLabel=":"
@@ -343,9 +357,10 @@ return (
             Audio={Audio}
             LinearGradient={LinearGradient}
             Haptics={Haptics}
+            MaskedView={MaskedView}
             styles={{
                 theme: "dark",
-                backgroundColor: "#202020",
+                backgroundColor: "transparent", // transparent fade-out
                 pickerItem: {
                     fontSize: 34,
                 },
@@ -368,7 +383,7 @@ return (
                 },
             }}
         />
-    </View>
+    </LinearGradient>
 )
 
 ```
@@ -464,16 +479,15 @@ return (
 |    repeatMinuteNumbersNTimes     | Set the number of times the list of minutes is repeated in the picker                                                                                                             |                                                                                             Number                                                                                              |               3                |  false   |
 |    repeatSecondNumbersNTimes     | Set the number of times the list of seconds is repeated in the picker                                                                                                             |                                                                                             Number                                                                                              |               3                |  false   |
 |      disableInfiniteScroll       | Disable the infinite scroll feature                                                                                                                                               |                                                                                             Boolean                                                                                             |             false              |  false   |
-|          LinearGradient          | Linear Gradient Component                                                                                                                                                         | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default |               -                |  false   |
-|             Haptics              | Haptics Namespace (required for Haptic feedback)                                                                                                                                  |                                                                   [expo-haptics](https://www.npmjs.com/package/expo-haptics)                                                                    |               -                |  false   |
-|              Audio               | Audio Class (required for audio feedback i.e. click sound)                                                                                                                        |                                                                     [expo-av](https://www.npmjs.com/package/expo-av).Audio                                                                      |               -                |  false   |
-|          pickerFeedback          | Generic picker feedback as alternative to the below Expo feedback support                                                                                                         |                                                                                 `() => void \| Promise<void> `                                                                                  |               -                |  false   |
+|          LinearGradient          | [Linear Gradient Component (required for picker fade-out)](#linear-gradient)                                                                                                                                                         | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default |               -                |  false   |
+|          MaskedView          | [Masked View Component (required for picker fade-out on transparent background)](#masked-view)                                                                                                                                                        | [@react-native-masked-view/masked-view](https://www.npmjs.com/package/@react-native-masked-view/masked-view).default |               -                |  false   |
+|             Haptics              | [Haptics Namespace (required for Haptic feedback)](#haptic-feedback)                                                                                                                                  |                                                                   [expo-haptics](https://www.npmjs.com/package/expo-haptics)                                                                    |               -                |  false   |
+|              Audio               | [Audio Class (required for audio feedback i.e. click sound)](#audio-feedback-click-sound)                                                                                                                        |                                                                     [expo-av](https://www.npmjs.com/package/expo-av).Audio                                                                      |               -                |  false   |
+|          pickerFeedback          | [Generic picker feedback as alternative to the above Expo feedback support](#generic-feedback)                                                                                                         |                                                                                 `() => void \| Promise<void> `                                                                                  |               -                |  false   |
 |             FlatList             | FlatList component used internally to implement each picker (hour, minutes and seconds). More info [below](#custom-flatlist)                                                      |                                                                 [react-native](https://reactnative.dev/docs/flatlist).FlatList                                                                  | `FlatList` from `react-native` |  false   |
 |         clickSoundAsset          | Custom sound asset for click sound (required for offline click sound - download default [here](https://drive.google.com/uc?export=download&id=10e1YkbNsRh-vGx1jmS1Nntz8xzkBp4_I)) |                                                                        require(.../somefolderpath) or {uri: www.someurl}                                                                        |               -                |  false   |
 |       pickerContainerProps       | Props for the picker container                                                                                                                                                    |                                                                               `React.ComponentProps<typeof View>`                                                                               |               -                |  false   |
-|    pickerGradientOverlayProps    | Props for both gradient overlays                                                                                                                                                  |                                                                                 `Partial<LinearGradientProps>`                                                                                  |               -                |  false   |
-|  topPickerGradientOverlayProps   | Props for the top gradient overlay                                                                                                                                                |                                                                                 `Partial<LinearGradientProps>`                                                                                  |               -                |  false   |
-| bottomPickerGradientOverlayProps | Props for the bottom gradient overlay                                                                                                                                             |                                                                                 `Partial<LinearGradientProps>`                                                                                  |               -                |  false   |
+|    pickerGradientOverlayProps    | Props for the gradient overlay (supply a different `locations` array to adjust its position) overlays                                                                                                                                                  |                                                                                 `Partial<LinearGradientProps>`                                                                                  |               -                |  false   |
 |              styles              | Custom styles for the timer picker                                                                                                                                                |                                                                           [CustomTimerPickerStyles](#custom-styles-)                                                                            |               -                |  false   |
 
 #### Custom Styles 👗
@@ -505,7 +519,7 @@ Note the minor limitations to the allowed styles for `pickerContainer` and `pick
 
 When the `disableInfiniteScroll` prop is not set, the picker gives the appearance of an infinitely scrolling picker by auto-scrolling forward/back when you near the start/end of the list. When the picker auto-scrolls, a momentary flicker is visible if you are scrolling very slowly.
 
-To mitigate for this, you can modify the `repeatHourNumbersNTimes`, `repeatMinuteNumbersNTimes` and `repeatSecondNumbersNTimes` props. These set the number of times the list of numbers in each picker is repeated. These have a performance trade-off: higher values mean the picker has to auto-scroll less to maintain the infinite scroll, but has to render a longer list of numbers. By default, the props are set to 7, 3 and 3, respectively, which balances that trade-off effectively.
+To mitigate for this, the list of numbers in each picker is repeated a given number of times based on the length of the list (8 times for the hours picker, and 3 times for the minutes and seconds picker). These have a performance trade-off: higher values mean the picker has to auto-scroll less to maintain the infinite scroll, but has to render a longer list of numbers. The number of repetitions automatically adjusts if the number of items in the picker changes (e.g. if an interval is included, or the maximum value is modified), balancing the trade-off. You can also manually adjust the number of repetitions in each picker with the `repeatHourNumbersNTimes`, `repeatMinuteNumbersNTimes` and `repeatSecondNumbersNTimes` props. 
 
 Note that you can avoid the auto-scroll flickering entirely by disabling infinite scroll. You could then set the above props to high values, so that a user has to scroll far down/up the list to reach the end of the list.
 
@@ -535,7 +549,7 @@ The custom component needs to have the same interface as React Native's `<FlatLi
 
 #### Generic feedback
 
-To enable haptic feedback from the non-Expo module [react-native-haptic-feedback](https://github.com/mkuczera/react-native-haptic-feedback) or provide feedback in any other form you can use the generic feedback callback prop `pickerFeedback`. This function is called whenever any of the pickers tick onto a new number.
+To enable haptic feedback from the non-Expo module [react-native-haptic-feedback](https://github.com/mkuczera/react-native-haptic-feedback) (or provide feedback in any other form) you can use the generic feedback callback prop `pickerFeedback`. This function is called whenever any of the pickers tick onto a new number.
 
 ```Jsx
 import { trigger } from 'react-native-haptic-feedback';
