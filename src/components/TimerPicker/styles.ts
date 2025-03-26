@@ -23,7 +23,7 @@ export interface CustomTimerPickerStyles {
 const DARK_MODE_BACKGROUND_COLOR = "#232323";
 const DARK_MODE_TEXT_COLOR = "#E9E9E9";
 const LIGHT_MODE_BACKGROUND_COLOR = "#F1F1F1";
-const LIGHT_MODE_TEXT_COLOR = "#1B1B1uB";
+const LIGHT_MODE_TEXT_COLOR = "#1B1B1B";
 
 export const generateStyles = (
     customStyles: CustomTimerPickerStyles | undefined,
