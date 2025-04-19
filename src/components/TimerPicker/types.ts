@@ -13,6 +13,7 @@ import type { CustomTimerPickerStyles } from "./styles";
 
 export interface TimerPickerRef {
     latestDuration: {
+        days: MutableRefObject<number> | undefined;
         hours: MutableRefObject<number> | undefined;
         minutes: MutableRefObject<number> | undefined;
         seconds: MutableRefObject<number> | undefined;
@@ -20,6 +21,7 @@ export interface TimerPickerRef {
     reset: (options?: { animated?: boolean }) => void;
     setValue: (
         value: {
+            days: number;
             hours: number;
             minutes: number;
             seconds: number;
@@ -42,7 +44,12 @@ export interface TimerPickerProps {
     allowFontScaling?: boolean;
     amLabel?: string;
     clickSoundAsset?: SoundAssetType;
+    dayInterval?: number;
+    dayLabel?: string | React.ReactElement;
+    dayLimit?: LimitType;
+    daysPickerIsDisabled?: boolean;
     disableInfiniteScroll?: boolean;
+    hideDays?: boolean;
     hideHours?: boolean;
     hideMinutes?: boolean;
     hideSeconds?: boolean;
@@ -51,10 +58,12 @@ export interface TimerPickerProps {
     hourLimit?: LimitType;
     hoursPickerIsDisabled?: boolean;
     initialValue?: {
+        days?: number;
         hours?: number;
         minutes?: number;
         seconds?: number;
     };
+    maximumDays?: number;
     maximumHours?: number;
     maximumMinutes?: number;
     maximumSeconds?: number;
@@ -63,10 +72,12 @@ export interface TimerPickerProps {
     minuteLimit?: LimitType;
     minutesPickerIsDisabled?: boolean;
     onDurationChange?: (duration: {
+        days: number;
         hours: number;
         minutes: number;
         seconds: number;
     }) => void;
+    padDaysWithZero?: boolean;
     padHoursWithZero?: boolean;
     padMinutesWithZero?: boolean;
     padSecondsWithZero?: boolean;
@@ -75,6 +86,7 @@ export interface TimerPickerProps {
     pickerFeedback?: () => void | Promise<void>;
     pickerGradientOverlayProps?: Partial<LinearGradientProps>;
     pmLabel?: string;
+    repeatDayNumbersNTimes?: number;
     repeatHourNumbersNTimes?: number;
     repeatMinuteNumbersNTimes?: number;
     repeatSecondNumbersNTimes?: number;
