@@ -27,7 +27,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             dayLimit,
             daysPickerIsDisabled = false,
             disableInfiniteScroll = false,
-            hideDays = false,
+            hideDays = true,
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,
