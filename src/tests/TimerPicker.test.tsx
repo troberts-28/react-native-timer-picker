@@ -18,12 +18,14 @@ describe("TimerPicker", () => {
         expect(component).toBeDefined();
     });
 
-    it("hides minutes and seconds when respective hide props are provided", () => {
+    it("hides days, minutes and seconds when respective hide props are provided", () => {
         const { queryByTestId } = render(
-            <TimerPicker hideMinutes hideSeconds />
+            <TimerPicker hideDays hideMinutes hideSeconds />
         );
+        const dayPicker = queryByTestId("duration-scroll-day");
         const minutePicker = queryByTestId("duration-scroll-minute");
         const secondPicker = queryByTestId("duration-scroll-second");
+        expect(dayPicker).toBeNull();
         expect(minutePicker).toBeNull();
         expect(secondPicker).toBeNull();
     });
@@ -36,6 +38,6 @@ describe("TimerPicker", () => {
             <TimerPicker FlatList={CustomFlatList} />
         );
         const customFlatList = queryAllByTestId("custom-flat-list");
-        expect(customFlatList).toHaveLength(3);
+        expect(customFlatList).toHaveLength(4);
     });
 });
