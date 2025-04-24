@@ -57,6 +57,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             repeatNumbersNTimesNotExplicitlySet,
             styles,
             testID,
+            decelerationRate = 0.88,
         } = props;
 
         const numberOfItems = useMemo(() => {
@@ -504,7 +505,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             styles.durationScrollFlatListContentContainer
                         }
                         data={numbersForFlatList}
-                        decelerationRate={0.88}
+                        decelerationRate={decelerationRate}
                         getItemLayout={getItemLayout}
                         initialScrollIndex={initialScrollIndex}
                         keyExtractor={(_, index) => index.toString()}

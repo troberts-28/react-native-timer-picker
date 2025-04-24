@@ -84,4 +84,5 @@ export interface TimerPickerProps {
     secondsPickerIsDisabled?: boolean;
     styles?: CustomTimerPickerStyles;
     use12HourPicker?: boolean;
+    decelerationRate?: number | "normal" | "fast";
 }

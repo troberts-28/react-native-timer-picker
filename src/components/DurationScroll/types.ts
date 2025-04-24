@@ -44,6 +44,7 @@ export interface DurationScrollProps {
     repeatNumbersNTimesNotExplicitlySet: boolean;
     styles: ReturnType<typeof generateStyles>;
     testID?: string;
+    decelerationRate?: number | "normal" | "fast";
 }
 
 export interface DurationScrollRef {

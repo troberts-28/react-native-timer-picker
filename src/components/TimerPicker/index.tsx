@@ -54,6 +54,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             secondsPickerIsDisabled = false,
             styles: customStyles,
             use12HourPicker = false,
+            decelerationRate = 0.88,
             ...otherProps
         } = props;
 
@@ -173,6 +174,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         }
                         styles={styles}
                         testID="duration-scroll-hour"
+                        decelerationRate={decelerationRate}
                         {...otherProps}
                     />
                 ) : null}
@@ -199,6 +201,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         }
                         styles={styles}
                         testID="duration-scroll-minute"
+                        decelerationRate={decelerationRate}
                         {...otherProps}
                     />
                 ) : null}
@@ -225,6 +228,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         }
                         styles={styles}
                         testID="duration-scroll-second"
+                        decelerationRate={decelerationRate}
                         {...otherProps}
                     />
                 ) : null}
