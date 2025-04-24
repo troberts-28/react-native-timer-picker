@@ -22,6 +22,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             aggressivelyGetLatestDuration = false,
             allowFontScaling = false,
             amLabel = "am",
+            decelerationRate = 0.88,
             disableInfiniteScroll = false,
             hideHours = false,
             hideMinutes = false,
@@ -54,7 +55,6 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             secondsPickerIsDisabled = false,
             styles: customStyles,
             use12HourPicker = false,
-            decelerationRate = 0.88,
             ...otherProps
         } = props;
 
@@ -154,6 +154,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         }
                         allowFontScaling={allowFontScaling}
                         amLabel={amLabel}
+                        decelerationRate={decelerationRate}
                         disableInfiniteScroll={disableInfiniteScroll}
                         initialValue={safeInitialValue.hours}
                         interval={hourInterval}
@@ -174,7 +175,6 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         }
                         styles={styles}
                         testID="duration-scroll-hour"
-                        decelerationRate={decelerationRate}
                         {...otherProps}
                     />
                 ) : null}
@@ -185,6 +185,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             aggressivelyGetLatestDuration
                         }
                         allowFontScaling={allowFontScaling}
+                        decelerationRate={decelerationRate}
                         disableInfiniteScroll={disableInfiniteScroll}
                         initialValue={safeInitialValue.minutes}
                         interval={minuteInterval}
@@ -201,7 +202,6 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         }
                         styles={styles}
                         testID="duration-scroll-minute"
-                        decelerationRate={decelerationRate}
                         {...otherProps}
                     />
                 ) : null}
@@ -212,6 +212,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             aggressivelyGetLatestDuration
                         }
                         allowFontScaling={allowFontScaling}
+                        decelerationRate={decelerationRate}
                         disableInfiniteScroll={disableInfiniteScroll}
                         initialValue={safeInitialValue.seconds}
                         interval={secondInterval}
@@ -228,7 +229,6 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         }
                         styles={styles}
                         testID="duration-scroll-second"
-                        decelerationRate={decelerationRate}
                         {...otherProps}
                     />
                 ) : null}

@@ -35,6 +35,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             amLabel,
             Audio,
             clickSoundAsset,
+            decelerationRate = 0.88,
             disableInfiniteScroll = false,
             FlatList = RNFlatList,
             Haptics,
@@ -57,7 +58,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             repeatNumbersNTimesNotExplicitlySet,
             styles,
             testID,
-            decelerationRate = 0.88,
         } = props;
 
         const numberOfItems = useMemo(() => {
@@ -562,6 +562,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             styles.pickerLabel,
             styles.pickerLabelContainer,
             viewabilityConfigCallbackPairs,
+            decelerationRate,
         ]);
 
         const renderLinearGradient = useMemo(() => {

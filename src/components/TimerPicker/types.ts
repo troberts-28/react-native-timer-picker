@@ -42,6 +42,7 @@ export interface TimerPickerProps {
     allowFontScaling?: boolean;
     amLabel?: string;
     clickSoundAsset?: SoundAssetType;
+    decelerationRate?: number | "normal" | "fast";
     disableInfiniteScroll?: boolean;
     hideHours?: boolean;
     hideMinutes?: boolean;
@@ -84,5 +85,4 @@ export interface TimerPickerProps {
     secondsPickerIsDisabled?: boolean;
     styles?: CustomTimerPickerStyles;
     use12HourPicker?: boolean;
-    decelerationRate?: number | "normal" | "fast";
 }

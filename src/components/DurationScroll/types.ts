@@ -26,6 +26,7 @@ export interface DurationScrollProps {
     allowFontScaling?: boolean;
     amLabel?: string;
     clickSoundAsset?: SoundAssetType;
+    decelerationRate?: number | "normal" | "fast";
     disableInfiniteScroll?: boolean;
     initialValue?: number;
     interval: number;
@@ -44,7 +45,6 @@ export interface DurationScrollProps {
     repeatNumbersNTimesNotExplicitlySet: boolean;
     styles: ReturnType<typeof generateStyles>;
     testID?: string;
-    decelerationRate?: number | "normal" | "fast";
 }
 
 export interface DurationScrollRef {
