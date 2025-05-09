@@ -35,6 +35,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             amLabel,
             Audio,
             clickSoundAsset,
+            decelerationRate = 0.88,
             disableInfiniteScroll = false,
             FlatList = RNFlatList,
             Haptics,
@@ -504,7 +505,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                             styles.durationScrollFlatListContentContainer
                         }
                         data={numbersForFlatList}
-                        decelerationRate={0.88}
+                        decelerationRate={decelerationRate}
                         getItemLayout={getItemLayout}
                         initialScrollIndex={initialScrollIndex}
                         keyExtractor={(_, index) => index.toString()}
@@ -561,6 +562,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             styles.pickerLabel,
             styles.pickerLabelContainer,
             viewabilityConfigCallbackPairs,
+            decelerationRate,
         ]);
 
         const renderLinearGradient = useMemo(() => {

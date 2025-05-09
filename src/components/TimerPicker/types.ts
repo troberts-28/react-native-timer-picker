@@ -44,6 +44,7 @@ export interface TimerPickerProps {
     allowFontScaling?: boolean;
     amLabel?: string;
     clickSoundAsset?: SoundAssetType;
+    decelerationRate?: number | "normal" | "fast";
     dayInterval?: number;
     dayLabel?: string | React.ReactElement;
     dayLimit?: LimitType;

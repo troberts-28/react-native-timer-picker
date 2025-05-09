@@ -22,6 +22,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             aggressivelyGetLatestDuration = false,
             allowFontScaling = false,
             amLabel = "am",
+            decelerationRate = 0.88,
             dayInterval = 1,
             dayLabel,
             dayLimit,
@@ -201,6 +202,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         }
                         allowFontScaling={allowFontScaling}
                         amLabel={amLabel}
+                        decelerationRate={decelerationRate}
                         disableInfiniteScroll={disableInfiniteScroll}
                         initialValue={safeInitialValue.hours}
                         interval={hourInterval}
@@ -231,6 +233,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             aggressivelyGetLatestDuration
                         }
                         allowFontScaling={allowFontScaling}
+                        decelerationRate={decelerationRate}
                         disableInfiniteScroll={disableInfiniteScroll}
                         initialValue={safeInitialValue.minutes}
                         interval={minuteInterval}
@@ -257,6 +260,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             aggressivelyGetLatestDuration
                         }
                         allowFontScaling={allowFontScaling}
+                        decelerationRate={decelerationRate}
                         disableInfiniteScroll={disableInfiniteScroll}
                         initialValue={safeInitialValue.seconds}
                         interval={secondInterval}
