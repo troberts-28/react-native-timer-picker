@@ -26,7 +26,7 @@ const LIGHT_MODE_BACKGROUND_COLOR = "#F1F1F1";
 const LIGHT_MODE_TEXT_COLOR = "#1B1B1B";
 
 export const generateStyles = (
-    customStyles: CustomTimerPickerStyles | undefined,
+    customStyles: CustomTimerPickerStyles | undefined
 ) =>
     StyleSheet.create({
         pickerContainer: {
