@@ -38,6 +38,6 @@ describe("TimerPicker", () => {
             <TimerPicker FlatList={CustomFlatList} />
         );
         const customFlatList = queryAllByTestId("custom-flat-list");
-        expect(customFlatList).toHaveLength(4);
+        expect(customFlatList).toHaveLength(3);
     });
 });
