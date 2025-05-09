@@ -9,6 +9,7 @@ import type { CustomTimerPickerModalStyles } from "./styles";
 
 export interface TimerPickerModalRef {
     latestDuration: {
+        days: MutableRefObject<number> | undefined;
         hours: MutableRefObject<number> | undefined;
         minutes: MutableRefObject<number> | undefined;
         seconds: MutableRefObject<number> | undefined;
@@ -16,6 +17,7 @@ export interface TimerPickerModalRef {
     reset: (options?: { animated?: boolean }) => void;
     setValue: (
         value: {
+            days: number;
             hours: number;
             minutes: number;
             seconds: number;
@@ -38,10 +40,12 @@ export interface TimerPickerModalProps extends TimerPickerProps {
     modalTitleProps?: React.ComponentProps<typeof Text>;
     onCancel?: () => void;
     onConfirm: ({
+        days,
         hours,
         minutes,
         seconds,
     }: {
+        days: number;
         hours: number;
         minutes: number;
         seconds: number;
