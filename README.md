@@ -14,12 +14,10 @@ Works with Expo and bare React Native apps ✅
 Includes iOS-style haptic and audio feedback 🍏
 
 -   [Demos 📱](#demos-)
--   [Peer Dependencies 👶](#peer-dependencies-)
-    -   [Linear Gradient](#linear-gradient)
-    -   [Masked View](#masked-view)
-    -   [Picker Feedback (Audio/Haptic)](#picker-feedback-audiohaptic)
-    -   [Expo-Specific Audio/Haptic Feedback (DEPRECATED)](#expo-specific-audiohaptic-feedback-deprecated)
 -   [Installation 🚀](#installation-)
+    -   [Peer Dependencies 👶](#peer-dependencies-)
+        -   [Linear Gradient](#linear-gradient)
+        -   [Masked View](#masked-view)
 -   [Examples 😎](#examples-)
     -   [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
     -   [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
@@ -35,6 +33,11 @@ Includes iOS-style haptic and audio feedback 🍏
 -   [Methods 🔄](#methods-)
     -   [TimerPicker](#timerpicker)
     -   [TimerPickerModal](#timerpickermodal)
+-   [Picker Feedback](#picker-feedback-)
+    -   [Audio Feedback](#audio-feedback)
+    -   [Haptic Feedback](#haptic-feedback)
+    -   [Feedback Example](#feedback-example)
+    -   [Expo-Specific Audio/Haptic Feedback (DEPRECATED)](#expo-specific-audiohaptic-feedback-deprecated)
 -   [Contributing 🧑‍🤝‍🧑](#contributing-)
     -   [Dev Setup](#dev-setup)
     -   [GitHub Guidelines](#github-guidelines)
@@ -58,147 +61,6 @@ Includes iOS-style haptic and audio feedback 🍏
 
 <br>
 
-## Peer Dependencies 👶
-
-This component will work in your React Native Project **_without any peer dependencies_**. However, to enable certain additional features (e.g. fade-out, feedback) you will need to supply various libraries as props. These are detailed below.
-
-### Linear Gradient
-
-If you want the numbers to fade in/out at the top and bottom of the picker, you will need to install either:
-
--   [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient) (if using Expo)
--   [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient) (if using in a bare React Native project)
-
-**To enable the linear gradient, you need to supply the component as a prop to either TimerPickerModal or TimerPicker.**
-
-### Masked View
-
-To make the numbers fade in/out on a transparent background (e.g. if the picker is rendered on top of a gradient or image), you will need to install the [@react-native-masked-view/masked-view
-](https://www.npmjs.com/package/@react-native-masked-view/masked-view) component. This is as the standard LinearGradient implementation relies on there being a solid background colour. You then just need to set `backgroundColor: "transparent` on the `TimerPicker` styles prop.
-
-`import MaskedView from "@react-native-masked-view/masked-view";`
-
-**To enable the fade-out on a transparent background, you need to supply the imported `MaskedView` component AND one of the LinearGradient components as props to either TimerPickerModal or TimerPicker. (see [this example](#timer-picker-with-transparent-fade-out-dark-mode-))**
-
-### Picker Feedback
-
-You can use the picker feedback callback prop `pickerFeedback` to provide any form of audio/haptic feedback for the picker. This function is called whenever any of the pickers tick onto a new number.
-
-Note that this prop should be used in lieu of the now deprecated expo-specific audio/haptic feedback props.
-
-#### Audio Feedack
-
-There is a challenge here with audio latency as we need to be able to play the click-sound repeatedly and rapidly when a user scrolls fast. Most React Native sound libraries are designed for playing audio tracks and the latency is too high for this application.
-
-Recommended libraries:
-
--   [react-native-audio-api](https://www.npmjs.com/package/react-native-audio-api): this is a new library but is built by Software Mansion and has strong potential for our application with low-latency audio. It is not currentl straightforward to use a local click-sound
-
-[react-native-sound](https://www.npmjs.com/package/react-native-sound) likely has low enough latency to work but the library is no longer maintained so it is best avoided.
-
-⚠️ Avoid [expo-av](https://docs.expo.dev/versions/latest/sdk/av/) as the latency is too high to work well. Expo are developing a new audio module [expo-audio](https://docs.expo.dev/versions/latest/sdk/audio/) that may be better, but at the time of writing (May 2025) it does not have the capability to repeatedly play the same sound.
-
-#### Haptic Feedback
-
-Recommended libraries:
-
--   [expo-haptics](https://www.npmjs.com/package/expo-haptics): for Expo apps.
--   [react-native-haptic-feedback](https://github.com/mkuczera/react-native-haptic-feedback): for bare React Native apps.
-
-#### Feedback Example
-
-```Jsx
-import { useCallback, useRef } from "react";
-import { TimerPicker } from "react-native-timer-picker";
-
-import { AudioContext, type AudioBuffer } from "react-native-audio-api";
-import * as Haptics from 'expo-haptics'; // Expo apps
-import { trigger } from 'react-native-haptic-feedback'; // Bare RN apps
-
-// see examples/example-expo and examples/example-bare for how to load a local sound
-import { getClickSound } from "./utils/getClickSound";
-
-// ...
-
-const audioContextRef = useRef<AudioContext | null>(null);
-const audioBufferRef = useRef<AudioBuffer | null>(null);
-
-useEffect(() => {
-    const setupAudio = async () => {
-        try {
-            const context = new AudioContext();
-            const arrayBuffer = await getClickSound();
-            const buffer = await context.decodeAudioData(arrayBuffer);
-
-            audioContextRef.current = context;
-            audioBufferRef.current = buffer;
-        } catch (error) {
-            console.warn("Audio setup failed:", error);
-        }
-    };
-
-    setupAudio();
-
-    return () => {
-        audioContextRef.current?.close();
-    };
-}, []);
-
-const pickerFeedback = useCallback(() => {
-    try {
-        // Audio
-        const context = audioContextRef.current;
-        const buffer = audioBufferRef.current;
-
-        if (!context || !buffer) {
-            console.warn("Audio not initialized");
-            return;
-        }
-
-        const playerNode = context.createBufferSource();
-        playerNode.buffer = buffer;
-        playerNode.connect(context.destination);
-        playerNode.start(context.currentTime);
-
-        // Haptics (Expo apps)
-        Haptics.selectionAsync();
-        // Hatpics (Bare RN apps)
-        trigger('selection');
-    } catch {
-        console.warn("Picker feedback failed");
-    }
-}, [])
-
-<TimerPicker
-    {...props}
-    pickerFeedback={pickerFeedback}
-/>
-
-```
-
-### Expo-Specific Audio/Haptic Feedback (DEPRECATED)
-
-**⚠️ This was deprecated in v2.2.0 - please use the [picker feedback](#generic-feedback) prop instead.**
-
-Enable haptic feedback with the [expo-haptics](https://www.npmjs.com/package/expo-haptics) module:
-
-`import * as Haptics from "expo-haptics";`
-
-To enable haptic feedback, you need to supply the imported `Haptics` namespace as a prop to either TimerPickerModal or TimerPicker.
-
-<br>
-
-Enable audio feedback with the [expo-av](https://www.npmjs.com/package/expo-av) module:
-
-`import { Audio } from "expo-av";`
-
-To enable audio feedback, you need to supply the imported `Audio` class as a prop to either TimerPickerModal or TimerPicker.
-
-Please note that the default click sound uses a hosted mp3 file. To make the click sound work offline, you need to supply your own
-sound asset through the `clickSoundAsset` prop. You can download the default click sound [here](https://drive.google.com/uc?export=download&id=10e1YkbNsRh-vGx1jmS1Nntz8xzkBp4_I).
-
-<br>
-
 ## Installation 🚀
 
 Supports React Native >= 0.59.0 and React >= 16.8.0.
@@ -215,6 +77,28 @@ or
 yarn add react-native-timer-picker
 ```
 
+### Peer Dependencies 👶
+
+This component will work in your React Native Project **_without any peer dependencies_**. However, to enable certain additional features (e.g. fade-out) you will need to supply various libraries as props. These are detailed below.
+
+#### Linear Gradient
+
+If you want the numbers to fade in/out at the top and bottom of the picker, you will need to install either:
+
+-   [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient) (if using Expo)
+-   [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient) (if using in a bare React Native project)
+
+**To enable the linear gradient, you need to supply the component as a prop to either TimerPickerModal or TimerPicker.**
+
+#### Masked View
+
+To make the numbers fade in/out on a transparent background (e.g. if the picker is rendered on top of a gradient or image), you will need to install the [@react-native-masked-view/masked-view
+](https://www.npmjs.com/package/@react-native-masked-view/masked-view) component. This is as the standard LinearGradient implementation relies on there being a solid background colour. You then just need to set `backgroundColor: "transparent` on the `TimerPicker` styles prop.
+
+`import MaskedView from "@react-native-masked-view/masked-view";`
+
+**To enable the fade-out on a transparent background, you need to supply the imported `MaskedView` component AND one of the LinearGradient components as props to either TimerPickerModal or TimerPicker. (see [this example](#timer-picker-with-transparent-fade-out-dark-mode-))**
+
 <br>
 
 ## Examples 😎
@@ -224,8 +108,6 @@ yarn add react-native-timer-picker
 ```jsx
 import { TimerPickerModal } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
-import { Audio } from "expo-av"; // for audio feedback (click sound as you scroll)
-import * as Haptics from "expo-haptics"; // for haptic feedback
 
 ....
 const [showPicker, setShowPicker] = useState(false);
@@ -304,9 +186,7 @@ return (
             modalTitle="Set Alarm"
             onCancel={() => setShowPicker(false)}
             closeOnOverlayPress
-            Audio={Audio}
             LinearGradient={LinearGradient}
-            Haptics={Haptics}
             styles={{
                 theme: "dark",
             }}
@@ -326,8 +206,6 @@ return (
 ```jsx
 import { TimerPickerModal } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
-import { Audio } from "expo-av"; // for audio feedback (click sound as you scroll)
-import * as Haptics from "expo-haptics"; // for haptic feedback
 
 ....
 const [showPicker, setShowPicker] = useState(false);
@@ -406,11 +284,7 @@ return (
             onCancel={() => setShowPicker(false)}
             closeOnOverlayPress
             use12HourPicker
-            Audio={Audio}
-            // supply your own custom click sound asset
-            clickSoundAsset={require("./assets/custom_click.mp3")}
             LinearGradient={LinearGradient}
-            Haptics={Haptics}
             styles={{
                 theme: "light",
             }}
@@ -428,8 +302,6 @@ return (
 import { TimerPicker } from "react-native-timer-picker";
 import MaskedView from "@react-native-masked-view/masked-view"; // for transparent fade-out
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
-import { Audio } from "expo-av"; // for audio feedback (click sound as you scroll)
-import * as Haptics from "expo-haptics"; // for haptic feedback
 
 ....
 const [showPicker, setShowPicker] = useState(false);
@@ -448,9 +320,7 @@ return (
             hourLabel=":"
             minuteLabel=":"
             secondLabel=""
-            Audio={Audio}
             LinearGradient={LinearGradient}
-            Haptics={Haptics}
             MaskedView={MaskedView}
             styles={{
                 theme: "dark",
@@ -489,8 +359,6 @@ return (
 ```jsx
 import { TimerPicker } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
-import { Audio } from "expo-av"; // for audio feedback (click sound as you scroll)
-import * as Haptics from "expo-haptics"; // for haptic feedback
 
 ....
 const [showPicker, setShowPicker] = useState(false);
@@ -505,9 +373,7 @@ return (
             hideHours
             minuteLabel="min"
             secondLabel="sec"
-            Audio={Audio}
             LinearGradient={LinearGradient}
-            Haptics={Haptics}
             styles={{
                 theme: "light",
                 pickerItem: {
@@ -583,10 +449,10 @@ return (
 |     disableInfiniteScroll     | Disable the infinite scroll feature                                                                                                                                                                                      |                                                                                             Boolean                                                                                             |             false              |  false   |
 |        LinearGradient         | [Linear Gradient Component (required for picker fade-out)](#linear-gradient)                                                                                                                                             | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default |               -                |  false   |
 |          MaskedView           | [Masked View Component (required for picker fade-out on transparent background)](#masked-view)                                                                                                                           |                                      [@react-native-masked-view/masked-view](https://www.npmjs.com/package/@react-native-masked-view/masked-view).default                                       |               -                |  false   |
-|        pickerFeedback         | [Generic picker feedback as alternative to the above Expo feedback support](#generic-feedback)                                                                                                                           |                                                                                 `() => void \| Promise<void> `                                                                                  |               -                |  false   |
 |           FlatList            | FlatList component used internally to implement each picker (day, hour, minutes and seconds). More info [below](#custom-flatlist)                                                                                        |                                                                 [react-native](https://reactnative.dev/docs/flatlist).FlatList                                                                  | `FlatList` from `react-native` |  false   |
-|     Haptics (DEPRECATED)      | [Expo Haptics Namespace](#haptic-feedback) (please use pickerFeedback instead)                                                                                                                                           |                                                                   [expo-haptics](https://www.npmjs.com/package/expo-haptics)                                                                    |               -                |  false   |
-|      Audio (DEPRECATED)       | [Expo AV Audio Class](#audio-feedback-click-sound)                                                                                                                                                                       |                                                   [expo-av](https://www.npmjs.com/package/expo-av).Audio (please use pickerFeedback instead)                                                    |               -                |  false   |
+|        pickerFeedback         | [Callback for providing audio/haptic feedback](#picker-feedback-) (fired whenever the picker ticks over a value)                                                                                                         |                                                                                 `() => void \| Promise<void> `                                                                                  |               -                |  false   |
+|     Haptics (DEPRECATED)      | [Expo Haptics Namespace](#expo-specific-audiohaptic-feedback-deprecated) (please use pickerFeedback instead)                                                                                                             |                                                                   [expo-haptics](https://www.npmjs.com/package/expo-haptics)                                                                    |               -                |  false   |
+|      Audio (DEPRECATED)       | [Expo AV Audio Class](#expo-specific-audiohaptic-feedback-deprecated)                                                                                                                                                    |                                                   [expo-av](https://www.npmjs.com/package/expo-av).Audio (please use pickerFeedback instead)                                                    |               -                |  false   |
 | clickSoundAsset (DEPRECATED)  | Custom sound asset for click sound (please use pickerFeedback instead), was required for offline click sound - download default [here](https://drive.google.com/uc?export=download&id=10e1YkbNsRh-vGx1jmS1Nntz8xzkBp4_I) |                                                                        require(.../somefolderpath) or {uri: www.someurl}                                                                        |               -                |  false   |
 |     pickerContainerProps      | Props for the picker container                                                                                                                                                                                           |                                                                               `React.ComponentProps<typeof View>`                                                                               |               -                |  false   |
 |  pickerGradientOverlayProps   | Props for the gradient overlay (supply a different `locations` array to adjust its position) overlays                                                                                                                    |                                                                                 `Partial<LinearGradientProps>`                                                                                  |               -                |  false   |
@@ -732,9 +598,131 @@ An identical ref is also exposed for the TimerPickerModal component.
 
 <br>
 
+## Picker Feedback 📳🔉
+
+You can use the picker feedback callback prop `pickerFeedback` to provide any form of audio/haptic feedback for the picker. This function is called whenever any of the pickers tick onto a new number.
+
+Note that this prop should be used in lieu of the now deprecated expo-specific audio/haptic feedback props.
+
+### Audio Feedack
+
+There is a challenge here with audio latency as we need to be able to play the click-sound repeatedly and rapidly when a user scrolls fast. Most React Native sound libraries are designed for playing audio tracks and the latency is too high for this application.
+
+Recommended libraries:
+
+-   [react-native-audio-api](https://www.npmjs.com/package/react-native-audio-api): this is a new library but is built by Software Mansion and has strong potential for our application with low-latency audio. It is not currentl straightforward to use a local click-sound
+
+Libraries to avoid:
+
+-   [react-native-sound](https://www.npmjs.com/package/react-native-sound): this likely has low enough latency to work but has not been maintained for the 3+ years.
+-   [expo-av](https://docs.expo.dev/versions/latest/sdk/av/): the latency is too high to work well. Expo are developing a new audio module [expo-audio](https://docs.expo.dev/versions/latest/sdk/audio/) that may be better, but at the time of writing (May 2025) it does not have the capability to repeatedly play the same sound.
+
+### Haptic Feedback
+
+Recommended libraries:
+
+-   [expo-haptics](https://www.npmjs.com/package/expo-haptics): for Expo apps.
+-   [react-native-haptic-feedback](https://github.com/mkuczera/react-native-haptic-feedback): for bare React Native apps.
+
+### Feedback Example
+
+```Jsx
+import { useCallback, useRef } from "react";
+import { TimerPicker } from "react-native-timer-picker";
+
+import { AudioContext, type AudioBuffer } from "react-native-audio-api";
+import * as Haptics from 'expo-haptics'; // Expo apps
+import { trigger } from 'react-native-haptic-feedback'; // Bare RN apps
+
+// see examples/example-expo and examples/example-bare for how to load a local sound
+import { getClickSound } from "./utils/getClickSound";
+
+// ...
+
+const audioContextRef = useRef<AudioContext | null>(null);
+const audioBufferRef = useRef<AudioBuffer | null>(null);
+
+useEffect(() => {
+    const setupAudio = async () => {
+        try {
+            const context = new AudioContext();
+            const arrayBuffer = await getClickSound();
+            const buffer = await context.decodeAudioData(arrayBuffer);
+
+            audioContextRef.current = context;
+            audioBufferRef.current = buffer;
+        } catch (error) {
+            console.warn("Audio setup failed:", error);
+        }
+    };
+
+    setupAudio();
+
+    return () => {
+        audioContextRef.current?.close();
+    };
+}, []);
+
+const pickerFeedback = useCallback(() => {
+    try {
+        // Audio
+        const context = audioContextRef.current;
+        const buffer = audioBufferRef.current;
+
+        if (!context || !buffer) {
+            console.warn("Audio not initialized");
+            return;
+        }
+
+        const playerNode = context.createBufferSource();
+        playerNode.buffer = buffer;
+        playerNode.connect(context.destination);
+        playerNode.start(context.currentTime);
+
+        // Haptics (Expo apps)
+        Haptics.selectionAsync();
+        // Hatpics (Bare RN apps)
+        trigger('selection');
+    } catch {
+        console.warn("Picker feedback failed");
+    }
+}, [])
+
+<TimerPicker
+    {...props}
+    pickerFeedback={pickerFeedback}
+/>
+
+```
+
+### Expo-Specific Audio/Haptic Feedback (DEPRECATED)
+
+**⚠️ This was deprecated in v2.2.0 - please use the [picker feedback](#generic-feedback) prop instead.**
+
+Enable haptic feedback with the [expo-haptics](https://www.npmjs.com/package/expo-haptics) module:
+
+`import * as Haptics from "expo-haptics";`
+
+To enable haptic feedback, you need to supply the imported `Haptics` namespace as a prop to either TimerPickerModal or TimerPicker.
+
+<br>
+
+Enable audio feedback with the [expo-av](https://www.npmjs.com/package/expo-av) module:
+
+`import { Audio } from "expo-av";`
+
+To enable audio feedback, you need to supply the imported `Audio` class as a prop to either TimerPickerModal or TimerPicker.
+
+Please note that the default click sound uses a hosted mp3 file. To make the click sound work offline, you need to supply your own
+sound asset through the `clickSoundAsset` prop. You can download the default click sound [here](https://drive.google.com/uc?export=download&id=10e1YkbNsRh-vGx1jmS1Nntz8xzkBp4_I).
+
+<br>
+
 ## Contributing 🧑‍🤝‍🧑
 
 Contributions to this project are more than welcome.
+
+**N.B. Please submit PRs into `develop`, not `main`.**
 
 ### Dev Setup
 
@@ -761,7 +749,7 @@ There are two permenant branches: `main` and `develop`. You should never work di
 ## Limitations ⚠
 
 -   The project is not compatibile with React Native versions prior to `v0.72.0` due to this [React Native issue](https://github.com/facebook/react-native/issues/36329).
--   The audio feedback provided by `expo-av` suffers from latency and does not give great
+-   The audio feedback provided by the `Audio` prop with `expo-av` suffers from high latency and doesn't work well when a user scrolls quickly. This has now been deprecated in place of the `pickerFeedback` prop. Please try `react-native-audio-api` for a lower latency audio library.
 
 <br>
 
