@@ -11,9 +11,7 @@ import React, {
 import { View, Text, FlatList as RNFlatList } from "react-native";
 import type {
     ViewabilityConfigCallbackPairs,
-    ViewToken,
-    NativeSyntheticEvent,
-    NativeScrollEvent,
+    FlatListProps,
 } from "react-native";
 
 import { colorToRgba } from "../../utils/colorToRgba";
@@ -25,7 +23,14 @@ import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
 import { getDurationAndIndexFromScrollOffset } from "../../utils/getDurationAndIndexFromScrollOffset";
 import { getInitialScrollIndex } from "../../utils/getInitialScrollIndex";
 
-import type { DurationScrollProps, DurationScrollRef, ExpoAvAudioInstance } from "./types";
+import type {
+    DurationScrollProps,
+    DurationScrollRef,
+    ExpoAvAudioInstance,
+} from "./types";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const keyExtractor = (item: any, index: number) => index.toString();
 
 const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
     (props, ref) => {
@@ -158,9 +163,12 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
         const flatListRef = useRef<RNFlatList | null>(null);
 
-        const [clickSound, setClickSound] = useState<ExpoAvAudioInstance | null>(null);
+        const [clickSound, setClickSound] =
+            useState<ExpoAvAudioInstance | null>(null);
 
         useEffect(() => {
+            // Audio prop deprecated in v2.2.0 (use pickerFeedback instead) - will be removed in a future version
+
             // preload the sound when the component mounts
             let soundInstance: ExpoAvAudioInstance | null = null;
 
@@ -204,8 +212,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             }
         }, [clickSound]);
 
-        const renderItem = useCallback(
-            ({ item }: { item: string }) => {
+        const renderItem = useCallback<
+            NonNullable<FlatListProps<string>["renderItem"]>
+        >(
+            ({ item }) => {
                 let stringItem = item;
                 let intItem: number;
                 let isAm: boolean | undefined;
@@ -263,8 +273,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             ]
         );
 
-        const onScroll = useCallback(
-            (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const onScroll = useCallback<
+            NonNullable<FlatListProps<string>["onScroll"]>
+        >(
+            (e) => {
                 // this function is only used when the picker is in a modal and/or has Haptic/Audio feedback
                 // it is used to ensure that the modal gets the latest duration on clicking
                 // the confirm button, even if the scrollview is still scrolling
@@ -349,8 +361,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             ]
         );
 
-        const onMomentumScrollEnd = useCallback(
-            (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const onMomentumScrollEnd = useCallback<
+            NonNullable<FlatListProps<string>["onMomentumScrollEnd"]>
+        >(
+            (e) => {
                 const newValues = getDurationAndIndexFromScrollOffset({
                     disableInfiniteScroll,
                     interval,
@@ -404,8 +418,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             ]
         );
 
-        const onViewableItemsChanged = useCallback(
-            ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+        const onViewableItemsChanged = useCallback<
+            NonNullable<FlatListProps<string>["onViewableItemsChanged"]>
+        >(
+            ({ viewableItems }) => {
                 if (numberOfItems === 1) {
                     return;
                 }
@@ -476,8 +492,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             );
         }, [disableInfiniteScroll, onViewableItemsChanged]);
 
-        const getItemLayout = useCallback(
-            (_: ArrayLike<string> | null | undefined, index: number) => ({
+        const getItemLayout = useCallback<
+            NonNullable<FlatListProps<string>["getItemLayout"]>
+        >(
+            (_, index) => ({
                 length: styles.pickerItemContainer.height,
                 offset: styles.pickerItemContainer.height * index,
                 index,
@@ -521,7 +539,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         decelerationRate={decelerationRate}
                         getItemLayout={getItemLayout}
                         initialScrollIndex={initialScrollIndex}
-                        keyExtractor={(_, index) => index.toString()}
+                        keyExtractor={keyExtractor}
                         nestedScrollEnabled
                         onMomentumScrollEnd={onMomentumScrollEnd}
                         onScroll={onScroll}
