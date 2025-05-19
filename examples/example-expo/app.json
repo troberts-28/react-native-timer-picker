@@ -4,7 +4,6 @@
     "slug": "timer-picker-example",
     "version": "1.0.0",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash.png",
@@ -22,6 +21,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "edgeToEdgeEnabled": true,
       "package": "com.nuumi.timerpickerexample"
     },
     "web": {

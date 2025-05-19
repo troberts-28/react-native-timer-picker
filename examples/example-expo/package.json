@@ -23,11 +23,5 @@
         "react-native": "0.79.2",
         "react-native-audio-api": "0.6.0"
     },
-    "devDependencies": {
-        "@babel/core": "^7.24.0",
-        "@types/react": "~19.0.10",
-        "eslint": "^8.19.0",
-        "typescript": "~5.8.3"
-    },
     "private": true
 }

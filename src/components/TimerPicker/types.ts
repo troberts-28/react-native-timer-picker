@@ -1,4 +1,4 @@
-import type { MutableRefObject } from "react";
+import type { RefObject } from "react";
 
 import type { View } from "react-native";
 
@@ -6,17 +6,16 @@ import type {
     LinearGradientProps,
     SoundAsset,
     Limit,
-    CustomFlatList,
 } from "../DurationScroll/types";
 
 import type { CustomTimerPickerStyles } from "./styles";
 
 export interface TimerPickerRef {
     latestDuration: {
-        days: MutableRefObject<number> | undefined;
-        hours: MutableRefObject<number> | undefined;
-        minutes: MutableRefObject<number> | undefined;
-        seconds: MutableRefObject<number> | undefined;
+        days: RefObject<number> | undefined;
+        hours: RefObject<number> | undefined;
+        minutes: RefObject<number> | undefined;
+        seconds: RefObject<number> | undefined;
     };
     reset: (options?: { animated?: boolean }) => void;
     setValue: (
@@ -34,7 +33,8 @@ export interface TimerPickerProps {
     /** @deprecated Use pickerFeedback prop instead. Will be removed in a future version. */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Audio?: any;
-    FlatList?: CustomFlatList;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    FlatList?: any;
     /** @deprecated Use pickerFeedback prop instead. Will be removed in a future version. */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Haptics?: any;

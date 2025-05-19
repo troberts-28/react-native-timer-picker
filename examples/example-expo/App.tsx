@@ -23,12 +23,12 @@ import {
     useWindowDimensions,
 } from "react-native";
 import type { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
-import { AudioContext, type AudioBuffer } from "react-native-audio-api";
+// import { AudioContext, type AudioBuffer } from "react-native-audio-api";
 
 import { TimerPicker, TimerPickerModal } from "../../src";
 
 import { formatTime } from "./utils/formatTime";
-import { getClickSound } from "./utils/getClickSound";
+// import { getClickSound } from "./utils/getClickSound";
 
 if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -38,8 +38,8 @@ export default function App() {
     const { width: screenWidth } = useWindowDimensions();
 
     const scrollViewRef = useRef<ScrollView>(null);
-    const audioContextRef = useRef<AudioContext | null>(null);
-    const audioBufferRef = useRef<AudioBuffer | null>(null);
+    // const audioContextRef = useRef<AudioContext | null>(null);
+    // const audioBufferRef = useRef<AudioBuffer | null>(null);
 
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
     const [showPickerExample1, setShowPickerExample1] = useState(false);
@@ -51,26 +51,27 @@ export default function App() {
         string | null
     >(null);
 
-    useEffect(() => {
-        const setupAudio = async () => {
-            try {
-                const context = new AudioContext();
-                const arrayBuffer = await getClickSound();
-                const buffer = await context.decodeAudioData(arrayBuffer);
+    // N.B. Uncomment this to use audio (requires development build)
+    // useEffect(() => {
+    //     const setupAudio = async () => {
+    //         try {
+    //             const context = new AudioContext();
+    //             const arrayBuffer = await getClickSound();
+    //             const buffer = await context.decodeAudioData(arrayBuffer);
 
-                audioContextRef.current = context;
-                audioBufferRef.current = buffer;
-            } catch (error) {
-                console.warn("Audio setup failed:", error);
-            }
-        };
+    //             audioContextRef.current = context;
+    //             audioBufferRef.current = buffer;
+    //         } catch (error) {
+    //             console.warn("Audio setup failed:", error);
+    //         }
+    //     };
 
-        setupAudio();
+    //     setupAudio();
 
-        return () => {
-            audioContextRef.current?.close();
-        };
-    }, []);
+    //     return () => {
+    //         audioContextRef.current?.close();
+    //     };
+    // }, []);
 
     useEffect(() => {
         // when changing to landscape mode, scroll to the nearest page index
@@ -99,18 +100,18 @@ export default function App() {
         try {
             Haptics.selectionAsync();
 
-            const context = audioContextRef.current;
-            const buffer = audioBufferRef.current;
+            // const context = audioContextRef.current;
+            // const buffer = audioBufferRef.current;
 
-            if (!context || !buffer) {
-                console.warn("Audio not initialized");
-                return;
-            }
+            // if (!context || !buffer) {
+            //     console.warn("Audio not initialized");
+            //     return;
+            // }
 
-            const playerNode = context.createBufferSource();
-            playerNode.buffer = buffer;
-            playerNode.connect(context.destination);
-            playerNode.start(context.currentTime);
+            // const playerNode = context.createBufferSource();
+            // playerNode.buffer = buffer;
+            // playerNode.connect(context.destination);
+            // playerNode.start(context.currentTime);
         } catch (error) {
             console.warn("Picker feedback failed:", error);
         }

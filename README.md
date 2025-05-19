@@ -610,7 +610,7 @@ There is a challenge here with audio latency as we need to be able to play the c
 
 Recommended libraries:
 
--   [react-native-audio-api](https://www.npmjs.com/package/react-native-audio-api): this is a new library but is built by Software Mansion and has strong potential for our application with low-latency audio. It is not currentl straightforward to use a local click-sound
+-   [react-native-audio-api](https://www.npmjs.com/package/react-native-audio-api): this is a new library but is built by Software Mansion and has strong potential for our application with low-latency audio. It is not currently straightforward to use a local sound asset with this library; please check out the [Expo example](./examples/example-expo/App.tsx) and [Bare React Native example](./examples/example-bare//App.tsx) for a guide on how to do that. Note that this library will not work in Expo Go (you must create a development build).
 
 Libraries to avoid:
 
@@ -733,8 +733,8 @@ To get this project running locally:
 
 You can then start either the Expo example or the bare React Native example:
 
--   For Expo, run `yarn start` to start the Expo example in Expo Go.
--   For bare React Native, run `yarn start-bare:android` or `start-bare:ios` to start the project on an emulator/device.
+-   For Expo, run `yarn start` to start the Expo example in Expo Go. For audio feedback, uncomment the relevant lines in `examples/example-expo/App.tsx` and create a development build with `yarn build:android` or `yarn build:ios`.
+-   For bare React Native, run `yarn start-bare:android` or `start-bare:ios` to start the project on an emulator/device (you have to refresh the app once on startup for it to work).
 
 ### GitHub Guidelines
 
