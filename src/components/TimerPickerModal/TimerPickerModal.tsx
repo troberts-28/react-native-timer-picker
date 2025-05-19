@@ -12,7 +12,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
 import Modal from "../Modal";
 import TimerPicker from "../TimerPicker";
-import type { TimerPickerRef } from "../TimerPicker/types";
+import type { TimerPickerRef } from "../TimerPicker";
 
 import { generateStyles } from "./styles";
 import type { TimerPickerModalRef, TimerPickerModalProps } from "./types";

@@ -11,7 +11,7 @@ import { View } from "react-native";
 
 import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
 import DurationScroll from "../DurationScroll";
-import type { DurationScrollRef } from "../DurationScroll/types";
+import type { DurationScrollRef } from "../DurationScroll";
 
 import { generateStyles } from "./styles";
 import type { TimerPickerProps, TimerPickerRef } from "./types";
