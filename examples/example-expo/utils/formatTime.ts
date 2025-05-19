@@ -22,7 +22,7 @@ export const formatTime = ({
     hours?: number;
     minutes?: number;
     seconds?: number;
-}) => {
+}): string => {
     const timeParts = [];
 
     if (hours !== undefined) {
