@@ -733,8 +733,8 @@ To get this project running locally:
 
 You can then start either the Expo example or the bare React Native example:
 
--   For Expo, run `yarn start` to start the Expo example in Expo Go.
--   For bare React Native, run `yarn start-bare:android` or `start-bare:ios` to start the project on an emulator/device.
+-   For Expo, run `yarn start` to start the Expo example in Expo Go. For audio feedback, uncomment the relevant lines in `examples/example-expo/App.tsx` and create a development build with `yarn build:android` or `yarn build:ios`.
+-   For bare React Native, run `yarn start-bare:android` or `start-bare:ios` to start the project on an emulator/device (you have to refresh the app once on startup for it to work).
 
 ### GitHub Guidelines
 
