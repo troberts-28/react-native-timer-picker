@@ -610,7 +610,7 @@ There is a challenge here with audio latency as we need to be able to play the c
 
 Recommended libraries:
 
--   [react-native-audio-api](https://www.npmjs.com/package/react-native-audio-api): this is a new library but is built by Software Mansion and has strong potential for our application with low-latency audio. It is not currentl straightforward to use a local click-sound
+-   [react-native-audio-api](https://www.npmjs.com/package/react-native-audio-api): this is a new library but is built by Software Mansion and has strong potential for our application with low-latency audio. It is not currently straightforward to use a local sound asset with this library; please check out the [Expo example](./examples/example-expo/App.tsx) and [Bare React Native example](./examples/example-bare//App.tsx) for a guide on how to do that. Note that this library will not work in Expo Go (you must create a development build).
 
 Libraries to avoid:
 
