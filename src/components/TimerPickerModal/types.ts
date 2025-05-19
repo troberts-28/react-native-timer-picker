@@ -1,4 +1,4 @@
-import type { MutableRefObject } from "react";
+import type { RefObject } from "react";
 
 import type { View, TouchableOpacity, Text } from "react-native";
 
@@ -9,10 +9,10 @@ import type { CustomTimerPickerModalStyles } from "./styles";
 
 export interface TimerPickerModalRef {
     latestDuration: {
-        days: MutableRefObject<number> | undefined;
-        hours: MutableRefObject<number> | undefined;
-        minutes: MutableRefObject<number> | undefined;
-        seconds: MutableRefObject<number> | undefined;
+        days: RefObject<number> | undefined;
+        hours: RefObject<number> | undefined;
+        minutes: RefObject<number> | undefined;
+        seconds: RefObject<number> | undefined;
     };
     reset: (options?: { animated?: boolean }) => void;
     setValue: (
