@@ -4,8 +4,8 @@ import type { View } from "react-native";
 
 import type {
     LinearGradientProps,
-    SoundAssetType,
-    LimitType,
+    SoundAsset,
+    Limit,
     CustomFlatList,
 } from "../DurationScroll/types";
 
@@ -31,9 +31,11 @@ export interface TimerPickerRef {
 }
 
 export interface TimerPickerProps {
+    /** @deprecated Use pickerFeedback prop instead. Will be removed in a future version. */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Audio?: any;
     FlatList?: CustomFlatList;
+    /** @deprecated Use pickerFeedback prop instead. Will be removed in a future version. */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Haptics?: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,12 +45,13 @@ export interface TimerPickerProps {
     aggressivelyGetLatestDuration?: boolean;
     allowFontScaling?: boolean;
     amLabel?: string;
-    clickSoundAsset?: SoundAssetType;
-    decelerationRate?: number | "normal" | "fast";
+    /** @deprecated Use pickerFeedback prop instead. Will be removed in a future version. */
+    clickSoundAsset?: SoundAsset;
     dayInterval?: number;
     dayLabel?: string | React.ReactElement;
-    dayLimit?: LimitType;
+    dayLimit?: Limit;
     daysPickerIsDisabled?: boolean;
+    decelerationRate?: number | "normal" | "fast";
     disableInfiniteScroll?: boolean;
     hideDays?: boolean;
     hideHours?: boolean;
@@ -56,7 +59,7 @@ export interface TimerPickerProps {
     hideSeconds?: boolean;
     hourInterval?: number;
     hourLabel?: string | React.ReactElement;
-    hourLimit?: LimitType;
+    hourLimit?: Limit;
     hoursPickerIsDisabled?: boolean;
     initialValue?: {
         days?: number;
@@ -70,7 +73,7 @@ export interface TimerPickerProps {
     maximumSeconds?: number;
     minuteInterval?: number;
     minuteLabel?: string | React.ReactElement;
-    minuteLimit?: LimitType;
+    minuteLimit?: Limit;
     minutesPickerIsDisabled?: boolean;
     onDurationChange?: (duration: {
         days: number;
@@ -93,7 +96,7 @@ export interface TimerPickerProps {
     repeatSecondNumbersNTimes?: number;
     secondInterval?: number;
     secondLabel?: string | React.ReactElement;
-    secondLimit?: LimitType;
+    secondLimit?: Limit;
     secondsPickerIsDisabled?: boolean;
     styles?: CustomTimerPickerStyles;
     use12HourPicker?: boolean;

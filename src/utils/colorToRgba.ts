@@ -1,9 +1,43 @@
-export const colorToRgba = (variables: { color: string; opacity?: number }) => {
-    // this function is required for expo-linear-gradient on iOS. To fade to transparent, we need
-    // to be able to add opacity to the background color. Supplying 'transparent' does not work
-    // because that is actually a transparent black (rgba(0, 0, 0, 1)), which results in dodgy rendering
-
+/**
+ * Converts various color formats to RGBA string representation.
+ * This function is specifically required for expo-linear-gradient on iOS to handle transparent colors correctly.
+ * It supports named colors, RGB, and hex color formats.
+ *
+ * @param {Object} variables - The input variables object
+ * @param {string} variables.color - The color to convert. Can be:
+ *   - Named color (e.g., 'transparent', 'black', 'white', 'blue', 'green', 'gray', 'red')
+ *   - RGB format (e.g., 'rgb(255, 0, 0)')
+ *   - Hex format (e.g., '#FF0000' or '#F00')
+ * @param {number} [variables.opacity=1] - The opacity value between 0 and 1
+ *
+ * @returns {string} The color in RGBA format (e.g., 'rgba(255, 0, 0, 0.5)')
+ *
+ * @example
+ * // Using named color
+ * colorToRgba({ color: 'transparent' })
+ * // Returns: 'rgba(0, 0, 0, 0)'
+ *
+ * @example
+ * // Using RGB with custom opacity
+ * colorToRgba({ color: 'rgb(255, 0, 0)', opacity: 0.5 })
+ * // Returns: 'rgba(255, 0, 0, 0.5)'
+ *
+ * @example
+ * // Using hex color
+ * colorToRgba({ color: '#FF0000' })
+ * // Returns: 'rgba(255, 0, 0, 1)'
+ *
+ * @example
+ * // Using short hex color
+ * colorToRgba({ color: '#F00' })
+ * // Returns: 'rgba(255, 0, 0, 1)'
+ */
+export const colorToRgba = (variables: {
+    color: string;
+    opacity?: number;
+}): string => {
     const { color, opacity = 1 } = variables;
+
     // Handle named colors
     const namedColors: { [key: string]: string } = {
         transparent: "rgba(0, 0, 0, 0)",

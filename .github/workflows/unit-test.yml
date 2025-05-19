@@ -20,10 +20,6 @@ jobs:
       with:
         node-version: 20
         registry-url: https://registry.npmjs.org
-    - name: Install react
-      run: yarn add react@18.2.0 -D
-    - name: Install react-native
-      run: yarn add react-native@0.73.1 -D
     - name: Install dependencies
       run: yarn install
     - name: Test

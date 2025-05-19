@@ -11,9 +11,7 @@ import React, {
 import { View, Text, FlatList as RNFlatList } from "react-native";
 import type {
     ViewabilityConfigCallbackPairs,
-    ViewToken,
-    NativeSyntheticEvent,
-    NativeScrollEvent,
+    FlatListProps,
 } from "react-native";
 
 import { colorToRgba } from "../../utils/colorToRgba";
@@ -25,7 +23,14 @@ import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
 import { getDurationAndIndexFromScrollOffset } from "../../utils/getDurationAndIndexFromScrollOffset";
 import { getInitialScrollIndex } from "../../utils/getInitialScrollIndex";
 
-import type { DurationScrollProps, DurationScrollRef } from "./types";
+import type {
+    DurationScrollProps,
+    DurationScrollRef,
+    ExpoAvAudioInstance,
+} from "./types";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const keyExtractor = (item: any, index: number) => index.toString();
 
 const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
     (props, ref) => {
@@ -158,19 +163,22 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
         const flatListRef = useRef<RNFlatList | null>(null);
 
-        const [clickSound, setClickSound] = useState<
-            | {
-                  replayAsync: () => Promise<void>;
-                  unloadAsync: () => Promise<void>;
-              }
-            | undefined
-        >();
+        const [clickSound, setClickSound] =
+            useState<ExpoAvAudioInstance | null>(null);
 
-        // Preload the sound when the component mounts
         useEffect(() => {
+            // Audio prop deprecated in v2.2.0 (use pickerFeedback instead) - will be removed in a future version
+
+            // preload the sound when the component mounts
+            let soundInstance: ExpoAvAudioInstance | null = null;
+
             const loadSound = async () => {
-                if (Audio) {
-                    const { sound } = await Audio.Sound.createAsync(
+                if (!Audio) {
+                    return;
+                }
+
+                try {
+                    const { sound: newSound } = await Audio.Sound.createAsync(
                         clickSoundAsset ?? {
                             // use a hosted sound as a fallback (do not use local asset due to loader issues
                             // in some environments when including mp3 in library)
@@ -178,21 +186,36 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         },
                         { shouldPlay: false }
                     );
-                    setClickSound(sound);
+                    soundInstance = newSound;
+                    setClickSound(newSound);
+                } catch (error) {
+                    console.warn("Failed to load click sound:", error);
                 }
             };
 
             loadSound();
 
-            // Unload sound when component unmounts
             return () => {
-                clickSound?.unloadAsync();
+                // unload sound when component unmounts
+                soundInstance?.unloadAsync();
             };
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [Audio]);
 
-        const renderItem = useCallback(
-            ({ item }: { item: string }) => {
+        const playClickSound = useCallback(async () => {
+            if (!clickSound) return;
+
+            try {
+                await clickSound.replayAsync();
+            } catch (error) {
+                console.warn("Failed to play click sound:", error);
+            }
+        }, [clickSound]);
+
+        const renderItem = useCallback<
+            NonNullable<FlatListProps<string>["renderItem"]>
+        >(
+            ({ item }) => {
                 let stringItem = item;
                 let intItem: number;
                 let isAm: boolean | undefined;
@@ -250,8 +273,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             ]
         );
 
-        const onScroll = useCallback(
-            (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const onScroll = useCallback<
+            NonNullable<FlatListProps<string>["onScroll"]>
+        >(
+            (e) => {
                 // this function is only used when the picker is in a modal and/or has Haptic/Audio feedback
                 // it is used to ensure that the modal gets the latest duration on clicking
                 // the confirm button, even if the scrollview is still scrolling
@@ -286,7 +311,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     }
                 }
 
-                if (Haptics || Audio || pickerFeedback) {
+                if (pickerFeedback || Haptics || Audio) {
                     const feedbackIndex = Math.round(
                         (e.nativeEvent.contentOffset.y +
                             styles.pickerItemContainer.height / 2) /
@@ -305,7 +330,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
                             // play click sound if available
                             try {
-                                clickSound?.replayAsync();
+                                playClickSound();
                             } catch {
                                 // do nothing
                             }
@@ -327,7 +352,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 adjustedLimited.max,
                 adjustedLimited.min,
                 aggressivelyGetLatestDuration,
-                clickSound,
+                playClickSound,
                 disableInfiniteScroll,
                 interval,
                 numberOfItems,
@@ -336,8 +361,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             ]
         );
 
-        const onMomentumScrollEnd = useCallback(
-            (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const onMomentumScrollEnd = useCallback<
+            NonNullable<FlatListProps<string>["onMomentumScrollEnd"]>
+        >(
+            (e) => {
                 const newValues = getDurationAndIndexFromScrollOffset({
                     disableInfiniteScroll,
                     interval,
@@ -391,8 +418,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             ]
         );
 
-        const onViewableItemsChanged = useCallback(
-            ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+        const onViewableItemsChanged = useCallback<
+            NonNullable<FlatListProps<string>["onViewableItemsChanged"]>
+        >(
+            ({ viewableItems }) => {
                 if (numberOfItems === 1) {
                     return;
                 }
@@ -463,8 +492,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             );
         }, [disableInfiniteScroll, onViewableItemsChanged]);
 
-        const getItemLayout = useCallback(
-            (_: ArrayLike<string> | null | undefined, index: number) => ({
+        const getItemLayout = useCallback<
+            NonNullable<FlatListProps<string>["getItemLayout"]>
+        >(
+            (_, index) => ({
                 length: styles.pickerItemContainer.height,
                 offset: styles.pickerItemContainer.height * index,
                 index,
@@ -508,7 +539,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         decelerationRate={decelerationRate}
                         getItemLayout={getItemLayout}
                         initialScrollIndex={initialScrollIndex}
-                        keyExtractor={(_, index) => index.toString()}
+                        keyExtractor={keyExtractor}
                         nestedScrollEnabled
                         onMomentumScrollEnd={onMomentumScrollEnd}
                         onScroll={onScroll}
