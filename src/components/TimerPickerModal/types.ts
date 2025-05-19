@@ -1,4 +1,4 @@
-import type { MutableRefObject } from "react";
+import type { RefObject } from "react";
 
 import type { View, TouchableOpacity, Text } from "react-native";
 
@@ -9,13 +9,15 @@ import type { CustomTimerPickerModalStyles } from "./styles";
 
 export interface TimerPickerModalRef {
     latestDuration: {
-        hours: MutableRefObject<number> | undefined;
-        minutes: MutableRefObject<number> | undefined;
-        seconds: MutableRefObject<number> | undefined;
+        days: RefObject<number> | undefined;
+        hours: RefObject<number> | undefined;
+        minutes: RefObject<number> | undefined;
+        seconds: RefObject<number> | undefined;
     };
     reset: (options?: { animated?: boolean }) => void;
     setValue: (
         value: {
+            days: number;
             hours: number;
             minutes: number;
             seconds: number;
@@ -38,10 +40,12 @@ export interface TimerPickerModalProps extends TimerPickerProps {
     modalTitleProps?: React.ComponentProps<typeof Text>;
     onCancel?: () => void;
     onConfirm: ({
+        days,
         hours,
         minutes,
         seconds,
     }: {
+        days: number;
         hours: number;
         minutes: number;
         seconds: number;

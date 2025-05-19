@@ -3,6 +3,9 @@
     "compilerOptions": {
         "strict": true,
         "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "paths": {
+            "react": ["./node_modules/@types/react"]
+        }
     }
 }

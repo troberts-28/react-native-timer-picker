@@ -8,11 +8,9 @@ import React, {
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaskedView from "@react-native-masked-view/masked-view";
-import { Audio } from "expo-av";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import {
-    Image,
     LayoutAnimation,
     Platform,
     Pressable,
@@ -25,10 +23,12 @@ import {
     useWindowDimensions,
 } from "react-native";
 import type { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+// import { AudioContext, type AudioBuffer } from "react-native-audio-api";
 
 import { TimerPicker, TimerPickerModal } from "../../src";
 
 import { formatTime } from "./utils/formatTime";
+// import { getClickSound } from "./utils/getClickSound";
 
 if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -38,6 +38,8 @@ export default function App() {
     const { width: screenWidth } = useWindowDimensions();
 
     const scrollViewRef = useRef<ScrollView>(null);
+    // const audioContextRef = useRef<AudioContext | null>(null);
+    // const audioBufferRef = useRef<AudioBuffer | null>(null);
 
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
     const [showPickerExample1, setShowPickerExample1] = useState(false);
@@ -48,6 +50,28 @@ export default function App() {
     const [alarmStringExample2, setAlarmStringExample2] = useState<
         string | null
     >(null);
+
+    // N.B. Uncomment this to use audio (requires development build)
+    // useEffect(() => {
+    //     const setupAudio = async () => {
+    //         try {
+    //             const context = new AudioContext();
+    //             const arrayBuffer = await getClickSound();
+    //             const buffer = await context.decodeAudioData(arrayBuffer);
+
+    //             audioContextRef.current = context;
+    //             audioBufferRef.current = buffer;
+    //         } catch (error) {
+    //             console.warn("Audio setup failed:", error);
+    //         }
+    //     };
+
+    //     setupAudio();
+
+    //     return () => {
+    //         audioContextRef.current?.close();
+    //     };
+    // }, []);
 
     useEffect(() => {
         // when changing to landscape mode, scroll to the nearest page index
@@ -71,6 +95,27 @@ export default function App() {
         },
         [screenWidth]
     );
+
+    const pickerFeedback = useCallback(() => {
+        try {
+            Haptics.selectionAsync();
+
+            // const context = audioContextRef.current;
+            // const buffer = audioBufferRef.current;
+
+            // if (!context || !buffer) {
+            //     console.warn("Audio not initialized");
+            //     return;
+            // }
+
+            // const playerNode = context.createBufferSource();
+            // playerNode.buffer = buffer;
+            // playerNode.connect(context.destination);
+            // playerNode.start(context.currentTime);
+        } catch (error) {
+            console.warn("Picker feedback failed:", error);
+        }
+    }, []);
 
     const renderExample1 = useMemo(() => {
         return (
@@ -107,9 +152,7 @@ export default function App() {
                     </View>
                 </TouchableOpacity>
                 <TimerPickerModal
-                    Audio={Audio}
                     closeOnOverlayPress
-                    Haptics={Haptics}
                     LinearGradient={LinearGradient}
                     modalProps={{
                         overlayOpacity: 0.2,
@@ -120,6 +163,7 @@ export default function App() {
                         setAlarmStringExample1(formatTime(pickedDuration));
                         setShowPickerExample1(false);
                     }}
+                    pickerFeedback={pickerFeedback}
                     setIsVisible={setShowPickerExample1}
                     styles={{
                         theme: "dark",
@@ -128,7 +172,7 @@ export default function App() {
                 />
             </View>
         );
-    }, [alarmStringExample1, screenWidth, showPickerExample1]);
+    }, [alarmStringExample1, pickerFeedback, screenWidth, showPickerExample1]);
 
     const renderExample2 = useMemo(() => {
         return (
@@ -165,10 +209,7 @@ export default function App() {
                     </View>
                 </TouchableOpacity>
                 <TimerPickerModal
-                    Audio={Audio}
-                    clickSoundAsset={require("./assets/custom_click.mp3")}
                     closeOnOverlayPress
-                    Haptics={Haptics}
                     LinearGradient={LinearGradient}
                     modalTitle="Set Alarm"
                     onCancel={() => setShowPickerExample2(false)}
@@ -176,6 +217,7 @@ export default function App() {
                         setAlarmStringExample2(formatTime(pickedDuration));
                         setShowPickerExample2(false);
                     }}
+                    pickerFeedback={pickerFeedback}
                     setIsVisible={setShowPickerExample2}
                     styles={{
                         theme: "light",
@@ -185,27 +227,26 @@ export default function App() {
                 />
             </View>
         );
-    }, [alarmStringExample2, screenWidth, showPickerExample2]);
+    }, [alarmStringExample2, pickerFeedback, screenWidth, showPickerExample2]);
 
     const renderExample3 = useMemo(() => {
         return (
             <LinearGradient
                 colors={["#202020", "#220578"]}
-                start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
+                start={{ x: 0, y: 0 }}
                 style={[
                     styles.container,
                     styles.page3Container,
                     { width: screenWidth },
                 ]}>
                 <TimerPicker
-                    Audio={Audio}
-                    Haptics={Haptics}
                     hourLabel=":"
                     LinearGradient={LinearGradient}
                     MaskedView={MaskedView}
                     minuteLabel=":"
                     padWithNItems={2}
+                    pickerFeedback={pickerFeedback}
                     secondLabel=""
                     styles={{
                         theme: "dark",
@@ -234,7 +275,7 @@ export default function App() {
                 />
             </LinearGradient>
         );
-    }, [screenWidth]);
+    }, [pickerFeedback, screenWidth]);
 
     const renderExample4 = useMemo(() => {
         return (
@@ -245,12 +286,11 @@ export default function App() {
                     { width: screenWidth },
                 ]}>
                 <TimerPicker
-                    Audio={Audio}
-                    Haptics={Haptics}
                     hideHours
                     LinearGradient={LinearGradient}
                     minuteLabel="min"
                     padWithNItems={3}
+                    pickerFeedback={pickerFeedback}
                     secondLabel="sec"
                     styles={{
                         theme: "light",
@@ -271,7 +311,7 @@ export default function App() {
                 />
             </View>
         );
-    }, [screenWidth]);
+    }, [pickerFeedback, screenWidth]);
 
     const renderNavigationArrows = useMemo(() => {
         return (

@@ -11,7 +11,7 @@ import { View } from "react-native";
 
 import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
 import DurationScroll from "../DurationScroll";
-import type { DurationScrollRef } from "../DurationScroll/types";
+import type { DurationScrollRef } from "../DurationScroll";
 
 import { generateStyles } from "./styles";
 import type { TimerPickerProps, TimerPickerRef } from "./types";
@@ -22,7 +22,13 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             aggressivelyGetLatestDuration = false,
             allowFontScaling = false,
             amLabel = "am",
+            dayInterval = 1,
+            dayLabel,
+            dayLimit,
+            daysPickerIsDisabled = false,
+            decelerationRate = 0.88,
             disableInfiniteScroll = false,
+            hideDays = true,
             hideHours = false,
             hideMinutes = false,
             hideSeconds = false,
@@ -31,6 +37,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             hourLimit,
             hoursPickerIsDisabled = false,
             initialValue,
+            maximumDays = 30,
             maximumHours = 23,
             maximumMinutes = 59,
             maximumSeconds = 59,
@@ -39,12 +46,14 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             minuteLimit,
             minutesPickerIsDisabled = false,
             onDurationChange,
+            padDaysWithZero = false,
             padHoursWithZero = false,
             padMinutesWithZero = true,
             padSecondsWithZero = true,
             padWithNItems = 1,
             pickerContainerProps,
             pmLabel = "pm",
+            repeatDayNumbersNTimes = 3,
             repeatHourNumbersNTimes = 8,
             repeatMinuteNumbersNTimes = 3,
             repeatSecondNumbersNTimes = 3,
@@ -56,6 +65,24 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             use12HourPicker = false,
             ...otherProps
         } = props;
+
+        useEffect(() => {
+            if (otherProps.Audio) {
+                console.warn(
+                    "The \"Audio\" prop is deprecated and will be removed in a future version. Please use the \"pickerFeedback\" prop instead."
+                );
+            }
+            if (otherProps.Haptics) {
+                console.warn(
+                    "The \"Haptics\" prop is deprecated and will be removed in a future version. Please use the \"pickerFeedback\" prop instead."
+                );
+            }
+            if (otherProps.clickSoundAsset) {
+                console.warn(
+                    "The \"clickSoundAsset\" prop is deprecated and will be removed in a future version. Please use the \"pickerFeedback\" prop instead."
+                );
+            }
+        }, [otherProps.Audio, otherProps.Haptics, otherProps.clickSoundAsset]);
 
         const safePadWithNItems = useMemo(() => {
             if (padWithNItems < 0 || isNaN(padWithNItems)) {
@@ -74,11 +101,17 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
         const safeInitialValue = useMemo(
             () =>
                 getSafeInitialValue({
+                    days: initialValue?.days,
                     hours: initialValue?.hours,
                     minutes: initialValue?.minutes,
                     seconds: initialValue?.seconds,
                 }),
-            [initialValue?.hours, initialValue?.minutes, initialValue?.seconds]
+            [
+                initialValue?.days,
+                initialValue?.hours,
+                initialValue?.minutes,
+                initialValue?.seconds,
+            ]
         );
 
         const styles = useMemo(
@@ -87,6 +120,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             [customStyles]
         );
 
+        const [selectedDays, setSelectedDays] = useState(safeInitialValue.days);
         const [selectedHours, setSelectedHours] = useState(
             safeInitialValue.hours
         );
@@ -99,30 +133,36 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
 
         useEffect(() => {
             onDurationChange?.({
+                days: selectedDays,
                 hours: selectedHours,
                 minutes: selectedMinutes,
                 seconds: selectedSeconds,
             });
             // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [selectedHours, selectedMinutes, selectedSeconds]);
+        }, [selectedDays, selectedHours, selectedMinutes, selectedSeconds]);
 
+        const daysDurationScrollRef = useRef<DurationScrollRef>(null);
         const hoursDurationScrollRef = useRef<DurationScrollRef>(null);
         const minutesDurationScrollRef = useRef<DurationScrollRef>(null);
         const secondsDurationScrollRef = useRef<DurationScrollRef>(null);
 
         useImperativeHandle(ref, () => ({
             reset: (options) => {
+                setSelectedDays(safeInitialValue.days);
                 setSelectedHours(safeInitialValue.hours);
                 setSelectedMinutes(safeInitialValue.minutes);
                 setSelectedSeconds(safeInitialValue.seconds);
+                daysDurationScrollRef.current?.reset(options);
                 hoursDurationScrollRef.current?.reset(options);
                 minutesDurationScrollRef.current?.reset(options);
                 secondsDurationScrollRef.current?.reset(options);
             },
             setValue: (value, options) => {
+                setSelectedDays(value.days);
                 setSelectedHours(value.hours);
                 setSelectedMinutes(value.minutes);
                 setSelectedSeconds(value.seconds);
+                daysDurationScrollRef.current?.setValue(value.days, options);
                 hoursDurationScrollRef.current?.setValue(value.hours, options);
                 minutesDurationScrollRef.current?.setValue(
                     value.minutes,
@@ -134,6 +174,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 );
             },
             latestDuration: {
+                days: daysDurationScrollRef.current?.latestDuration,
                 hours: hoursDurationScrollRef.current?.latestDuration,
                 minutes: minutesDurationScrollRef.current?.latestDuration,
                 seconds: secondsDurationScrollRef.current?.latestDuration,
@@ -145,6 +186,32 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 {...pickerContainerProps}
                 style={styles.pickerContainer}
                 testID="timer-picker">
+                {!hideDays ? (
+                    <DurationScroll
+                        ref={daysDurationScrollRef}
+                        aggressivelyGetLatestDuration={
+                            aggressivelyGetLatestDuration
+                        }
+                        allowFontScaling={allowFontScaling}
+                        disableInfiniteScroll={disableInfiniteScroll}
+                        initialValue={safeInitialValue.days}
+                        interval={dayInterval}
+                        isDisabled={daysPickerIsDisabled}
+                        label={dayLabel ?? "d"}
+                        limit={dayLimit}
+                        maximumValue={maximumDays}
+                        onDurationChange={setSelectedDays}
+                        padNumbersWithZero={padDaysWithZero}
+                        padWithNItems={safePadWithNItems}
+                        repeatNumbersNTimes={repeatDayNumbersNTimes}
+                        repeatNumbersNTimesNotExplicitlySet={
+                            props?.repeatDayNumbersNTimes === undefined
+                        }
+                        styles={styles}
+                        testID="duration-scroll-day"
+                        {...otherProps}
+                    />
+                ) : null}
                 {!hideHours ? (
                     <DurationScroll
                         ref={hoursDurationScrollRef}
@@ -153,6 +220,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         }
                         allowFontScaling={allowFontScaling}
                         amLabel={amLabel}
+                        decelerationRate={decelerationRate}
                         disableInfiniteScroll={disableInfiniteScroll}
                         initialValue={safeInitialValue.hours}
                         interval={hourInterval}
@@ -183,6 +251,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             aggressivelyGetLatestDuration
                         }
                         allowFontScaling={allowFontScaling}
+                        decelerationRate={decelerationRate}
                         disableInfiniteScroll={disableInfiniteScroll}
                         initialValue={safeInitialValue.minutes}
                         interval={minuteInterval}
@@ -209,6 +278,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                             aggressivelyGetLatestDuration
                         }
                         allowFontScaling={allowFontScaling}
+                        decelerationRate={decelerationRate}
                         disableInfiniteScroll={disableInfiniteScroll}
                         initialValue={safeInitialValue.seconds}
                         interval={secondInterval}

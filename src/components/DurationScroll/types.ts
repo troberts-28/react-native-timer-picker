@@ -1,38 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { MutableRefObject } from "react";
+import type { RefObject } from "react";
 
-import type {
-    View,
-    FlatList as RNFlatList,
-    FlatListProps as RNFlatListProps,
-} from "react-native";
+import type { View } from "react-native";
 
 import type { generateStyles } from "../TimerPicker/styles";
 
-export type CustomFlatList = <ItemT = any>(
-    props: React.PropsWithChildren<
-        RNFlatListProps<ItemT> & React.RefAttributes<RNFlatList<ItemT>>
-    >,
-    ref: React.ForwardedRef<RNFlatList<ItemT>>
-) => React.ReactElement | null;
-
 export interface DurationScrollProps {
     Audio?: any;
-    FlatList?: CustomFlatList;
+    FlatList?: any;
     Haptics?: any;
     LinearGradient?: any;
     MaskedView?: any;
     aggressivelyGetLatestDuration: boolean;
     allowFontScaling?: boolean;
     amLabel?: string;
-    clickSoundAsset?: SoundAssetType;
+    clickSoundAsset?: SoundAsset;
+    decelerationRate?: number | "normal" | "fast";
     disableInfiniteScroll?: boolean;
     initialValue?: number;
     interval: number;
     is12HourPicker?: boolean;
     isDisabled?: boolean;
     label?: string | React.ReactElement;
-    limit?: LimitType;
+    limit?: Limit;
     maximumValue: number;
     onDurationChange: (duration: number) => void;
     padNumbersWithZero?: boolean;
@@ -47,7 +37,7 @@ export interface DurationScrollProps {
 }
 
 export interface DurationScrollRef {
-    latestDuration: MutableRefObject<number>;
+    latestDuration: RefObject<number>;
     reset: (options?: { animated?: boolean }) => void;
     setValue: (value: number, options?: { animated?: boolean }) => void;
 }
@@ -64,15 +54,20 @@ export type LinearGradientProps = React.ComponentProps<typeof View> & {
     start?: LinearGradientPoint | null;
 };
 
-export type LimitType = {
+export type Limit = {
     max?: number;
     min?: number;
 };
 
-export type SoundAssetType =
+export type SoundAsset =
     | number
     | {
           headers?: Record<string, string>;
           overrideFileExtensionAndroid?: string;
           uri: string;
       };
+
+export type ExpoAvAudioInstance = {
+    replayAsync: () => Promise<void>;
+    unloadAsync: () => Promise<void>;
+};

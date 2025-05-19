@@ -12,7 +12,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
 import Modal from "../Modal";
 import TimerPicker from "../TimerPicker";
-import type { TimerPickerRef } from "../TimerPicker/types";
+import type { TimerPickerRef } from "../TimerPicker";
 
 import { generateStyles } from "./styles";
 import type { TimerPickerModalRef, TimerPickerModalProps } from "./types";
@@ -48,6 +48,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
         const timerPickerRef = useRef<TimerPickerRef>(null);
 
         const safeInitialValue = getSafeInitialValue({
+            days: initialValue?.days,
             hours: initialValue?.hours,
             minutes: initialValue?.minutes,
             seconds: initialValue?.seconds,
@@ -69,6 +70,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             reset();
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [
+            safeInitialValue.days,
             safeInitialValue.hours,
             safeInitialValue.minutes,
             safeInitialValue.seconds,
@@ -76,6 +78,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
 
         const hideModalHandler = () => {
             setSelectedDuration({
+                days: confirmedDuration.days,
                 hours: confirmedDuration.hours,
                 minutes: confirmedDuration.minutes,
                 seconds: confirmedDuration.seconds,
@@ -87,6 +90,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
             const latestDuration = timerPickerRef.current?.latestDuration;
 
             const newDuration = {
+                days: latestDuration?.days?.current ?? selectedDuration.days,
                 hours: latestDuration?.hours?.current ?? selectedDuration.hours,
                 minutes:
                     latestDuration?.minutes?.current ??
@@ -107,7 +111,12 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
 
         // wrapped in useCallback to avoid unnecessary re-renders of TimerPicker
         const durationChangeHandler = useCallback(
-            (duration: { hours: number; minutes: number; seconds: number }) => {
+            (duration: {
+                days: number;
+                hours: number;
+                minutes: number;
+                seconds: number;
+            }) => {
                 setSelectedDuration(duration);
                 onDurationChange?.(duration);
             },
@@ -122,6 +131,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                 timerPickerRef.current?.setValue(value, options);
             },
             latestDuration: {
+                days: timerPickerRef.current?.latestDuration?.days,
                 hours: timerPickerRef.current?.latestDuration?.hours,
                 minutes: timerPickerRef.current?.latestDuration?.minutes,
                 seconds: timerPickerRef.current?.latestDuration?.seconds,

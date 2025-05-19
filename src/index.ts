@@ -1,13 +1,13 @@
-export { default as TimerPickerModal } from "./components/TimerPickerModal";
 export {
+    default as TimerPickerModal,
     TimerPickerModalProps,
     TimerPickerModalRef,
-} from "./components/TimerPickerModal/types";
-export { CustomTimerPickerModalStyles } from "./components/TimerPickerModal/styles";
+    CustomTimerPickerModalStyles,
+} from "./components/TimerPickerModal";
 
-export { default as TimerPicker } from "./components/TimerPicker";
 export {
+    default as TimerPicker,
     TimerPickerProps,
     TimerPickerRef,
-} from "./components/TimerPicker/types";
-export { CustomTimerPickerStyles } from "./components/TimerPicker/styles";
+    CustomTimerPickerStyles,
+} from "./components/TimerPicker";

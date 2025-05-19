@@ -23,7 +23,7 @@ jobs:
     - name: Install react
       run: yarn add react@18.2.0 -D
     - name: Install react-native
-      run: yarn add react-native@0.73.1 -D
+      run: yarn add react-native@0.72.0 -D
     - name: Install dependencies
       run: yarn install
     - name: Test
