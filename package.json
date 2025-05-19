@@ -11,7 +11,7 @@
     "module": "dist/module/index.js",
     "types": "dist/typescript/index.d.ts",
     "typings": "dist/typescript/index.d.ts",
-    "packageManager": "yarn@3.6.4",
+    "packageManager": "yarn@4.9.1",
     "workspaces": {
         "packages": [
             "examples/*"
@@ -21,7 +21,7 @@
         "setup": "yarn install",
         "start": " yarn workspace example-expo start",
         "start-bare:android": "yarn workspace example-bare android && yarn workspace example-bare start",
-        "start-bare:ios": "yarn workspace example-bare android && yarn workspace example-bare start",
+        "start-bare:ios": "yarn workspace example-bare ios && yarn workspace example-bare start",
         "test": "jest --forceExit --silent",
         "build": "bob build",
         "clean": "rm yarn.lock && rm -rf ./node_modules && yarn install",
