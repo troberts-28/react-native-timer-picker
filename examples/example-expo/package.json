@@ -6,26 +6,26 @@
         "start": "npx expo start",
         "android": "npx expo start --android",
         "ios": "npx expo start --ios",
-        "web": "npx expo start --web"
+        "web": "npx expo start --web",
+        "build:android": "npx expo run:android",
+        "build:ios": "npx expo run:ios"
     },
     "dependencies": {
         "@expo/vector-icons": "^14.1.0",
         "@react-native-masked-view/masked-view": "0.3.2",
         "expo": "^53.0.0",
+        "expo-asset": "~11.1.5",
         "expo-av": "~15.1.4",
         "expo-haptics": "~14.1.4",
         "expo-linear-gradient": "~14.1.4",
         "react": "19.0.0",
-        "react-native": "0.79.2"
+        "react-native": "0.79.2",
+        "react-native-audio-api": "0.6.0"
     },
     "devDependencies": {
         "@babel/core": "^7.24.0",
         "@types/react": "~19.0.10",
-        "@typescript-eslint/eslint-plugin": ">=5.49.0",
-        "@typescript-eslint/parser": ">=5.49.0",
-        "eslint": ">=8.44.0",
-        "eslint-plugin-react": ">=7.33.1",
-        "eslint-plugin-react-hooks": ">=4.6.0",
+        "eslint": "^8.19.0",
         "typescript": "~5.8.3"
     },
     "private": true

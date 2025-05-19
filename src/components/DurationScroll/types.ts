@@ -25,7 +25,7 @@ export interface DurationScrollProps {
     aggressivelyGetLatestDuration: boolean;
     allowFontScaling?: boolean;
     amLabel?: string;
-    clickSoundAsset?: SoundAssetType;
+    clickSoundAsset?: SoundAsset;
     decelerationRate?: number | "normal" | "fast";
     disableInfiniteScroll?: boolean;
     initialValue?: number;
@@ -33,7 +33,7 @@ export interface DurationScrollProps {
     is12HourPicker?: boolean;
     isDisabled?: boolean;
     label?: string | React.ReactElement;
-    limit?: LimitType;
+    limit?: Limit;
     maximumValue: number;
     onDurationChange: (duration: number) => void;
     padNumbersWithZero?: boolean;
@@ -65,15 +65,20 @@ export type LinearGradientProps = React.ComponentProps<typeof View> & {
     start?: LinearGradientPoint | null;
 };
 
-export type LimitType = {
+export type Limit = {
     max?: number;
     min?: number;
 };
 
-export type SoundAssetType =
+export type SoundAsset =
     | number
     | {
           headers?: Record<string, string>;
           overrideFileExtensionAndroid?: string;
           uri: string;
       };
+
+export type ExpoAvAudioInstance = {
+    replayAsync: () => Promise<void>;
+    unloadAsync: () => Promise<void>;
+};

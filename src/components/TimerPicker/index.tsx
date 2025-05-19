@@ -22,11 +22,11 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             aggressivelyGetLatestDuration = false,
             allowFontScaling = false,
             amLabel = "am",
-            decelerationRate = 0.88,
             dayInterval = 1,
             dayLabel,
             dayLimit,
             daysPickerIsDisabled = false,
+            decelerationRate = 0.88,
             disableInfiniteScroll = false,
             hideDays = true,
             hideHours = false,
@@ -65,6 +65,24 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             use12HourPicker = false,
             ...otherProps
         } = props;
+
+        useEffect(() => {
+            if (otherProps.Audio) {
+                console.warn(
+                    "The \"Audio\" prop is deprecated and will be removed in a future version. Please use the \"pickerFeedback\" prop instead."
+                );
+            }
+            if (otherProps.Haptics) {
+                console.warn(
+                    "The \"Haptics\" prop is deprecated and will be removed in a future version. Please use the \"pickerFeedback\" prop instead."
+                );
+            }
+            if (otherProps.clickSoundAsset) {
+                console.warn(
+                    "The \"clickSoundAsset\" prop is deprecated and will be removed in a future version. Please use the \"pickerFeedback\" prop instead."
+                );
+            }
+        }, [otherProps.Audio, otherProps.Haptics, otherProps.clickSoundAsset]);
 
         const safePadWithNItems = useMemo(() => {
             if (padWithNItems < 0 || isNaN(padWithNItems)) {

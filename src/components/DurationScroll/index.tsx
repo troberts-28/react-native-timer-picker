@@ -25,7 +25,7 @@ import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
 import { getDurationAndIndexFromScrollOffset } from "../../utils/getDurationAndIndexFromScrollOffset";
 import { getInitialScrollIndex } from "../../utils/getInitialScrollIndex";
 
-import type { DurationScrollProps, DurationScrollRef } from "./types";
+import type { DurationScrollProps, DurationScrollRef, ExpoAvAudioInstance } from "./types";
 
 const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
     (props, ref) => {
@@ -158,19 +158,19 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
         const flatListRef = useRef<RNFlatList | null>(null);
 
-        const [clickSound, setClickSound] = useState<
-            | {
-                  replayAsync: () => Promise<void>;
-                  unloadAsync: () => Promise<void>;
-              }
-            | undefined
-        >();
+        const [clickSound, setClickSound] = useState<ExpoAvAudioInstance | null>(null);
 
-        // Preload the sound when the component mounts
         useEffect(() => {
+            // preload the sound when the component mounts
+            let soundInstance: ExpoAvAudioInstance | null = null;
+
             const loadSound = async () => {
-                if (Audio) {
-                    const { sound } = await Audio.Sound.createAsync(
+                if (!Audio) {
+                    return;
+                }
+
+                try {
+                    const { sound: newSound } = await Audio.Sound.createAsync(
                         clickSoundAsset ?? {
                             // use a hosted sound as a fallback (do not use local asset due to loader issues
                             // in some environments when including mp3 in library)
@@ -178,18 +178,31 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                         },
                         { shouldPlay: false }
                     );
-                    setClickSound(sound);
+                    soundInstance = newSound;
+                    setClickSound(newSound);
+                } catch (error) {
+                    console.warn("Failed to load click sound:", error);
                 }
             };
 
             loadSound();
 
-            // Unload sound when component unmounts
             return () => {
-                clickSound?.unloadAsync();
+                // unload sound when component unmounts
+                soundInstance?.unloadAsync();
             };
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [Audio]);
+
+        const playClickSound = useCallback(async () => {
+            if (!clickSound) return;
+
+            try {
+                await clickSound.replayAsync();
+            } catch (error) {
+                console.warn("Failed to play click sound:", error);
+            }
+        }, [clickSound]);
 
         const renderItem = useCallback(
             ({ item }: { item: string }) => {
@@ -286,7 +299,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     }
                 }
 
-                if (Haptics || Audio || pickerFeedback) {
+                if (pickerFeedback || Haptics || Audio) {
                     const feedbackIndex = Math.round(
                         (e.nativeEvent.contentOffset.y +
                             styles.pickerItemContainer.height / 2) /
@@ -305,7 +318,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
 
                             // play click sound if available
                             try {
-                                clickSound?.replayAsync();
+                                playClickSound();
                             } catch {
                                 // do nothing
                             }
@@ -327,7 +340,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 adjustedLimited.max,
                 adjustedLimited.min,
                 aggressivelyGetLatestDuration,
-                clickSound,
+                playClickSound,
                 disableInfiniteScroll,
                 interval,
                 numberOfItems,
