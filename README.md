@@ -13,36 +13,37 @@ Works with Expo and bare React Native apps ✅
 
 Includes iOS-style haptic and audio feedback 🍏
 
--   [Demos 📱](#demos-)
--   [Installation 🚀](#installation-)
-    -   [Peer Dependencies 👶](#peer-dependencies-)
-        -   [Linear Gradient](#linear-gradient)
-        -   [Masked View](#masked-view)
--   [Examples 😎](#examples-)
-    -   [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
-    -   [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
-    -   [Timer Picker with Transparent Fade-Out (Dark Mode) 🌒](#timer-picker-with-transparent-fade-out-dark-mode-)
-    -   [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
--   [Props 💅](#props-)
-    -   [TimerPicker ⏲️](#timerpicker-️)
-        -   [Custom Styles 👗](#custom-styles-)
-        -   [Performance](#performance)
-        -   [Custom FlatList](#custom-flatlist)
-    -   [TimerPickerModal ⏰](#timerpickermodal-)
-        -   [Custom Styles 👕](#custom-styles--1)
--   [Methods 🔄](#methods-)
-    -   [TimerPicker](#timerpicker)
-    -   [TimerPickerModal](#timerpickermodal)
--   [Picker Feedback](#picker-feedback-)
-    -   [Audio Feedback](#audio-feedback)
-    -   [Haptic Feedback](#haptic-feedback)
-    -   [Feedback Example](#feedback-example)
-    -   [Expo-Specific Audio/Haptic Feedback (DEPRECATED)](#expo-specific-audiohaptic-feedback-deprecated)
--   [Contributing 🧑‍🤝‍🧑](#contributing-)
-    -   [Dev Setup](#dev-setup)
-    -   [GitHub Guidelines](#github-guidelines)
--   [Limitations ⚠](#limitations-)
--   [License 📝](#license-)
+- [React Native Timer Picker ⏰🕰️⏳](#react-native-timer-picker-️)
+  - [Demos 📱](#demos-)
+  - [Installation 🚀](#installation-)
+    - [Peer Dependencies 👶](#peer-dependencies-)
+      - [Linear Gradient](#linear-gradient)
+      - [Masked View](#masked-view)
+  - [Examples 😎](#examples-)
+    - [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
+    - [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
+    - [Timer Picker with Transparent Fade-Out (Dark Mode) 🌒](#timer-picker-with-transparent-fade-out-dark-mode-)
+    - [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
+  - [Props 💅](#props-)
+    - [TimerPicker ⏲️](#timerpicker-️)
+      - [Custom Styles 👗](#custom-styles-)
+      - [Performance](#performance)
+      - [Custom FlatList](#custom-flatlist)
+    - [TimerPickerModal ⏰](#timerpickermodal-)
+      - [Custom Styles 👕](#custom-styles--1)
+  - [Methods 🔄](#methods-)
+    - [TimerPicker](#timerpicker)
+    - [TimerPickerModal](#timerpickermodal)
+  - [Picker Feedback 📳🔉](#picker-feedback-)
+    - [Audio Feedack](#audio-feedack)
+    - [Haptic Feedback](#haptic-feedback)
+    - [Feedback Example](#feedback-example)
+    - [Expo-Specific Audio/Haptic Feedback (DEPRECATED)](#expo-specific-audiohaptic-feedback-deprecated)
+  - [Contributing 🧑‍🤝‍🧑](#contributing-)
+    - [Dev Setup](#dev-setup)
+    - [GitHub Guidelines](#github-guidelines)
+  - [Limitations ⚠](#limitations-)
+  - [License 📝](#license-)
 
 <br>
 
@@ -63,7 +64,7 @@ Includes iOS-style haptic and audio feedback 🍏
 
 ## Installation 🚀
 
-Supports React Native >= 0.59.0 and React >= 16.8.0.
+Supports React Native >= 0.72.0 and React >= 18.2.0.
 
 Just run:
 
@@ -610,11 +611,11 @@ There is a challenge here with audio latency as we need to be able to play the c
 
 Recommended libraries:
 
--   [react-native-audio-api](https://www.npmjs.com/package/react-native-audio-api): this is a new library but is built by Software Mansion and has strong potential for our application with low-latency audio. It is not currently straightforward to use a local sound asset with this library; please check out the [Expo example](./examples/example-expo/App.tsx) and [Bare React Native example](./examples/example-bare//App.tsx) for a guide on how to do that. Note that this library will not work in Expo Go (you must create a development build).
+-   [react-native-audio-api](https://www.npmjs.com/package/react-native-audio-api): this is a new library but it's built by Software Mansion and has strong potential for our application with low-latency audio. It is not currently straightforward to use a local sound asset with this library; please check out the [Expo example](./examples/example-expo/App.tsx) and [Bare React Native example](./examples/example-bare//App.tsx) for a guide on how to do that. Note that this library will not work in Expo Go (you must create a development build).
 
 Libraries to avoid:
 
--   [react-native-sound](https://www.npmjs.com/package/react-native-sound): this likely has low enough latency to work but has not been maintained for the 3+ years.
+-   [react-native-sound](https://www.npmjs.com/package/react-native-sound): this likely has low enough latency to work but has not been maintained for 3+ years.
 -   [expo-av](https://docs.expo.dev/versions/latest/sdk/av/): the latency is too high to work well. Expo are developing a new audio module [expo-audio](https://docs.expo.dev/versions/latest/sdk/audio/) that may be better, but at the time of writing (May 2025) it does not have the capability to repeatedly play the same sound.
 
 ### Haptic Feedback
@@ -749,7 +750,7 @@ There are two permenant branches: `main` and `develop`. You should never work di
 ## Limitations ⚠
 
 -   The project is not compatibile with React Native versions prior to `v0.72.0` due to this [React Native issue](https://github.com/facebook/react-native/issues/36329).
--   The audio feedback provided by the `Audio` prop with `expo-av` suffers from high latency and doesn't work well when a user scrolls quickly. This has now been deprecated in place of the `pickerFeedback` prop. Please try `react-native-audio-api` for a lower latency audio library.
+-   The audio feedback provided by the `Audio` prop with `expo-av` suffers from high latency and doesn't work well when a user scrolls quickly. This has now been deprecated in place of the `pickerFeedback` prop. Please try `react-native-audio-api` instead.
 
 <br>
 
