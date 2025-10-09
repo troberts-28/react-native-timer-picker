@@ -35,7 +35,7 @@ export const getAdjustedLimit = (
 } => {
     const maxValue = (numberOfItems - 1) * interval;
 
-    if (!limit || (!limit.max && !limit.min)) {
+    if (!limit || (limit.max === undefined && limit.min === undefined)) {
         return {
             max: maxValue,
             min: 0,
@@ -43,10 +43,10 @@ export const getAdjustedLimit = (
     }
 
     // guard against limits that are out of bounds
-    const adjustedMaxLimit = limit.max
+    const adjustedMaxLimit = limit.max !== undefined
         ? Math.min(limit.max, maxValue)
         : maxValue;
-    const adjustedMinLimit = limit.min ? Math.max(limit.min, 0) : 0;
+    const adjustedMinLimit = limit.min !== undefined ? Math.max(limit.min, 0) : 0;
 
     // guard against invalid limits
     if (adjustedMaxLimit < adjustedMinLimit) {

@@ -76,6 +76,12 @@ export const colorToRgba = (variables: {
         const r = parseInt(hexColor.slice(0, 2), 16);
         const g = parseInt(hexColor.slice(2, 4), 16);
         const b = parseInt(hexColor.slice(4, 6), 16);
+
+        // Validate that all color components are valid numbers
+        if (isNaN(r) || isNaN(g) || isNaN(b)) {
+            return color; // Return original if malformed
+        }
+
         return `rgba(${r}, ${g}, ${b}, ${opacity})`;
     }
 

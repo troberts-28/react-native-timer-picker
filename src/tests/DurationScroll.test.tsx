@@ -69,4 +69,104 @@ describe("DurationScroll", () => {
         const label = getByText("Duration");
         expect(label).toBeDefined();
     });
+
+    it("does not render label when not provided", () => {
+        const { queryByTestId } = render(
+            <DurationScroll
+                aggressivelyGetLatestDuration={false}
+                interval={1}
+                maximumValue={59}
+                onDurationChange={onDurationChangeMock}
+                padWithNItems={1}
+                repeatNumbersNTimesNotExplicitlySet={true}
+                styles={emptyStyles}
+            />
+        );
+        const label = queryByTestId("picker-label");
+        expect(label).toBeNull();
+    });
+
+    it("handles different intervals", () => {
+        const { getAllByTestId } = render(
+            <DurationScroll
+                aggressivelyGetLatestDuration={false}
+                interval={5}
+                maximumValue={55}
+                onDurationChange={onDurationChangeMock}
+                padWithNItems={1}
+                repeatNumbersNTimesNotExplicitlySet={true}
+                styles={emptyStyles}
+            />
+        );
+        const items = getAllByTestId("picker-item");
+        expect(items).toBeDefined();
+    });
+
+    it("renders with zero padWithNItems", () => {
+        const { getByTestId } = render(
+            <DurationScroll
+                aggressivelyGetLatestDuration={false}
+                interval={1}
+                maximumValue={59}
+                onDurationChange={onDurationChangeMock}
+                padWithNItems={0}
+                repeatNumbersNTimesNotExplicitlySet={true}
+                styles={emptyStyles}
+                testID="duration-scroll"
+            />
+        );
+        const component = getByTestId("duration-scroll");
+        expect(component).toBeDefined();
+    });
+
+    it("handles large maximumValue", () => {
+        const { getByTestId } = render(
+            <DurationScroll
+                aggressivelyGetLatestDuration={false}
+                interval={1}
+                maximumValue={999}
+                onDurationChange={onDurationChangeMock}
+                padWithNItems={1}
+                repeatNumbersNTimesNotExplicitlySet={true}
+                styles={emptyStyles}
+                testID="duration-scroll"
+            />
+        );
+        const component = getByTestId("duration-scroll");
+        expect(component).toBeDefined();
+    });
+
+    it("handles aggressivelyGetLatestDuration set to true", () => {
+        const { getByTestId } = render(
+            <DurationScroll
+                aggressivelyGetLatestDuration={true}
+                interval={1}
+                maximumValue={59}
+                onDurationChange={onDurationChangeMock}
+                padWithNItems={1}
+                repeatNumbersNTimesNotExplicitlySet={true}
+                styles={emptyStyles}
+                testID="duration-scroll"
+            />
+        );
+        const component = getByTestId("duration-scroll");
+        expect(component).toBeDefined();
+    });
+
+    it("handles repeatNumbersNTimesNotExplicitlySet set to false", () => {
+        const { getByTestId } = render(
+            <DurationScroll
+                aggressivelyGetLatestDuration={false}
+                interval={1}
+                maximumValue={59}
+                onDurationChange={onDurationChangeMock}
+                padWithNItems={1}
+                repeatNumbersNTimesNotExplicitlySet={false}
+                styles={emptyStyles}
+                testID="duration-scroll"
+            />
+        );
+        const component = getByTestId("duration-scroll");
+        expect(component).toBeDefined();
+    });
 });
