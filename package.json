@@ -6,7 +6,7 @@
         "url": "https://github.com/troberts-28"
     },
     "license": "MIT",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "main": "dist/commonjs/index.js",
     "module": "dist/module/index.js",
     "types": "dist/typescript/index.d.ts",
@@ -44,9 +44,6 @@
     },
     "files": [
         "dist",
-        "!**/__tests__",
-        "!**/__fixtures__",
-        "!**/__mocks__",
         "package.json",
         "README.md",
         "LICENSE"
@@ -111,6 +108,8 @@
         "jest": "^29.0.0",
         "metro-react-native-babel-preset": "^0.71.1",
         "prettier": "2.8.8",
+        "react": "18.2.0",
+        "react-native": "0.72.0",
         "react-native-builder-bob": "^0.18.3",
         "react-test-renderer": "18.2.0",
         "typescript": "^4.7.4"

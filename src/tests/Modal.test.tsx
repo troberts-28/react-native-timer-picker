@@ -1,11 +1,21 @@
 import React from "react";
 
-import { render, fireEvent } from "@testing-library/react-native";
+import { render, fireEvent, cleanup } from "@testing-library/react-native";
 import { Text } from "react-native";
 
 import Modal from "../components/Modal";
 
 describe("Modal", () => {
+    beforeEach(() => {
+        jest.useFakeTimers();
+    });
+
+    afterEach(() => {
+        jest.runOnlyPendingTimers();
+        jest.useRealTimers();
+        cleanup();
+    });
+
     it("renders without crashing", () => {
         const { getByTestId } = render(<Modal isVisible/>);
         const component = getByTestId("modal");
@@ -32,5 +42,66 @@ describe("Modal", () => {
         expect(onOverlayPressMock).toHaveBeenCalled();
     });
 
-    // Add more test cases to cover different interactions, scenarios, and edge cases
+    it("renders but is not visible when isVisible is false", () => {
+        const { getByTestId } = render(<Modal isVisible={false} />);
+        const modal = getByTestId("modal");
+        expect(modal).toBeDefined();
+        expect(modal.props.visible).toBe(false);
+    });
+
+    it("does not call onOverlayPress when onOverlayPress is not provided", () => {
+        const { getByTestId } = render(<Modal isVisible />);
+        const overlay = getByTestId("modal-backdrop");
+        expect(() => fireEvent.press(overlay)).not.toThrow();
+    });
+
+    it("renders multiple children", () => {
+        const { getByText } = render(
+            <Modal isVisible>
+                <Text>{"First Child"}</Text>
+                <Text>{"Second Child"}</Text>
+            </Modal>
+        );
+        const firstChild = getByText("First Child");
+        const secondChild = getByText("Second Child");
+        expect(firstChild).toBeDefined();
+        expect(secondChild).toBeDefined();
+    });
+
+    it("handles rapid visibility changes", () => {
+        const { rerender, getByTestId } = render(
+            <Modal isVisible={true} />
+        );
+        expect(getByTestId("modal")).toBeDefined();
+        expect(getByTestId("modal").props.visible).toBe(true);
+
+        rerender(<Modal isVisible={false} />);
+        expect(getByTestId("modal")).toBeDefined();
+        expect(getByTestId("modal").props.visible).toBe(false);
+
+        rerender(<Modal isVisible={true} />);
+        expect(getByTestId("modal")).toBeDefined();
+        expect(getByTestId("modal").props.visible).toBe(true);
+    });
+
+    it("calls onOverlayPress exactly once per press", () => {
+        const onOverlayPressMock = jest.fn();
+        const { getByTestId } = render(
+            <Modal isVisible onOverlayPress={onOverlayPressMock} />
+        );
+        const overlay = getByTestId("modal-backdrop");
+        fireEvent.press(overlay);
+        expect(onOverlayPressMock).toHaveBeenCalledTimes(1);
+    });
+
+    it("renders children with complex structure", () => {
+        const { getByText } = render(
+            <Modal isVisible>
+                <Text>{"Parent"}</Text>
+                <Text>{"Child"}</Text>
+            </Modal>
+        );
+        expect(getByText("Parent")).toBeDefined();
+        expect(getByText("Child")).toBeDefined();
+    });
 });
