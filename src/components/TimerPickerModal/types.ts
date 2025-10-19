@@ -17,10 +17,10 @@ export interface TimerPickerModalRef {
     reset: (options?: { animated?: boolean }) => void;
     setValue: (
         value: {
-            days: number;
-            hours: number;
-            minutes: number;
-            seconds: number;
+            days?: number;
+            hours?: number;
+            minutes?: number;
+            seconds?: number;
         },
         options?: { animated?: boolean }
     ) => void;
