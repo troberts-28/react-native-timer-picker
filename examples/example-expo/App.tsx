@@ -34,6 +34,21 @@ if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
 }
 
+
+type MyCustomButtonProps = {
+    label: string;
+    onPress?: () => void;
+};
+const MyCustomButton: React.FC<MyCustomButtonProps> = ({ label, onPress }) => {
+    return (
+        <TouchableOpacity onPress={onPress} style={styles.button}>
+            <Text style={{}}>{label}</Text>
+        </TouchableOpacity>
+    );
+};
+
+
+
 export default function App() {
     const { width: screenWidth } = useWindowDimensions();
 
@@ -47,9 +62,11 @@ export default function App() {
     const [alarmStringExample1, setAlarmStringExample1] = useState<
         string | null
     >(null);
+
     const [alarmStringExample2, setAlarmStringExample2] = useState<
         string | null
     >(null);
+    console.log(alarmStringExample2);
 
     // N.B. Uncomment this to use audio (requires development build)
     // useEffect(() => {
@@ -152,7 +169,9 @@ export default function App() {
                     </View>
                 </TouchableOpacity>
                 <TimerPickerModal
+                    cancelButton={<MyCustomButton label="Cancel" />}
                     closeOnOverlayPress
+                    confirmButton={<MyCustomButton label="Confirm" />}
                     LinearGradient={LinearGradient}
                     modalProps={{
                         overlayOpacity: 0.2,
