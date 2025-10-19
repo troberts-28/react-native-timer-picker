@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import type { RefObject, ReactElement } from "react";
 
 import type { View, TouchableOpacity, Text } from "react-native";
 
@@ -29,8 +29,11 @@ export interface TimerPickerModalRef {
 export interface TimerPickerModalProps extends TimerPickerProps {
     buttonContainerProps?: React.ComponentProps<typeof View>;
     buttonTouchableOpacityProps?: React.ComponentProps<typeof TouchableOpacity>;
+    cancelButton?: ReactElement<{ onPress?: () => void }>;
     cancelButtonText?: string;
     closeOnOverlayPress?: boolean;
+    /** ✅ New props for custom buttons */
+    confirmButton?: ReactElement<{ onPress?: () => void }>;
     confirmButtonText?: string;
     containerProps?: React.ComponentProps<typeof View>;
     contentContainerProps?: React.ComponentProps<typeof View>;
