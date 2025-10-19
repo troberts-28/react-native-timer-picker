@@ -126,8 +126,14 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
         useImperativeHandle(ref, () => ({
             reset,
             setValue: (value, options) => {
-                setSelectedDuration(value);
-                setConfirmedDuration(value);
+                setSelectedDuration((prev) => ({
+                    ...prev,
+                    ...value,
+                }));
+                setConfirmedDuration((prev) => ({
+                    ...prev,
+                    ...value,
+                }));
                 timerPickerRef.current?.setValue(value, options);
             },
             latestDuration: {
