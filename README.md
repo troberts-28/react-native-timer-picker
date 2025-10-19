@@ -577,7 +577,7 @@ timerPickerRef.current.reset(options?: { animated: boolean });
 `setValue` - imperative method to set the selected duration to a particular value
 
 ```javascript
-timerPickerRef.current.setValue({ hours: number, minutes: number, seconds: number }, options?: { animated: boolean });
+timerPickerRef.current.setValue({ days?: number, hours?: number, minutes?: number, seconds?: number }, options?: { animated: boolean });
 ```
 
 It also exposes the following ref object:
@@ -587,6 +587,7 @@ It also exposes the following ref object:
 ```javascript
 const latestDuration = timerPickerRef.current?.latestDuration;
 const newDuration = {
+    days: latestDuration?.days?.current,
     hours: latestDuration?.hours?.current,
     minutes: latestDuration?.minutes?.current,
     seconds: latestDuration?.seconds?.current,
