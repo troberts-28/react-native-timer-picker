@@ -158,20 +158,34 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 secondsDurationScrollRef.current?.reset(options);
             },
             setValue: (value, options) => {
-                setSelectedDays(value.days);
-                setSelectedHours(value.hours);
-                setSelectedMinutes(value.minutes);
-                setSelectedSeconds(value.seconds);
-                daysDurationScrollRef.current?.setValue(value.days, options);
-                hoursDurationScrollRef.current?.setValue(value.hours, options);
-                minutesDurationScrollRef.current?.setValue(
-                    value.minutes,
-                    options
-                );
-                secondsDurationScrollRef.current?.setValue(
-                    value.seconds,
-                    options
-                );
+                if (value.days) {
+                    setSelectedDays(value.days);
+                    daysDurationScrollRef.current?.setValue(
+                        value.days,
+                        options
+                    );
+                }
+                if (value.hours) {
+                    setSelectedHours(value.hours);
+                    hoursDurationScrollRef.current?.setValue(
+                        value.hours,
+                        options
+                    );
+                }
+                if (value.minutes) {
+                    setSelectedMinutes(value.minutes);
+                    minutesDurationScrollRef.current?.setValue(
+                        value.minutes,
+                        options
+                    );
+                }
+                if (value.seconds) {
+                    setSelectedSeconds(value.seconds);
+                    secondsDurationScrollRef.current?.setValue(
+                        value.seconds,
+                        options
+                    );
+                }
             },
             latestDuration: {
                 days: daysDurationScrollRef.current?.latestDuration,
