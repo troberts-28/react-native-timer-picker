@@ -34,6 +34,25 @@ if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
 }
 
+type MyCustomButtonProps = {
+    label: string;
+    onPress?: () => void;
+};
+
+const MyCustomButton: React.FC<MyCustomButtonProps> = ({ label, onPress }) => {
+    return (
+        <TouchableOpacity onPress={onPress} style={styles.customButtonContainer}>
+            <LinearGradient
+                style={styles.customButtonGradient}
+                colors={["#CC95C0", "#DBD4B4"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}>
+                <Text style={styles.customButtonText}>{label}</Text>
+            </LinearGradient>
+        </TouchableOpacity>
+    );
+};
+
 export default function App() {
     const { width: screenWidth } = useWindowDimensions();
 
@@ -44,10 +63,14 @@ export default function App() {
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
     const [showPickerExample1, setShowPickerExample1] = useState(false);
     const [showPickerExample2, setShowPickerExample2] = useState(false);
+    const [showPickerExample5, setShowPickerExample5] = useState(false);
     const [alarmStringExample1, setAlarmStringExample1] = useState<
         string | null
     >(null);
     const [alarmStringExample2, setAlarmStringExample2] = useState<
+        string | null
+    >(null);
+    const [alarmStringExample5, setAlarmStringExample5] = useState<
         string | null
     >(null);
 
@@ -313,10 +336,70 @@ export default function App() {
         );
     }, [pickerFeedback, screenWidth]);
 
+
+    const renderExample5 = useMemo(() => {
+        return (
+            <View
+                style={[
+                    styles.container,
+                    styles.page1Container,
+                    { width: screenWidth },
+                ]}>
+                <Text style={styles.textDark}>
+                    {alarmStringExample5 !== null
+                        ? "Alarm set for"
+                        : "No alarm set"}
+                </Text>
+                <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => setShowPickerExample5(true)}>
+                    <View style={styles.touchableContainer}>
+                        {alarmStringExample5 !== null ? (
+                            <Text style={styles.alarmTextDark}>
+                                {alarmStringExample5}
+                            </Text>
+                        ) : null}
+                        <TouchableOpacity
+                            activeOpacity={0.7}
+                            onPress={() => setShowPickerExample5(true)}>
+                            <View style={styles.buttonContainer}>
+                                <Text
+                                    style={[styles.button, styles.buttonDark]}>
+                                    {"Set Alarm 🔔"}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
+                <TimerPickerModal
+                    cancelButton={<MyCustomButton label="Cancel" />}
+                    closeOnOverlayPress
+                    confirmButton={<MyCustomButton label="Confirm" />}
+                    LinearGradient={LinearGradient}
+                    modalProps={{
+                        overlayOpacity: 0.2,
+                    }}
+                    modalTitle="Set Alarm"
+                    onCancel={() => setShowPickerExample5(false)}
+                    onConfirm={(pickedDuration) => {
+                        setAlarmStringExample5(formatTime(pickedDuration));
+                        setShowPickerExample5(false);
+                    }}
+                    pickerFeedback={pickerFeedback}
+                    setIsVisible={setShowPickerExample5}
+                    styles={{
+                        theme: "dark",
+                    }}
+                    visible={showPickerExample5}
+                />
+            </View>
+        );
+    }, [alarmStringExample5, pickerFeedback, screenWidth, showPickerExample5]);
+
     const renderNavigationArrows = useMemo(() => {
         return (
             <>
-                {currentPageIndex !== 3 ? (
+                {currentPageIndex !== 4 ? (
                     <Pressable
                         onPress={() => {
                             LayoutAnimation.configureNext(
@@ -391,6 +474,7 @@ export default function App() {
                 {renderExample2}
                 {renderExample3}
                 {renderExample4}
+                {renderExample5}
             </ScrollView>
             {renderNavigationArrows}
         </>
@@ -459,5 +543,18 @@ const styles = StyleSheet.create({
     },
     chevronPressable_pressed: {
         opacity: 0.7,
+    },
+    customButtonContainer: {
+        marginHorizontal: 5,
+    },
+    customButtonGradient: {
+        borderRadius: 15,
+    },
+    customButtonText: {
+        color: "#FFFFFF",
+        fontSize: 16,
+        fontWeight: "600",
+        paddingVertical: 12,
+        paddingHorizontal: 20,
     },
 });
