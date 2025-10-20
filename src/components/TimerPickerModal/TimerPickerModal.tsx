@@ -174,30 +174,47 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                         <View
                             {...buttonContainerProps}
                             style={styles.buttonContainer}>
-                            {!hideCancelButton ? (
-                                <TouchableOpacity
-                                    {...buttonTouchableOpacityProps}
-                                    onPress={cancelHandler}>
-                                    <Text
-                                        style={[
-                                            styles.button,
-                                            styles.cancelButton,
-                                        ]}>
-                                        {cancelButtonText}
-                                    </Text>
-                                </TouchableOpacity>
-                            ) : null}
-                            <TouchableOpacity
-                                {...buttonTouchableOpacityProps}
-                                onPress={confirmHandler}>
-                                <Text
-                                    style={[
-                                        styles.button,
-                                        styles.confirmButton,
-                                    ]}>
-                                    {confirmButtonText}
-                                </Text>
-                            </TouchableOpacity>
+                            {!hideCancelButton
+                                ? (
+                                    React.isValidElement(props.cancelButton)
+                                        ? React.cloneElement(
+                                            props.cancelButton,
+                                            {
+                                                onPress: cancelHandler,
+                                            }
+                                        )
+                                        : (
+                                            <TouchableOpacity
+                                                {...buttonTouchableOpacityProps}
+                                                onPress={cancelHandler}>
+                                                <Text
+                                                    style={[
+                                                        styles.button,
+                                                        styles.cancelButton,
+                                                    ]}>
+                                                    {cancelButtonText}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        )
+                                )
+                                : null}
+                            {React.isValidElement(props.confirmButton)
+                                ? React.cloneElement(props.confirmButton, {
+                                    onPress: confirmHandler,
+                                })
+                                : (
+                                    <TouchableOpacity
+                                        {...buttonTouchableOpacityProps}
+                                        onPress={confirmHandler}>
+                                        <Text
+                                            style={[
+                                                styles.button,
+                                                styles.confirmButton,
+                                            ]}>
+                                            {confirmButtonText}
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
                         </View>
                     </View>
                 </View>
