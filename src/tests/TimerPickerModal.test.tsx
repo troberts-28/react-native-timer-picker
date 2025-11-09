@@ -1,4 +1,5 @@
 import React from "react";
+import { TouchableOpacity, Text } from "react-native";
 
 import { render, fireEvent, cleanup } from "@testing-library/react-native";
 
@@ -193,5 +194,96 @@ describe("TimerPickerModal", () => {
             />
         );
         expect(getByTestId("timer-picker-modal")).toBeDefined();
+    });
+
+    it("renders custom cancel button when provided", () => {
+        const CustomButton = ({ onPress }: { onPress?: () => void }) => (
+            <TouchableOpacity onPress={onPress} testID="custom-cancel-button">
+                <Text>Custom Cancel</Text>
+            </TouchableOpacity>
+        );
+
+        const { getByTestId } = render(
+            <TimerPickerModal
+                {...defaultProps}
+                cancelButton={<CustomButton />}
+            />
+        );
+        expect(getByTestId("custom-cancel-button")).toBeDefined();
+    });
+
+    it("renders custom confirm button when provided", () => {
+        const CustomButton = ({ onPress }: { onPress?: () => void }) => (
+            <TouchableOpacity onPress={onPress} testID="custom-confirm-button">
+                <Text>Custom Confirm</Text>
+            </TouchableOpacity>
+        );
+
+        const { getByTestId } = render(
+            <TimerPickerModal
+                {...defaultProps}
+                confirmButton={<CustomButton />}
+            />
+        );
+        expect(getByTestId("custom-confirm-button")).toBeDefined();
+    });
+
+    it("calls onCancel when custom cancel button is pressed", () => {
+        const CustomButton = ({ onPress }: { onPress?: () => void }) => (
+            <TouchableOpacity onPress={onPress} testID="custom-cancel-button">
+                <Text>Custom Cancel</Text>
+            </TouchableOpacity>
+        );
+
+        const { getByTestId } = render(
+            <TimerPickerModal
+                {...defaultProps}
+                cancelButton={<CustomButton />}
+            />
+        );
+        const customCancelButton = getByTestId("custom-cancel-button");
+        fireEvent.press(customCancelButton);
+        expect(mockOnCancel).toHaveBeenCalled();
+    });
+
+    it("calls onConfirm when custom confirm button is pressed", () => {
+        const CustomButton = ({ onPress }: { onPress?: () => void }) => (
+            <TouchableOpacity onPress={onPress} testID="custom-confirm-button">
+                <Text>Custom Confirm</Text>
+            </TouchableOpacity>
+        );
+
+        const { getByTestId } = render(
+            <TimerPickerModal
+                {...defaultProps}
+                confirmButton={<CustomButton />}
+            />
+        );
+        const customConfirmButton = getByTestId("custom-confirm-button");
+        fireEvent.press(customConfirmButton);
+        expect(mockOnConfirm).toHaveBeenCalled();
+    });
+
+    it("renders both custom cancel and confirm buttons when provided", () => {
+        const CustomCancelButton = ({ onPress }: { onPress?: () => void }) => (
+            <TouchableOpacity onPress={onPress} testID="custom-cancel-button">
+                <Text>Custom Cancel</Text>
+            </TouchableOpacity>
+        );
+        const CustomConfirmButton = ({ onPress }: { onPress?: () => void }) => (
+            <TouchableOpacity onPress={onPress} testID="custom-confirm-button">
+                <Text>Custom Confirm</Text>
+            </TouchableOpacity>
+        );
+
+        const { getByTestId } = render(
+            <TimerPickerModal
+                {...defaultProps}
+                cancelButton={<CustomCancelButton />}
+                confirmButton={<CustomConfirmButton />}
+            />
+        );
+        expect(getByTestId("custom-cancel-button")).toBeDefined();
+        expect(getByTestId("custom-confirm-button")).toBeDefined();
     });
 });
