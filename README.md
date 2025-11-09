@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=for-the-badge)]()
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=for-the-badge&colorB=191A17)
 [![Version](https://img.shields.io/npm/v/react-native-timer-picker.svg?style=for-the-badge)](https://www.npmjs.com/package/react-native-timer-picker)
-[![npm](https://img.shields.io/npm/dt/react-native-timer-picker.svg?style=for-the-badge)](https://www.npmjs.com/package/react-native-timer-picker)
+<!-- [![npm](https://img.shields.io/npm/dt/react-native-timer-picker.svg?style=for-the-badge&cacheSeconds=86400)](https://www.npmjs.com/package/react-native-timer-picker) -->
 
 A simple, flexible, performant duration picker component for React Native apps 🔥
 
@@ -13,37 +13,37 @@ Works with Expo and bare React Native apps ✅
 
 Includes iOS-style haptic and audio feedback 🍏
 
-- [React Native Timer Picker ⏰🕰️⏳](#react-native-timer-picker-️)
-  - [Demos 📱](#demos-)
-  - [Installation 🚀](#installation-)
-    - [Peer Dependencies 👶](#peer-dependencies-)
-      - [Linear Gradient](#linear-gradient)
-      - [Masked View](#masked-view)
-  - [Examples 😎](#examples-)
-    - [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
-    - [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
-    - [Timer Picker with Transparent Fade-Out (Dark Mode) 🌒](#timer-picker-with-transparent-fade-out-dark-mode-)
-    - [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
-  - [Props 💅](#props-)
-    - [TimerPicker ⏲️](#timerpicker-️)
-      - [Custom Styles 👗](#custom-styles-)
-      - [Performance](#performance)
-      - [Custom FlatList](#custom-flatlist)
-    - [TimerPickerModal ⏰](#timerpickermodal-)
-      - [Custom Styles 👕](#custom-styles--1)
-  - [Methods 🔄](#methods-)
-    - [TimerPicker](#timerpicker)
-    - [TimerPickerModal](#timerpickermodal)
-  - [Picker Feedback 📳🔉](#picker-feedback-)
-    - [Audio Feedack](#audio-feedack)
-    - [Haptic Feedback](#haptic-feedback)
-    - [Feedback Example](#feedback-example)
-    - [Expo-Specific Audio/Haptic Feedback (DEPRECATED)](#expo-specific-audiohaptic-feedback-deprecated)
-  - [Contributing 🧑‍🤝‍🧑](#contributing-)
-    - [Dev Setup](#dev-setup)
-    - [GitHub Guidelines](#github-guidelines)
-  - [Limitations ⚠](#limitations-)
-  - [License 📝](#license-)
+- [Demos 📱](#demos-)
+- [Installation 🚀](#installation-)
+- [Peer Dependencies 👶](#peer-dependencies-)
+    - [Linear Gradient](#linear-gradient)
+    - [Masked View](#masked-view)
+- [Examples 😎](#examples-)
+- [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
+- [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
+- [Timer Picker Modal with Custom Buttons 🎨](#timer-picker-modal-with-custom-buttons-)
+- [Timer Picker with Transparent Fade-Out (Dark Mode) 🌒](#timer-picker-with-transparent-fade-out-dark-mode-)
+- [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
+- [Props 💅](#props-)
+- [TimerPicker ⏲️](#timerpicker-️)
+    - [Custom Styles 👗](#custom-styles-)
+    - [Performance](#performance)
+    - [Custom FlatList](#custom-flatlist)
+- [TimerPickerModal ⏰](#timerpickermodal-)
+    - [Custom Styles 👕](#custom-styles--1)
+- [Methods 🔄](#methods-)
+- [TimerPicker](#timerpicker)
+- [TimerPickerModal](#timerpickermodal)
+- [Picker Feedback 📳🔉](#picker-feedback-)
+- [Audio Feedack](#audio-feedack)
+- [Haptic Feedback](#haptic-feedback)
+- [Feedback Example](#feedback-example)
+- [Expo-Specific Audio/Haptic Feedback (DEPRECATED)](#expo-specific-audiohaptic-feedback-deprecated)
+- [Contributing 🧑‍🤝‍🧑](#contributing-)
+- [Dev Setup](#dev-setup)
+- [GitHub Guidelines](#github-guidelines)
+- [Limitations ⚠](#limitations-)
+- [License 📝](#license-)
 
 <br>
 
@@ -53,11 +53,12 @@ Includes iOS-style haptic and audio feedback 🍏
 
 <p>
     <img src="demos/example1.gif" width="250" height="550" style="margin-right:50px"/>
-    <img src="demos/example2.gif" width="250" height="550"/>
+    <img src="demos/example2.gif" width="250" height="550" style="margin-right:50px"/>
+    <img src="demos/example3.gif" width="250" height="550" />
 </p>
 <p>
-    <img src="demos/example3.gif" width="250" height="550" style="margin-right:50px"/>
-    <img src="demos/example4.gif" width="250" height="550"/>
+    <img src="demos/example4.gif" width="250" height="550" style="margin-right:50px"/>
+    <img src="demos/example5.gif" width="250" height="550"/>
 </p>
 
 <br>
@@ -105,6 +106,8 @@ To make the numbers fade in/out on a transparent background (e.g. if the picker 
 ## Examples 😎
 
 ### Timer Picker Modal (Dark Mode) 🌚
+
+<img src="demos/example1.gif" width="250" height="550"/>
 
 ```jsx
 import { TimerPickerModal } from "react-native-timer-picker";
@@ -200,9 +203,9 @@ return (
 
 ```
 
-<img src="demos/example1.gif" width="250" height="550"/>
-
 ### Timer Picker Modal (Light Mode) 🌞
+
+<img src="demos/example2.gif" width="250" height="550"/>
 
 ```jsx
 import { TimerPickerModal } from "react-native-timer-picker";
@@ -295,9 +298,144 @@ return (
 
 ```
 
-<img src="demos/example2.gif" width="250" height="550"/>
+### Timer Picker Modal with Custom Buttons 🎨
+
+<img src="demos/example3.gif" width="250" height="550"/>
+
+```jsx
+import { TimerPickerModal } from "react-native-timer-picker";
+import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
+import { TouchableOpacity, Text, StyleSheet, Platform } from "react-native";
+
+// Custom Button Component
+interface MyCustomButtonProps {
+    label: string;
+    onPress?: () => void;
+}
+
+const MyCustomButton: React.FC<MyCustomButtonProps> = ({ label, onPress }) => {
+    return (
+        <TouchableOpacity onPress={onPress} style={styles.customButtonContainer}>
+            <LinearGradient
+                style={styles.customButtonGradient}
+                colors={['#bb2649', '#6c35de']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+            >
+                <Text style={styles.customButtonText}>{label}</Text>
+            </LinearGradient>
+        </TouchableOpacity>
+    );
+};
+
+// Styles
+const styles = StyleSheet.create({
+    customButtonContainer: {
+        marginHorizontal: 5,
+    },
+    customButtonGradient: {
+        borderRadius: 15,
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    customButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+});
+
+....
+const [showPicker, setShowPicker] = useState(false);
+const [alarmString, setAlarmString] = useState<string>("00:00:00");
+
+const formatTime = ({
+    hours,
+    minutes,
+    seconds,
+}: {
+    hours?: number;
+    minutes?: number;
+    seconds?: number;
+}) => {
+    const timeParts = [];
+
+    if (hours !== undefined) {
+        timeParts.push(hours.toString().padStart(2, "0"));
+    }
+    if (minutes !== undefined) {
+        timeParts.push(minutes.toString().padStart(2, "0"));
+    }
+    if (seconds !== undefined) {
+        timeParts.push(seconds.toString().padStart(2, "0"));
+    }
+
+    return timeParts.join(":");
+};
+
+return (
+    <View style={{backgroundColor: "#F1F1F1", alignItems: "center", justifyContent: "center"}}>
+        <Text style={{fontSize: 18, color: "#202020"}}>
+            {alarmString !== null ? "Alarm set for" : "No alarm set"}
+        </Text>
+        <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => setShowPicker(true)}>
+            <View style={{alignItems: "center"}}>
+                {alarmString !== null ? (
+                    <Text style={{color: "#202020", fontSize: 48}}>
+                        {alarmString}
+                    </Text>
+                ) : null}
+                <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => setShowPicker(true)}>
+                    <View style={{marginTop: 30}}>
+                        <Text
+                            style={{paddingVertical: 10,
+                            paddingHorizontal: 18,
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            fontSize: 16,
+                            overflow: "hidden",
+                            borderColor: "#8C8C8C",
+                            color: "#8C8C8C"
+                            }}>
+                            Set Alarm 🔔
+                        </Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        </TouchableOpacity>
+        <TimerPickerModal
+            visible={showPicker}
+            setIsVisible={setShowPicker}
+            onConfirm={(pickedDuration) => {
+                setAlarmString(formatTime(pickedDuration));
+                setShowPicker(false);
+            }}
+            modalTitle="Set Alarm"
+            onCancel={() => setShowPicker(false)}
+            closeOnOverlayPress
+            use12HourPicker
+            LinearGradient={LinearGradient}
+            // Custom buttons
+            cancelButton={<MyCustomButton label="Cancel" />}
+            confirmButton={<MyCustomButton label="Confirm" />}
+            styles={{
+                theme: "light",
+            }}
+        />
+    </View>
+)
+
+```
 
 ### Timer Picker with Transparent Fade-Out (Dark Mode) 🌒
+
+<img src="demos/example4.gif" width="250" height="550"/>
 
 ```jsx
 import { TimerPicker } from "react-native-timer-picker";
@@ -353,9 +491,9 @@ return (
 
 ```
 
-<img src="demos/example3.gif" width="250" height="550"/>
-
 ### Timer Picker with Customisation (Light Mode) 🌔
+
+<img src="demos/example5.gif" width="250" height="550"/>
 
 ```jsx
 import { TimerPicker } from "react-native-timer-picker";
@@ -396,8 +534,6 @@ return (
 )
 
 ```
-
-<img src="demos/example4.gif" width="250" height="550"/>
 
 <br>
 
@@ -531,6 +667,8 @@ The TimerPickerModal component accepts all [TimerPicker props](#timerpicker-️)
 |      hideCancelButton       | Hide the cancel button within the modal               |                                           Boolean                                            |  false  |  false   |
 |      confirmButtonText      | Text for the confirm button                           |                                            String                                            | Confirm |  false   |
 |      cancelButtonText       | Text for the cancel button                            |                                            String                                            | Cancel  |  false   |
+|        confirmButton        | Custom confirm button component                       |                           `ReactElement<{ onPress?: () => void }>`                           |    -    |  false   |
+|        cancelButton         | Custom cancel button component                        |                           `ReactElement<{ onPress?: () => void }>`                           |    -    |  false   |
 |         modalTitle          | Title text for the modal                              |                                            String                                            |    -    |  false   |
 |         modalProps          | Props for the main modal component                    |                             `React.ComponentProps<typeof Modal>`                             |    -    |  false   |
 |       containerProps        | Props for the main container                          |                             `React.ComponentProps<typeof View>`                              |    -    |  false   |

@@ -25,6 +25,7 @@ import LinearGradient from "react-native-linear-gradient";
 
 import { TimerPicker, TimerPickerModal } from "../../src";
 
+import { CustomButton } from "./components/CustomButton";
 import { formatTime } from "./utils/formatTime";
 import { getClickSound } from "./utils/getClickSound";
 
@@ -42,12 +43,15 @@ export default function App() {
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
     const [showPickerExample1, setShowPickerExample1] = useState(false);
     const [showPickerExample2, setShowPickerExample2] = useState(false);
+    const [showPickerExample3, setShowPickerExample3] = useState(false);
     const [alarmStringExample1, setAlarmStringExample1] = useState<
         string | null
     >(null);
     const [alarmStringExample2, setAlarmStringExample2] = useState<
         string | null
     >(null);
+    const [alarmStringExample3, setAlarmStringExample3] =
+        useState<string>("00:00:00");
 
     useEffect(() => {
         const setupAudio = async () => {
@@ -228,13 +232,72 @@ export default function App() {
 
     const renderExample3 = useMemo(() => {
         return (
+            <View
+                style={[
+                    styles.container,
+                    styles.page3Container,
+                    { width: screenWidth },
+                ]}>
+                <Text style={styles.textDark}>
+                    {alarmStringExample3 !== null
+                        ? "Alarm set for"
+                        : "No alarm set"}
+                </Text>
+                <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => setShowPickerExample3(true)}>
+                    <View style={styles.touchableContainer}>
+                        {alarmStringExample3 !== null ? (
+                            <Text style={styles.alarmTextDark}>
+                                {alarmStringExample3}
+                            </Text>
+                        ) : null}
+                        <TouchableOpacity
+                            activeOpacity={0.7}
+                            onPress={() => setShowPickerExample3(true)}>
+                            <View style={styles.buttonContainer}>
+                                <Text
+                                    style={[styles.button, styles.buttonDark]}>
+                                    {"Set Alarm 🔔"}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
+                <TimerPickerModal
+                    cancelButton={<CustomButton label="Cancel" />}
+                    closeOnOverlayPress
+                    confirmButton={<CustomButton label="Confirm" />}
+                    LinearGradient={LinearGradient}
+                    modalProps={{
+                        overlayOpacity: 0.2,
+                    }}
+                    modalTitle="Set Alarm"
+                    onCancel={() => setShowPickerExample3(false)}
+                    onConfirm={(pickedDuration) => {
+                        setAlarmStringExample3(formatTime(pickedDuration));
+                        setShowPickerExample3(false);
+                    }}
+                    pickerFeedback={pickerFeedback}
+                    setIsVisible={setShowPickerExample3}
+                    styles={{
+                        theme: "dark",
+                    }}
+                    visible={showPickerExample3}
+                />
+            </View>
+        );
+    }, [alarmStringExample3, pickerFeedback, screenWidth, showPickerExample3]);
+
+    const renderExample4 = useMemo(() => {
+        return (
             <LinearGradient
                 colors={["#202020", "#220578"]}
                 end={{ x: 1, y: 1 }}
                 start={{ x: 0, y: 0 }}
                 style={[
                     styles.container,
-                    styles.page3Container,
+                    styles.page4Container,
                     { width: screenWidth },
                 ]}>
                 <TimerPicker
@@ -274,12 +337,12 @@ export default function App() {
         );
     }, [pickerFeedback, screenWidth]);
 
-    const renderExample4 = useMemo(() => {
+    const renderExample5 = useMemo(() => {
         return (
             <View
                 style={[
                     styles.container,
-                    styles.page4Container,
+                    styles.page5Container,
                     { width: screenWidth },
                 ]}>
                 <TimerPicker
@@ -320,6 +383,7 @@ export default function App() {
             {renderExample2}
             {renderExample3}
             {renderExample4}
+            {renderExample5}
         </ScrollView>
     );
 }
@@ -336,9 +400,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#F1F1F1",
     },
     page3Container: {
-        flex: 1,
+        backgroundColor: "#F1F1F1",
     },
     page4Container: {
+        flex: 1,
+    },
+    page5Container: {
         backgroundColor: "#F1F1F1",
     },
     textDark: {
