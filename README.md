@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=for-the-badge)]()
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=for-the-badge&colorB=191A17)
 [![Version](https://img.shields.io/npm/v/react-native-timer-picker.svg?style=for-the-badge)](https://www.npmjs.com/package/react-native-timer-picker)
-[![npm](https://img.shields.io/npm/dt/react-native-timer-picker.svg?style=for-the-badge&cacheSeconds=86400)](https://www.npmjs.com/package/react-native-timer-picker)
+<!-- [![npm](https://img.shields.io/npm/dt/react-native-timer-picker.svg?style=for-the-badge&cacheSeconds=86400)](https://www.npmjs.com/package/react-native-timer-picker) -->
 
 A simple, flexible, performant duration picker component for React Native apps 🔥
 
