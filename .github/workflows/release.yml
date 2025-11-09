@@ -1,24 +1,29 @@
 name: "🚀 release"
+
 on:
- push:
-  branches:
-    - main
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
 
 jobs:
   release:
     name: 🚀 release
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v1
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 20
-        registry-url: https://registry.npmjs.org
-    - name: Install dependencies
-      run: yarn
-    - name: Release
-      run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - name: Update npm
+        run: npm install -g npm@latest
+      - name: Install dependencies
+        run: yarn
+      - name: Release
+        run: npm publish

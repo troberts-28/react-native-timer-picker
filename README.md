@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=for-the-badge)]()
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=for-the-badge&colorB=191A17)
 [![Version](https://img.shields.io/npm/v/react-native-timer-picker.svg?style=for-the-badge)](https://www.npmjs.com/package/react-native-timer-picker)
-[![npm](https://img.shields.io/npm/dt/react-native-timer-picker.svg?style=for-the-badge)](https://www.npmjs.com/package/react-native-timer-picker)
+<!-- [![npm](https://img.shields.io/npm/dt/react-native-timer-picker.svg?style=for-the-badge&cacheSeconds=86400)](https://www.npmjs.com/package/react-native-timer-picker) -->
 
 A simple, flexible, performant duration picker component for React Native apps 🔥
 
@@ -13,38 +13,37 @@ Works with Expo and bare React Native apps ✅
 
 Includes iOS-style haptic and audio feedback 🍏
 
--   [React Native Timer Picker ⏰🕰️⏳](#react-native-timer-picker-️)
-    -   [Demos 📱](#demos-)
-    -   [Installation 🚀](#installation-)
-        -   [Peer Dependencies 👶](#peer-dependencies-)
-            -   [Linear Gradient](#linear-gradient)
-            -   [Masked View](#masked-view)
-    -   [Examples 😎](#examples-)
-        -   [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
-        -   [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
-        -   [Timer Picker with Transparent Fade-Out (Dark Mode) 🌒](#timer-picker-with-transparent-fade-out-dark-mode-)
-        -   [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
-        -   [Timer Picker Modal with Custom Buttons 🎨](#timer-picker-modal-with-custom-buttons-)
-    -   [Props 💅](#props-)
-        -   [TimerPicker ⏲️](#timerpicker-️)
-            -   [Custom Styles 👗](#custom-styles-)
-            -   [Performance](#performance)
-            -   [Custom FlatList](#custom-flatlist)
-        -   [TimerPickerModal ⏰](#timerpickermodal-)
-            -   [Custom Styles 👕](#custom-styles--1)
-    -   [Methods 🔄](#methods-)
-        -   [TimerPicker](#timerpicker)
-        -   [TimerPickerModal](#timerpickermodal)
-    -   [Picker Feedback 📳🔉](#picker-feedback-)
-        -   [Audio Feedack](#audio-feedack)
-        -   [Haptic Feedback](#haptic-feedback)
-        -   [Feedback Example](#feedback-example)
-        -   [Expo-Specific Audio/Haptic Feedback (DEPRECATED)](#expo-specific-audiohaptic-feedback-deprecated)
-    -   [Contributing 🧑‍🤝‍🧑](#contributing-)
-        -   [Dev Setup](#dev-setup)
-        -   [GitHub Guidelines](#github-guidelines)
-    -   [Limitations ⚠](#limitations-)
-    -   [License 📝](#license-)
+- [Demos 📱](#demos-)
+- [Installation 🚀](#installation-)
+- [Peer Dependencies 👶](#peer-dependencies-)
+    - [Linear Gradient](#linear-gradient)
+    - [Masked View](#masked-view)
+- [Examples 😎](#examples-)
+- [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
+- [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
+- [Timer Picker Modal with Custom Buttons 🎨](#timer-picker-modal-with-custom-buttons-)
+- [Timer Picker with Transparent Fade-Out (Dark Mode) 🌒](#timer-picker-with-transparent-fade-out-dark-mode-)
+- [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
+- [Props 💅](#props-)
+- [TimerPicker ⏲️](#timerpicker-️)
+    - [Custom Styles 👗](#custom-styles-)
+    - [Performance](#performance)
+    - [Custom FlatList](#custom-flatlist)
+- [TimerPickerModal ⏰](#timerpickermodal-)
+    - [Custom Styles 👕](#custom-styles--1)
+- [Methods 🔄](#methods-)
+- [TimerPicker](#timerpicker)
+- [TimerPickerModal](#timerpickermodal)
+- [Picker Feedback 📳🔉](#picker-feedback-)
+- [Audio Feedack](#audio-feedack)
+- [Haptic Feedback](#haptic-feedback)
+- [Feedback Example](#feedback-example)
+- [Expo-Specific Audio/Haptic Feedback (DEPRECATED)](#expo-specific-audiohaptic-feedback-deprecated)
+- [Contributing 🧑‍🤝‍🧑](#contributing-)
+- [Dev Setup](#dev-setup)
+- [GitHub Guidelines](#github-guidelines)
+- [Limitations ⚠](#limitations-)
+- [License 📝](#license-)
 
 <br>
 
@@ -54,14 +53,12 @@ Includes iOS-style haptic and audio feedback 🍏
 
 <p>
     <img src="demos/example1.gif" width="250" height="550" style="margin-right:50px"/>
-    <img src="demos/example2.gif" width="250" height="550"/>
+    <img src="demos/example2.gif" width="250" height="550" style="margin-right:50px"/>
+    <img src="demos/example3.gif" width="250" height="550" />
 </p>
 <p>
-    <img src="demos/example3.gif" width="250" height="550" style="margin-right:50px"/>
-    <img src="demos/example4.gif" width="250" height="550"/>
-</p>
-<p>
-    <img src="demos/example5.gif" width="250" height="550" style="margin-right:50px"/>
+    <img src="demos/example4.gif" width="250" height="550" style="margin-right:50px"/>
+    <img src="demos/example5.gif" width="250" height="550"/>
 </p>
 
 <br>
@@ -109,6 +106,8 @@ To make the numbers fade in/out on a transparent background (e.g. if the picker 
 ## Examples 😎
 
 ### Timer Picker Modal (Dark Mode) 🌚
+
+<img src="demos/example1.gif" width="250" height="550"/>
 
 ```jsx
 import { TimerPickerModal } from "react-native-timer-picker";
@@ -204,9 +203,9 @@ return (
 
 ```
 
-<img src="demos/example1.gif" width="250" height="550"/>
-
 ### Timer Picker Modal (Light Mode) 🌞
+
+<img src="demos/example2.gif" width="250" height="550"/>
 
 ```jsx
 import { TimerPickerModal } from "react-native-timer-picker";
@@ -299,111 +298,9 @@ return (
 
 ```
 
-<img src="demos/example2.gif" width="250" height="550"/>
-
-### Timer Picker with Transparent Fade-Out (Dark Mode) 🌒
-
-```jsx
-import { TimerPicker } from "react-native-timer-picker";
-import MaskedView from "@react-native-masked-view/masked-view"; // for transparent fade-out
-import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
-
-....
-const [showPicker, setShowPicker] = useState(false);
-const [alarmString, setAlarmString] = useState<
-        string | null
-    >(null);
-
-return (
-    <LinearGradient
-        colors={["#202020", "#220578"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{alignItems: "center", justifyContent: "center"}}>
-        <TimerPicker
-            padWithNItems={2}
-            hourLabel=":"
-            minuteLabel=":"
-            secondLabel=""
-            LinearGradient={LinearGradient}
-            MaskedView={MaskedView}
-            styles={{
-                theme: "dark",
-                backgroundColor: "transparent", // transparent fade-out
-                pickerItem: {
-                    fontSize: 34,
-                },
-                pickerLabel: {
-                    fontSize: 32,
-                    marginTop: 0,
-                },
-                pickerContainer: {
-                    marginRight: 6,
-                },
-                pickerItemContainer: {
-                    width: 100
-                },
-                pickerLabelContainer: {
-                    right: -20,
-                    top: 0,
-                    bottom: 6,
-                    width: 40,
-                    alignItems: "center",
-                },
-            }}
-        />
-    </LinearGradient>
-)
-
-```
+### Timer Picker Modal with Custom Buttons 🎨
 
 <img src="demos/example3.gif" width="250" height="550"/>
-
-### Timer Picker with Customisation (Light Mode) 🌔
-
-```jsx
-import { TimerPicker } from "react-native-timer-picker";
-import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
-
-....
-const [showPicker, setShowPicker] = useState(false);
-const [alarmString, setAlarmString] = useState<
-        string | null
-    >(null);
-
-return (
-    <View style={{backgroundColor: "#F1F1F1", alignItems: "center", justifyContent: "center"}}>
-        <TimerPicker
-            padWithNItems={3}
-            hideHours
-            minuteLabel="min"
-            secondLabel="sec"
-            LinearGradient={LinearGradient}
-            styles={{
-                theme: "light",
-                pickerItem: {
-                    fontSize: 34,
-                },
-                pickerLabel: {
-                    fontSize: 26,
-                    right: -20,
-                },
-                pickerLabelContainer: {
-                    width: 60,
-                },
-                pickerItemContainer: {
-                    width: 150,
-                },
-            }}
-        />
-    </View>
-)
-
-```
-
-<img src="demos/example4.gif" width="250" height="550"/>
-
-### Timer Picker Modal with Custom Buttons 🎨
 
 ```jsx
 import { TimerPickerModal } from "react-native-timer-picker";
@@ -452,7 +349,7 @@ const styles = StyleSheet.create({
 
 ....
 const [showPicker, setShowPicker] = useState(false);
-const [alarmString, setAlarmString] = useState<string | null>(null);
+const [alarmString, setAlarmString] = useState<string>("00:00:00");
 
 const formatTime = ({
     hours,
@@ -536,7 +433,107 @@ return (
 
 ```
 
+### Timer Picker with Transparent Fade-Out (Dark Mode) 🌒
+
+<img src="demos/example4.gif" width="250" height="550"/>
+
+```jsx
+import { TimerPicker } from "react-native-timer-picker";
+import MaskedView from "@react-native-masked-view/masked-view"; // for transparent fade-out
+import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
+
+....
+const [showPicker, setShowPicker] = useState(false);
+const [alarmString, setAlarmString] = useState<
+        string | null
+    >(null);
+
+return (
+    <LinearGradient
+        colors={["#202020", "#220578"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{alignItems: "center", justifyContent: "center"}}>
+        <TimerPicker
+            padWithNItems={2}
+            hourLabel=":"
+            minuteLabel=":"
+            secondLabel=""
+            LinearGradient={LinearGradient}
+            MaskedView={MaskedView}
+            styles={{
+                theme: "dark",
+                backgroundColor: "transparent", // transparent fade-out
+                pickerItem: {
+                    fontSize: 34,
+                },
+                pickerLabel: {
+                    fontSize: 32,
+                    marginTop: 0,
+                },
+                pickerContainer: {
+                    marginRight: 6,
+                },
+                pickerItemContainer: {
+                    width: 100
+                },
+                pickerLabelContainer: {
+                    right: -20,
+                    top: 0,
+                    bottom: 6,
+                    width: 40,
+                    alignItems: "center",
+                },
+            }}
+        />
+    </LinearGradient>
+)
+
+```
+
+### Timer Picker with Customisation (Light Mode) 🌔
+
 <img src="demos/example5.gif" width="250" height="550"/>
+
+```jsx
+import { TimerPicker } from "react-native-timer-picker";
+import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
+
+....
+const [showPicker, setShowPicker] = useState(false);
+const [alarmString, setAlarmString] = useState<
+        string | null
+    >(null);
+
+return (
+    <View style={{backgroundColor: "#F1F1F1", alignItems: "center", justifyContent: "center"}}>
+        <TimerPicker
+            padWithNItems={3}
+            hideHours
+            minuteLabel="min"
+            secondLabel="sec"
+            LinearGradient={LinearGradient}
+            styles={{
+                theme: "light",
+                pickerItem: {
+                    fontSize: 34,
+                },
+                pickerLabel: {
+                    fontSize: 26,
+                    right: -20,
+                },
+                pickerLabelContainer: {
+                    width: 60,
+                },
+                pickerItemContainer: {
+                    width: 150,
+                },
+            }}
+        />
+    </View>
+)
+
+```
 
 <br>
 
