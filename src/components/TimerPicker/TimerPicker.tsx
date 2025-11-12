@@ -69,17 +69,17 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
         useEffect(() => {
             if (otherProps.Audio) {
                 console.warn(
-                    "The \"Audio\" prop is deprecated and will be removed in a future version. Please use the \"pickerFeedback\" prop instead."
+                    'The "Audio" prop is deprecated and will be removed in a future version. Please use the "pickerFeedback" prop instead.'
                 );
             }
             if (otherProps.Haptics) {
                 console.warn(
-                    "The \"Haptics\" prop is deprecated and will be removed in a future version. Please use the \"pickerFeedback\" prop instead."
+                    'The "Haptics" prop is deprecated and will be removed in a future version. Please use the "pickerFeedback" prop instead.'
                 );
             }
             if (otherProps.clickSoundAsset) {
                 console.warn(
-                    "The \"clickSoundAsset\" prop is deprecated and will be removed in a future version. Please use the \"pickerFeedback\" prop instead."
+                    'The "clickSoundAsset" prop is deprecated and will be removed in a future version. Please use the "pickerFeedback" prop instead.'
                 );
             }
         }, [otherProps.Audio, otherProps.Haptics, otherProps.clickSoundAsset]);

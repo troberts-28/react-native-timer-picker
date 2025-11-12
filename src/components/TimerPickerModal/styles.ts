@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import type { TextStyle, ViewStyle } from "react-native";
+import type { DimensionValue, TextStyle, ViewStyle } from "react-native";
 
 import type { CustomTimerPickerStyles } from "../TimerPicker/styles";
 
@@ -40,10 +40,6 @@ export const generateStyles = (
             justifyContent: "center",
             overflow: "hidden",
             ...customContainerStyle,
-            // disable setting alignItems here because it can affect
-            // the FlatList's ability to calculate its layout, which can
-            // stop snapToOffsets working properly
-            alignItems: undefined,
         },
         contentContainer: {
             backgroundColor:
@@ -55,12 +51,8 @@ export const generateStyles = (
             alignItems: "center",
             borderRadius: 20,
             overflow: "hidden",
+            paddingHorizontal: 20,
             ...customContentContainerStyle,
-            // disable setting padding here because it can affect
-            // the FlatList's ability to calculate its layout, which can
-            // stop snapToOffsets working properly
-            paddingHorizontal: 0,
-            paddingVertical: 0,
         },
         buttonContainer: {
             flexDirection: "row",
@@ -116,10 +108,7 @@ export const generateStyles = (
         timerPickerStyles: {
             ...customTimerPickerStyles,
             pickerContainer: {
-                // set padding here instead of on modal content container because it can affect
-                // the FlatList's ability to calculate its layout, which can
-                // stop snapToOffsets working properly
-                paddingHorizontal: 20,
+                marginRight: "8%" as DimensionValue,
                 paddingTop: !variables?.hasModalTitle ? 20 : 0,
                 ...(customTimerPickerStyles?.pickerContainer ?? {}),
             },
