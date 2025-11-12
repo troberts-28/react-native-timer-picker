@@ -12,13 +12,11 @@ import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import {
     LayoutAnimation,
-    Platform,
     Pressable,
     ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
-    UIManager,
     View,
     useWindowDimensions,
 } from "react-native";
@@ -30,10 +28,6 @@ import { TimerPicker, TimerPickerModal } from "../../src";
 import { CustomButton } from "./components/CustomButton";
 import { formatTime } from "./utils/formatTime";
 // import { getClickSound } from "./utils/getClickSound";
-
-if (Platform.OS === "android") {
-    UIManager.setLayoutAnimationEnabledExperimental?.(true);
-}
 
 export default function App() {
     const { width: screenWidth } = useWindowDimensions();
@@ -158,9 +152,7 @@ export default function App() {
                 <TimerPickerModal
                     closeOnOverlayPress
                     LinearGradient={LinearGradient}
-                    modalProps={{
-                        overlayOpacity: 0.2,
-                    }}
+                    modalProps={{ overlayOpacity: 0.2 }}
                     modalTitle="Set Alarm"
                     onCancel={() => setShowPickerExample1(false)}
                     onConfirm={(pickedDuration) => {
@@ -169,9 +161,7 @@ export default function App() {
                     }}
                     pickerFeedback={pickerFeedback}
                     setIsVisible={setShowPickerExample1}
-                    styles={{
-                        theme: "dark",
-                    }}
+                    styles={{ theme: "dark" }}
                     visible={showPickerExample1}
                 />
             </View>
@@ -223,9 +213,7 @@ export default function App() {
                     }}
                     pickerFeedback={pickerFeedback}
                     setIsVisible={setShowPickerExample2}
-                    styles={{
-                        theme: "light",
-                    }}
+                    styles={{ theme: "light" }}
                     use12HourPicker
                     visible={showPickerExample2}
                 />
@@ -272,9 +260,7 @@ export default function App() {
                     closeOnOverlayPress
                     confirmButton={<CustomButton label="Confirm" />}
                     LinearGradient={LinearGradient}
-                    modalProps={{
-                        overlayOpacity: 0.2,
-                    }}
+                    modalProps={{ overlayOpacity: 0.2 }}
                     modalTitle="Set Alarm"
                     onCancel={() => setShowPickerExample3(false)}
                     onConfirm={(pickedDuration) => {
@@ -283,9 +269,7 @@ export default function App() {
                     }}
                     pickerFeedback={pickerFeedback}
                     setIsVisible={setShowPickerExample3}
-                    styles={{
-                        theme: "dark",
-                    }}
+                    styles={{ theme: "dark" }}
                     visible={showPickerExample3}
                 />
             </View>
@@ -298,11 +282,7 @@ export default function App() {
                 colors={["#202020", "#220578"]}
                 end={{ x: 1, y: 1 }}
                 start={{ x: 0, y: 0 }}
-                style={[
-                    styles.container,
-                    styles.page4Container,
-                    { width: screenWidth },
-                ]}>
+                style={[styles.container, { width: screenWidth }]}>
                 <TimerPicker
                     hourLabel=":"
                     LinearGradient={LinearGradient}
@@ -317,22 +297,16 @@ export default function App() {
                         pickerItem: {
                             fontSize: 34,
                         },
+                        pickerLabelContainer: {
+                            marginTop: -4,
+                            right: 0,
+                            left: undefined,
+                        },
                         pickerLabel: {
                             fontSize: 32,
-                            marginTop: 0,
                         },
                         pickerContainer: {
-                            marginRight: 6,
-                        },
-                        pickerItemContainer: {
-                            width: 100,
-                        },
-                        pickerLabelContainer: {
-                            right: -20,
-                            top: 0,
-                            bottom: 6,
-                            width: 46,
-                            alignItems: "center",
+                            paddingHorizontal: 50,
                         },
                     }}
                 />
@@ -357,18 +331,15 @@ export default function App() {
                     secondLabel="sec"
                     styles={{
                         theme: "light",
+                        labelOffsetPercentage: 0,
                         pickerItem: {
                             fontSize: 34,
                         },
                         pickerLabel: {
                             fontSize: 26,
-                            right: -20,
                         },
-                        pickerLabelContainer: {
-                            width: 60,
-                        },
-                        pickerItemContainer: {
-                            width: 150,
+                        pickerContainer: {
+                            paddingHorizontal: 50,
                         },
                     }}
                 />
@@ -377,9 +348,16 @@ export default function App() {
     }, [pickerFeedback, screenWidth]);
 
     const renderNavigationArrows = useMemo(() => {
+        const pageIndicesWithDarkBackground = [0, 3];
+        const isDarkBackground =
+            pageIndicesWithDarkBackground.includes(currentPageIndex);
+
+        const isFinalPage = currentPageIndex === 4;
+        const isFirstPage = currentPageIndex === 0;
+
         return (
             <>
-                {currentPageIndex !== 4 ? (
+                {!isFinalPage ? (
                     <Pressable
                         onPress={() => {
                             LayoutAnimation.configureNext(
@@ -399,17 +377,13 @@ export default function App() {
                             pressed && styles.chevronPressable_pressed,
                         ]}>
                         <Ionicons
-                            color={
-                                currentPageIndex % 2 !== 0
-                                    ? "#514242"
-                                    : "#F1F1F1"
-                            }
+                            color={isDarkBackground ? "#F1F1F1" : "#514242"}
                             name="chevron-forward"
                             size={32}
                         />
                     </Pressable>
                 ) : null}
-                {currentPageIndex !== 0 ? (
+                {!isFirstPage ? (
                     <Pressable
                         onPress={() => {
                             LayoutAnimation.configureNext(
@@ -429,11 +403,7 @@ export default function App() {
                             pressed && styles.chevronPressable_pressed,
                         ]}>
                         <Ionicons
-                            color={
-                                currentPageIndex % 2 !== 0
-                                    ? "#514242"
-                                    : "#F1F1F1"
-                            }
+                            color={isDarkBackground ? "#F1F1F1" : "#514242"}
                             name="chevron-back"
                             size={32}
                         />
@@ -474,9 +444,6 @@ const styles = StyleSheet.create({
     },
     page3Container: {
         backgroundColor: "#F1F1F1",
-    },
-    page4Container: {
-        flex: 1,
     },
     page5Container: {
         backgroundColor: "#F1F1F1",
