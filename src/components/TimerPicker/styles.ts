@@ -8,6 +8,7 @@ export interface CustomTimerPickerStyles {
     durationScrollFlatList?: ViewStyle;
     durationScrollFlatListContainer?: ViewStyle;
     durationScrollFlatListContentContainer?: ViewStyle;
+    labelOffsetPercentage?: number;
     pickerAmPmContainer?: ViewStyle;
     pickerAmPmLabel?: TextStyle;
     pickerContainer?: ViewStyle & { backgroundColor?: string };
@@ -27,41 +28,67 @@ const LIGHT_MODE_TEXT_COLOR = "#1B1B1B";
 
 export const generateStyles = (
     customStyles: CustomTimerPickerStyles | undefined
-) =>
-    StyleSheet.create({
+) => {
+    const backgroundColor =
+        customStyles?.backgroundColor ??
+        (customStyles?.theme === "dark"
+            ? DARK_MODE_BACKGROUND_COLOR
+            : LIGHT_MODE_BACKGROUND_COLOR);
+
+    const textColor =
+        customStyles?.theme === "dark"
+            ? DARK_MODE_TEXT_COLOR
+            : LIGHT_MODE_TEXT_COLOR;
+
+    const pickerLabelFontSize =
+        customStyles?.pickerLabel?.fontSize ??
+        customStyles?.text?.fontSize ??
+        18;
+    const pickerAmPmFontSize =
+        customStyles?.pickerAmPmLabel?.fontSize ??
+        customStyles?.pickerLabel?.fontSize ??
+        customStyles?.text?.fontSize ??
+        18;
+    const pickerItemFontSize =
+        customStyles?.pickerItem?.fontSize ??
+        customStyles?.text?.fontSize ??
+        25;
+
+    // This offset makes the picker label appear to be aligned with the picker item
+    // despite them having different font sizes
+    const pickerLabelVerticalOffset =
+        pickerItemFontSize - pickerLabelFontSize - 1;
+    const pickerAmPmVerticalOffset =
+        pickerItemFontSize - pickerAmPmFontSize - 1;
+
+    // The label is absolutely positioned, so we need to offset it for it to appear
+    // in the correct position. We offset it to the left of the container so that
+    // the width of the label doesn't impact its position.
+    const extraLabelOffsetPercentage = customStyles?.labelOffsetPercentage ?? 8;
+    const baseLeftOffsetPercentage = 70;
+    const labelOffsetPercentage =
+        baseLeftOffsetPercentage + extraLabelOffsetPercentage;
+
+    return StyleSheet.create({
         pickerContainer: {
             flexDirection: "row",
-            marginRight: "8%",
-            backgroundColor:
-                customStyles?.backgroundColor ??
-                (customStyles?.theme === "dark"
-                    ? DARK_MODE_BACKGROUND_COLOR
-                    : LIGHT_MODE_BACKGROUND_COLOR),
+            backgroundColor,
+            width: "100%",
             ...customStyles?.pickerContainer,
         },
         pickerLabelContainer: {
             position: "absolute",
-            right: 4,
             top: 0,
             bottom: 0,
+            left: `${labelOffsetPercentage}%`,
             justifyContent: "center",
-            minWidth:
-                (customStyles?.pickerLabel?.fontSize ??
-                    customStyles?.text?.fontSize ??
-                    25) * 0.65,
+            marginTop: pickerLabelVerticalOffset,
             ...customStyles?.pickerLabelContainer,
         },
         pickerLabel: {
             fontSize: 18,
             fontWeight: "bold",
-            marginTop:
-                (customStyles?.pickerItem?.fontSize ??
-                    customStyles?.text?.fontSize ??
-                    25) / 6,
-            color:
-                customStyles?.theme === "dark"
-                    ? DARK_MODE_TEXT_COLOR
-                    : LIGHT_MODE_TEXT_COLOR,
+            color: textColor,
             ...customStyles?.text,
             ...customStyles?.pickerLabel,
         },
@@ -70,36 +97,30 @@ export const generateStyles = (
             height: 50,
             justifyContent: "center",
             alignItems: "center",
-            width: (customStyles?.pickerItem?.fontSize ?? 25) * 3.6,
             ...customStyles?.pickerItemContainer,
         },
         pickerItem: {
             textAlignVertical: "center",
             fontSize: 25,
-            color:
-                customStyles?.theme === "dark"
-                    ? DARK_MODE_TEXT_COLOR
-                    : LIGHT_MODE_TEXT_COLOR,
+            overflow: "visible",
+            color: textColor,
             ...customStyles?.text,
             ...customStyles?.pickerItem,
         },
         pickerAmPmContainer: {
             position: "absolute",
-            right: 0,
             top: 0,
             bottom: 0,
+            left: `${labelOffsetPercentage}%`,
             justifyContent: "center",
+            marginTop: pickerAmPmVerticalOffset,
             ...customStyles?.pickerLabelContainer,
             ...customStyles?.pickerAmPmContainer,
         },
         pickerAmPmLabel: {
             fontSize: 18,
             fontWeight: "bold",
-            marginTop: (customStyles?.pickerItem?.fontSize ?? 25) / 6,
-            color:
-                customStyles?.theme === "dark"
-                    ? DARK_MODE_TEXT_COLOR
-                    : LIGHT_MODE_TEXT_COLOR,
+            color: textColor,
             ...customStyles?.text,
             ...customStyles?.pickerLabel,
             ...customStyles?.pickerAmPmLabel,
@@ -121,16 +142,19 @@ export const generateStyles = (
             height: "100%",
             ...customStyles?.pickerGradientOverlay,
         },
-        durationScrollFlatList: {
-            minWidth: 1,
-            width: "300%",
-            ...customStyles?.durationScrollFlatList,
-        },
         durationScrollFlatListContainer: {
-            overflow: "visible",
+            flex: 1,
             ...customStyles?.durationScrollFlatListContainer,
+        },
+        durationScrollFlatList: {
+            // These paddings allow the inner am/pm label to
+            // spill out of the flatlist
+            paddingRight: "25%",
+            marginRight: "-25%",
+            ...customStyles?.durationScrollFlatList,
         },
         durationScrollFlatListContentContainer: {
             ...customStyles?.durationScrollFlatListContentContainer,
         },
     });
+};

@@ -29,7 +29,7 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
 
 const styles = StyleSheet.create({
     customButtonContainer: {
-        marginHorizontal: 5,
+        marginHorizontal: 12,
     },
     customButtonGradient: {
         borderRadius: 15,

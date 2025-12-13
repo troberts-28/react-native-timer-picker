@@ -22,6 +22,7 @@ import {
 import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
 import { getDurationAndIndexFromScrollOffset } from "../../utils/getDurationAndIndexFromScrollOffset";
 import { getInitialScrollIndex } from "../../utils/getInitialScrollIndex";
+import PickerItem from "../PickerItem";
 
 import type {
     DurationScrollProps,
@@ -215,49 +216,18 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         const renderItem = useCallback<
             NonNullable<FlatListProps<string>["renderItem"]>
         >(
-            ({ item }) => {
-                let stringItem = item;
-                let intItem: number;
-                let isAm: boolean | undefined;
-
-                if (!is12HourPicker) {
-                    intItem = parseInt(item);
-                } else {
-                    isAm = item.includes("AM");
-                    stringItem = item.replace(/\s[AP]M/g, "");
-                    intItem = parseInt(stringItem);
-                }
-
-                return (
-                    <View
-                        key={item}
-                        style={styles.pickerItemContainer}
-                        testID="picker-item">
-                        <Text
-                            allowFontScaling={allowFontScaling}
-                            style={[
-                                styles.pickerItem,
-                                intItem > adjustedLimited.max ||
-                                intItem < adjustedLimited.min
-                                    ? styles.disabledPickerItem
-                                    : {},
-                            ]}>
-                            {stringItem}
-                        </Text>
-                        {is12HourPicker ? (
-                            <View
-                                pointerEvents="none"
-                                style={styles.pickerAmPmContainer}>
-                                <Text
-                                    allowFontScaling={allowFontScaling}
-                                    style={[styles.pickerAmPmLabel]}>
-                                    {isAm ? amLabel : pmLabel}
-                                </Text>
-                            </View>
-                        ) : null}
-                    </View>
-                );
-            },
+            ({ item }) => (
+                <PickerItem
+                    adjustedLimitedMax={adjustedLimited.max}
+                    adjustedLimitedMin={adjustedLimited.min}
+                    allowFontScaling={allowFontScaling}
+                    amLabel={amLabel}
+                    is12HourPicker={is12HourPicker}
+                    item={item}
+                    pmLabel={pmLabel}
+                    styles={styles}
+                />
+            ),
             [
                 adjustedLimited.max,
                 adjustedLimited.min,
@@ -265,11 +235,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 amLabel,
                 is12HourPicker,
                 pmLabel,
-                styles.disabledPickerItem,
-                styles.pickerAmPmContainer,
-                styles.pickerAmPmLabel,
-                styles.pickerItem,
-                styles.pickerItemContainer,
+                styles,
             ]
         );
 
@@ -577,6 +543,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         }, [
             FlatList,
             allowFontScaling,
+            decelerationRate,
             flatListRenderKey,
             getItemLayout,
             initialScrollIndex,
@@ -593,7 +560,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             styles.pickerLabel,
             styles.pickerLabelContainer,
             viewabilityConfigCallbackPairs,
-            decelerationRate,
         ]);
 
         const renderLinearGradient = useMemo(() => {
