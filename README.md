@@ -3,7 +3,7 @@
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?style=for-the-badge)]()
 ![platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS-brightgreen.svg?style=for-the-badge&colorB=191A17)
 [![Version](https://img.shields.io/npm/v/react-native-timer-picker.svg?style=for-the-badge)](https://www.npmjs.com/package/react-native-timer-picker)
-<!-- [![npm](https://img.shields.io/npm/dt/react-native-timer-picker.svg?style=for-the-badge&cacheSeconds=86400)](https://www.npmjs.com/package/react-native-timer-picker) -->
+[![npm](https://img.shields.io/npm/dt/react-native-timer-picker.svg?style=for-the-badge&cacheSeconds=86400)](https://www.npmjs.com/package/react-native-timer-picker)
 
 A simple, flexible, performant duration picker component for React Native apps 🔥
 
@@ -13,37 +13,37 @@ Works with Expo and bare React Native apps ✅
 
 Includes iOS-style haptic and audio feedback 🍏
 
-- [Demos 📱](#demos-)
-- [Installation 🚀](#installation-)
-- [Peer Dependencies 👶](#peer-dependencies-)
-    - [Linear Gradient](#linear-gradient)
-    - [Masked View](#masked-view)
-- [Examples 😎](#examples-)
-- [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
-- [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
-- [Timer Picker Modal with Custom Buttons 🎨](#timer-picker-modal-with-custom-buttons-)
-- [Timer Picker with Transparent Fade-Out (Dark Mode) 🌒](#timer-picker-with-transparent-fade-out-dark-mode-)
-- [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
-- [Props 💅](#props-)
-- [TimerPicker ⏲️](#timerpicker-️)
-    - [Custom Styles 👗](#custom-styles-)
-    - [Performance](#performance)
-    - [Custom FlatList](#custom-flatlist)
-- [TimerPickerModal ⏰](#timerpickermodal-)
-    - [Custom Styles 👕](#custom-styles--1)
-- [Methods 🔄](#methods-)
-- [TimerPicker](#timerpicker)
-- [TimerPickerModal](#timerpickermodal)
-- [Picker Feedback 📳🔉](#picker-feedback-)
-- [Audio Feedack](#audio-feedack)
-- [Haptic Feedback](#haptic-feedback)
-- [Feedback Example](#feedback-example)
-- [Expo-Specific Audio/Haptic Feedback (DEPRECATED)](#expo-specific-audiohaptic-feedback-deprecated)
-- [Contributing 🧑‍🤝‍🧑](#contributing-)
-- [Dev Setup](#dev-setup)
-- [GitHub Guidelines](#github-guidelines)
-- [Limitations ⚠](#limitations-)
-- [License 📝](#license-)
+  - [Demos 📱](#demos-)
+  - [Installation 🚀](#installation-)
+    - [Peer Dependencies 👶](#peer-dependencies-)
+      - [Linear Gradient](#linear-gradient)
+      - [Masked View](#masked-view)
+  - [Examples 😎](#examples-)
+    - [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
+    - [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
+    - [Timer Picker Modal with Custom Buttons 🎨](#timer-picker-modal-with-custom-buttons-)
+    - [Timer Picker with Transparent Fade-Out (Dark Mode) 🌒](#timer-picker-with-transparent-fade-out-dark-mode-)
+    - [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
+  - [Props 💅](#props-)
+    - [TimerPicker ⏲️](#timerpicker-️)
+      - [Custom Styles 👗](#custom-styles-)
+      - [Performance](#performance)
+      - [Custom FlatList](#custom-flatlist)
+    - [TimerPickerModal ⏰](#timerpickermodal-)
+      - [Custom Styles 👕](#custom-styles--1)
+  - [Methods 🔄](#methods-)
+    - [TimerPicker](#timerpicker)
+    - [TimerPickerModal](#timerpickermodal)
+  - [Picker Feedback 📳🔉](#picker-feedback-)
+    - [Audio Feedack](#audio-feedack)
+    - [Haptic Feedback](#haptic-feedback)
+    - [Feedback Example](#feedback-example)
+    - [Expo-Specific Audio/Haptic Feedback (DEPRECATED)](#expo-specific-audiohaptic-feedback-deprecated)
+  - [Contributing 🧑‍🤝‍🧑](#contributing-)
+    - [Dev Setup](#dev-setup)
+    - [GitHub Guidelines](#github-guidelines)
+  - [Limitations ⚠](#limitations-)
+  - [License 📝](#license-)
 
 <br>
 
@@ -99,7 +99,7 @@ To make the numbers fade in/out on a transparent background (e.g. if the picker 
 
 `import MaskedView from "@react-native-masked-view/masked-view";`
 
-**To enable the fade-out on a transparent background, you need to supply the imported `MaskedView` component AND one of the LinearGradient components as props to either TimerPickerModal or TimerPicker. (see [this example](#timer-picker-with-transparent-fade-out-dark-mode-))**
+**To enable the fade-out on a transparent background, you need to supply the imported `MaskedView` component AND one of the LinearGradient components as props to either TimerPickerModal or TimerPicker (see [this example](#timer-picker-with-transparent-fade-out-dark-mode-)).**
 
 <br>
 
@@ -146,7 +146,7 @@ const formatTime = ({
 return (
     <View style={{backgroundColor: "#514242", alignItems: "center", justifyContent: "center"}}>
         <Text style={{fontSize: 18, color: "#F1F1F1"}}>
-            {alarmStringExample !== null
+            {alarmString !== null
                 ? "Alarm set for"
                 : "No alarm set"}
         </Text>
@@ -181,22 +181,22 @@ return (
             </View>
         </TouchableOpacity>
         <TimerPickerModal
-            visible={showPicker}
-            setIsVisible={setShowPicker}
+            closeOnOverlayPress
+            LinearGradient={LinearGradient}
+            modalProps={{
+                overlayOpacity: 0.2,
+            }}
+            modalTitle="Set Alarm"
+            onCancel={() => setShowPicker(false)}
             onConfirm={(pickedDuration) => {
                 setAlarmString(formatTime(pickedDuration));
                 setShowPicker(false);
             }}
-            modalTitle="Set Alarm"
-            onCancel={() => setShowPicker(false)}
-            closeOnOverlayPress
-            LinearGradient={LinearGradient}
+            setIsVisible={setShowPicker}
             styles={{
                 theme: "dark",
             }}
-            modalProps={{
-                overlayOpacity: 0.2,
-            }}
+            visible={showPicker}
         />
     </View>
 )
@@ -244,7 +244,7 @@ const formatTime = ({
 return (
     <View style={{backgroundColor: "#F1F1F1", alignItems: "center", justifyContent: "center"}}>
         <Text style={{fontSize: 18, color: "#202020"}}>
-            {alarmStringExample !== null
+            {alarmString !== null
                 ? "Alarm set for"
                 : "No alarm set"}
         </Text>
@@ -271,27 +271,27 @@ return (
                             borderColor: "#8C8C8C",
                             color: "#8C8C8C"
                             }}>
-                            Set Alarm 🔔
+                            {"Set Alarm 🔔"}
                         </Text>
                     </View>
                 </TouchableOpacity>
             </View>
         </TouchableOpacity>
         <TimerPickerModal
-            visible={showPicker}
-            setIsVisible={setShowPicker}
+            closeOnOverlayPress
+            LinearGradient={LinearGradient}
+            modalTitle="Set Alarm"
+            onCancel={() => setShowPicker(false)}
             onConfirm={(pickedDuration) => {
                 setAlarmString(formatTime(pickedDuration));
                 setShowPicker(false);
             }}
-            modalTitle="Set Alarm"
-            onCancel={() => setShowPicker(false)}
-            closeOnOverlayPress
-            use12HourPicker
-            LinearGradient={LinearGradient}
+            setIsVisible={setShowPicker}
             styles={{
                 theme: "light",
             }}
+            use12HourPicker
+            visible={showPicker}
         />
     </View>
 )
@@ -305,15 +305,15 @@ return (
 ```jsx
 import { TimerPickerModal } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
-import { TouchableOpacity, Text, StyleSheet, Platform } from "react-native";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 // Custom Button Component
-interface MyCustomButtonProps {
+interface CustomButtonProps {
     label: string;
     onPress?: () => void;
 }
 
-const MyCustomButton: React.FC<MyCustomButtonProps> = ({ label, onPress }) => {
+const CustomButton: React.FC<CustomButtonProps> = ({ label, onPress }) => {
     return (
         <TouchableOpacity onPress={onPress} style={styles.customButtonContainer}>
             <LinearGradient
@@ -410,23 +410,24 @@ return (
             </View>
         </TouchableOpacity>
         <TimerPickerModal
-            visible={showPicker}
-            setIsVisible={setShowPicker}
+            cancelButton={<CustomButton label="Cancel" />}
+            closeOnOverlayPress
+            confirmButton={<CustomButton label="Confirm" />}
+            LinearGradient={LinearGradient}
+            modalProps={{
+                overlayOpacity: 0.2,
+            }}
+            modalTitle="Set Alarm"
+            onCancel={() => setShowPicker(false)}
             onConfirm={(pickedDuration) => {
                 setAlarmString(formatTime(pickedDuration));
                 setShowPicker(false);
             }}
-            modalTitle="Set Alarm"
-            onCancel={() => setShowPicker(false)}
-            closeOnOverlayPress
-            use12HourPicker
-            LinearGradient={LinearGradient}
-            // Custom buttons
-            cancelButton={<MyCustomButton label="Cancel" />}
-            confirmButton={<MyCustomButton label="Confirm" />}
+            setIsVisible={setShowPicker}
             styles={{
-                theme: "light",
+                theme: "dark",
             }}
+            visible={showPicker}
         />
     </View>
 )
@@ -443,46 +444,36 @@ import MaskedView from "@react-native-masked-view/masked-view"; // for transpare
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
 
 ....
-const [showPicker, setShowPicker] = useState(false);
-const [alarmString, setAlarmString] = useState<
-        string | null
-    >(null);
 
 return (
     <LinearGradient
         colors={["#202020", "#220578"]}
-        start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
+        start={{ x: 0, y: 0 }}
         style={{alignItems: "center", justifyContent: "center"}}>
         <TimerPicker
-            padWithNItems={2}
             hourLabel=":"
-            minuteLabel=":"
-            secondLabel=""
             LinearGradient={LinearGradient}
             MaskedView={MaskedView}
+            minuteLabel=":"
+            padWithNItems={2}
+            secondLabel=""
             styles={{
                 theme: "dark",
-                backgroundColor: "transparent", // transparent fade-out
+                backgroundColor: "transparent",
                 pickerItem: {
                     fontSize: 34,
                 },
+                pickerLabelContainer: {
+                    marginTop: -4,
+                    right: 0,
+                    left: undefined,
+                },
                 pickerLabel: {
                     fontSize: 32,
-                    marginTop: 0,
                 },
                 pickerContainer: {
-                    marginRight: 6,
-                },
-                pickerItemContainer: {
-                    width: 100
-                },
-                pickerLabelContainer: {
-                    right: -20,
-                    top: 0,
-                    bottom: 6,
-                    width: 40,
-                    alignItems: "center",
+                    paddingHorizontal: 50,
                 },
             }}
         />
@@ -500,33 +491,26 @@ import { TimerPicker } from "react-native-timer-picker";
 import { LinearGradient } from "expo-linear-gradient"; // or `import LinearGradient from "react-native-linear-gradient"`
 
 ....
-const [showPicker, setShowPicker] = useState(false);
-const [alarmString, setAlarmString] = useState<
-        string | null
-    >(null);
 
 return (
     <View style={{backgroundColor: "#F1F1F1", alignItems: "center", justifyContent: "center"}}>
         <TimerPicker
-            padWithNItems={3}
             hideHours
-            minuteLabel="min"
-            secondLabel="sec"
             LinearGradient={LinearGradient}
+            minuteLabel="min"
+            padWithNItems={3}
+            secondLabel="sec"
             styles={{
                 theme: "light",
+                labelOffsetPercentage: 0,
                 pickerItem: {
                     fontSize: 34,
                 },
                 pickerLabel: {
                     fontSize: 26,
-                    right: -20,
                 },
-                pickerLabelContainer: {
-                    width: 60,
-                },
-                pickerItemContainer: {
-                    width: 150,
+                pickerContainer: {
+                    paddingHorizontal: 50,
                 },
             }}
         />
@@ -596,15 +580,21 @@ return (
 |            styles             | Custom styles for the timer picker                                                                                                                                                                                       |                                                                           [CustomTimerPickerStyles](#custom-styles-)                                                                            |               -                |  false   |
 |       decelerationRate        | Set how quickly the picker decelerates after the user lifts their finger                                                                                                                                                 |                                                                                   'fast', 'normal', or Number                                                                                   |              0.88              |  false   |
 
-#### Custom Styles 👗
+#### Custom Styles 👗 
 
-The following custom styles can be supplied to re-style the component in any way. Various styles are applied by default - you can take a look at these [here](src/components/TimerPicker/styles.ts).
+The component should look good straight out of the box, but you can use these styles to make it fit in with your App's theme:
 
 |               Style Prop               | Description                                                          |                   Type                   |
 | :------------------------------------: | :------------------------------------------------------------------- | :--------------------------------------: |
 |                 theme                  | Theme of the component                                               |            "light" \| "dark"             |
 |            backgroundColor             | Main background color                                                |                  string                  |
 |                  text                  | Base text style                                                      |                TextStyle                 |
+|       labelOffsetPercentage            | Percentage offset for horizonal label positioning relative to the picker                        |                  number                  |
+
+For deeper style customization, you can supply the following custom styles to adjust the component in any way. These are applied on top of the default styling so take a look at those [styles](src/components/TimerPicker/styles.ts) if something isn't adjusting in the way you'd expect.
+
+|               Style Prop               | Description                                                          |                   Type                   |
+| :------------------------------------: | :------------------------------------------------------------------- | :--------------------------------------: |
 |            pickerContainer             | Main container for the picker                                        | ViewStyle & { backgroundColor?: string } |
 |          pickerLabelContainer          | Container for the picker's labels                                    |                ViewStyle                 |
 |              pickerLabel               | Style for the picker's labels                                        |                TextStyle                 |
@@ -619,7 +609,7 @@ The following custom styles can be supplied to re-style the component in any way
 |    durationScrollFlatListContainer     | Style for the View that contains the Flatlist in each picker         |                ViewStyle                 |
 | durationScrollFlatListContentContainer | Style for the Flatlist's `contentContainerStyle` prop in each picker |                ViewStyle                 |
 
-Note the minor limitations to the allowed styles for `pickerContainer` and `pickerItemContainer`. These are made because these styles are used for internal calculations and all possible `backgroundColor`/`height` types are not supported.
+**Note:** There are minor limitations on `pickerContainer.backgroundColor` and `pickerItemContainer.height`. These properties must be simple values (string and number respectively) as they are used in internal calculations for scroll positioning, gradient overlays, and snap behavior. Complex computed values or union types are not supported for these specific properties.
 
 #### Performance
 
@@ -680,17 +670,18 @@ The TimerPickerModal component accepts all [TimerPicker props](#timerpicker-️)
 
 #### Custom Styles 👕
 
-The following custom styles can be supplied to re-style the component in any way. You can also supply all of the styles specified in [CustomTimerPickerStyles](#custom-styles-). Various styles are applied by default - you can take a look at these [here](src/components/TimerPickerModal/styles.ts).
+The following custom styles can be supplied to re-style the component in any way. You can also supply all of the styles specified in [CustomTimerPickerStyles](#custom-styles-). These are applied on top of the default styling so take a look at those [styles](src/components/TimerPickerModal/styles.ts) if something isn't adjusting in the way you'd expect.
 
 |    Style Prop    | Description                                |   Type    |
 | :--------------: | :----------------------------------------- | :-------: |
-|    container     | Main container's style                     | ViewStyle |
-| contentContainer | Style for the content's container          | ViewStyle |
-| buttonContainer  | Style for the container around the buttons | ViewStyle |
+|    container     | Style for the modal container              | ViewStyle |
+| contentContainer | Style for the modal content's container    | ViewStyle |
+| buttonContainer  | Style for the container for the buttons    | ViewStyle |
 |      button      | General style for both buttons             | TextStyle |
 |   cancelButton   | Style for the cancel button                | TextStyle |
 |  confirmButton   | Style for the confirm button               | TextStyle |
 |    modalTitle    | Style for the title of the modal           | TextStyle |
+|    ...           | Supply any of [TimerPicker's custom styles]((#custom-styles-))  | -         |
 
 <br>
 

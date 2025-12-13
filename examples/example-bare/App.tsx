@@ -238,7 +238,7 @@ export default function App() {
                     styles.page3Container,
                     { width: screenWidth },
                 ]}>
-                <Text style={styles.textDark}>
+                <Text style={styles.textLight}>
                     {alarmStringExample3 !== null
                         ? "Alarm set for"
                         : "No alarm set"}
@@ -248,7 +248,7 @@ export default function App() {
                     onPress={() => setShowPickerExample3(true)}>
                     <View style={styles.touchableContainer}>
                         {alarmStringExample3 !== null ? (
-                            <Text style={styles.alarmTextDark}>
+                            <Text style={styles.alarmTextLight}>
                                 {alarmStringExample3}
                             </Text>
                         ) : null}
@@ -257,7 +257,7 @@ export default function App() {
                             onPress={() => setShowPickerExample3(true)}>
                             <View style={styles.buttonContainer}>
                                 <Text
-                                    style={[styles.button, styles.buttonDark]}>
+                                    style={[styles.button, styles.buttonLight]}>
                                     {"Set Alarm 🔔"}
                                 </Text>
                             </View>
@@ -295,11 +295,7 @@ export default function App() {
                 colors={["#202020", "#220578"]}
                 end={{ x: 1, y: 1 }}
                 start={{ x: 0, y: 0 }}
-                style={[
-                    styles.container,
-                    styles.page4Container,
-                    { width: screenWidth },
-                ]}>
+                style={[styles.container, { width: screenWidth }]}>
                 <TimerPicker
                     hourLabel=":"
                     LinearGradient={LinearGradient}
@@ -314,22 +310,16 @@ export default function App() {
                         pickerItem: {
                             fontSize: 34,
                         },
+                        pickerLabelContainer: {
+                            marginTop: -4,
+                            right: 0,
+                            left: undefined,
+                        },
                         pickerLabel: {
                             fontSize: 32,
-                            marginTop: 0,
                         },
                         pickerContainer: {
-                            marginRight: 6,
-                        },
-                        pickerItemContainer: {
-                            width: 100,
-                        },
-                        pickerLabelContainer: {
-                            right: -20,
-                            top: 0,
-                            bottom: 6,
-                            width: 46,
-                            alignItems: "center",
+                            paddingHorizontal: 50,
                         },
                     }}
                 />
@@ -354,18 +344,15 @@ export default function App() {
                     secondLabel="sec"
                     styles={{
                         theme: "light",
+                        labelOffsetPercentage: 0,
                         pickerItem: {
                             fontSize: 34,
                         },
                         pickerLabel: {
                             fontSize: 26,
-                            right: -20,
                         },
-                        pickerLabelContainer: {
-                            width: 60,
-                        },
-                        pickerItemContainer: {
-                            width: 150,
+                        pickerContainer: {
+                            paddingHorizontal: 50,
                         },
                     }}
                 />
@@ -401,9 +388,6 @@ const styles = StyleSheet.create({
     },
     page3Container: {
         backgroundColor: "#F1F1F1",
-    },
-    page4Container: {
-        flex: 1,
     },
     page5Container: {
         backgroundColor: "#F1F1F1",
@@ -442,5 +426,16 @@ const styles = StyleSheet.create({
     buttonLight: { borderColor: "#8C8C8C", color: "#8C8C8C" },
     buttonContainer: {
         marginTop: 30,
+    },
+    chevronPressable: {
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        padding: 8,
+    },
+    chevronPressable_pressed: {
+        opacity: 0.7,
     },
 });
