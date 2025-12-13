@@ -22,7 +22,7 @@ describe("generateNumbers", () => {
                 repeatNTimes: 1,
                 disableInfiniteScroll: true,
             });
-            expect(result).toEqual([" 0", " 2", " 4", " 6", " 8"]);
+            expect(result).toEqual(["\u20070", "\u20072", "\u20074", "\u20076", "\u20078"]);
         });
 
         it("generates numbers with interval of 5", () => {
@@ -32,7 +32,7 @@ describe("generateNumbers", () => {
                 repeatNTimes: 1,
                 disableInfiniteScroll: true,
             });
-            expect(result).toEqual([" 0", " 5", "10", "15"]);
+            expect(result).toEqual(["\u20070", "\u20075", "10", "15"]);
         });
 
         it("returns empty array when numberOfItems is 0", () => {
@@ -88,7 +88,7 @@ describe("generateNumbers", () => {
                 padNumbersWithZero: false,
                 disableInfiniteScroll: true,
             });
-            expect(result).toEqual([" 0", " 1", " 2", " 3", " 4"]);
+            expect(result).toEqual(["\u20070", "\u20071", "\u20072", "\u20073", "\u20074"]);
         });
     });
 
@@ -100,7 +100,7 @@ describe("generateNumbers", () => {
                 repeatNTimes: 1,
                 disableInfiniteScroll: true,
             });
-            expect(result).toEqual(["", "", " 0", " 1", " 2", "", ""]);
+            expect(result).toEqual(["", "", "\u20070", "\u20071", "\u20072", "", ""]);
             expect(result).toHaveLength(7);
         });
 
@@ -111,7 +111,7 @@ describe("generateNumbers", () => {
                 repeatNTimes: 1,
                 disableInfiniteScroll: true,
             });
-            expect(result).toEqual(["", " 0", " 1", " 2", ""]);
+            expect(result).toEqual(["", "\u20070", "\u20071", "\u20072", ""]);
         });
 
         it("adds padding with 3 items", () => {
@@ -121,7 +121,7 @@ describe("generateNumbers", () => {
                 repeatNTimes: 1,
                 disableInfiniteScroll: true,
             });
-            expect(result).toEqual(["", "", "", " 0", " 1", "", "", ""]);
+            expect(result).toEqual(["", "", "", "\u20070", "\u20071", "", "", ""]);
         });
     });
 
@@ -133,7 +133,7 @@ describe("generateNumbers", () => {
                 repeatNTimes: 2,
                 disableInfiniteScroll: false,
             });
-            expect(result).toEqual([" 0", " 1", " 2", " 0", " 1", " 2"]);
+            expect(result).toEqual(["\u20070", "\u20071", "\u20072", "\u20070", "\u20071", "\u20072"]);
         });
 
         it("repeats numbers when repeatNTimes is 3", () => {
@@ -143,7 +143,7 @@ describe("generateNumbers", () => {
                 repeatNTimes: 3,
                 disableInfiniteScroll: false,
             });
-            expect(result).toEqual([" 0", " 1", " 0", " 1", " 0", " 1"]);
+            expect(result).toEqual(["\u20070", "\u20071", "\u20070", "\u20071", "\u20070", "\u20071"]);
         });
     });
 
@@ -192,7 +192,7 @@ describe("generate12HourNumbers", () => {
                 disableInfiniteScroll: false,
             });
             expect(result).toHaveLength(24);
-            expect(result[0]).toBe(" 0 AM");
+            expect(result[0]).toBe("12 AM");
             expect(result[11]).toBe("11 AM");
             expect(result[12]).toBe("12 PM");
             expect(result[23]).toBe("11 PM");
@@ -205,7 +205,7 @@ describe("generate12HourNumbers", () => {
                 disableInfiniteScroll: false,
             });
             expect(result).toHaveLength(12);
-            expect(result[0]).toBe(" 0 AM");
+            expect(result[0]).toBe("12 AM");
             expect(result[5]).toBe("10 AM");
             expect(result[6]).toBe("12 PM");
             expect(result[11]).toBe("10 PM");
@@ -218,10 +218,10 @@ describe("generate12HourNumbers", () => {
                 disableInfiniteScroll: false,
             });
             expect(result).toHaveLength(8);
-            expect(result[0]).toBe(" 0 AM");
-            expect(result[3]).toBe(" 9 AM");
+            expect(result[0]).toBe("12 AM");
+            expect(result[3]).toBe("\u20079 AM");
             expect(result[4]).toBe("12 PM");
-            expect(result[7]).toBe(" 9 PM");
+            expect(result[7]).toBe("\u20079 PM");
         });
 
         it("generates hours with 4-hour interval", () => {
@@ -231,10 +231,10 @@ describe("generate12HourNumbers", () => {
                 disableInfiniteScroll: false,
             });
             expect(result).toHaveLength(6);
-            expect(result[0]).toBe(" 0 AM");
-            expect(result[2]).toBe(" 8 AM");
+            expect(result[0]).toBe("12 AM");
+            expect(result[2]).toBe("\u20078 AM");
             expect(result[3]).toBe("12 PM");
-            expect(result[5]).toBe(" 8 PM");
+            expect(result[5]).toBe("\u20078 PM");
         });
 
         it("generates hours with 6-hour interval", () => {
@@ -244,10 +244,10 @@ describe("generate12HourNumbers", () => {
                 disableInfiniteScroll: false,
             });
             expect(result).toHaveLength(4);
-            expect(result[0]).toBe(" 0 AM");
-            expect(result[1]).toBe(" 6 AM");
+            expect(result[0]).toBe("12 AM");
+            expect(result[1]).toBe("\u20076 AM");
             expect(result[2]).toBe("12 PM");
-            expect(result[3]).toBe(" 6 PM");
+            expect(result[3]).toBe("\u20076 PM");
         });
     });
 
@@ -259,7 +259,7 @@ describe("generate12HourNumbers", () => {
                 padNumbersWithZero: true,
                 disableInfiniteScroll: false,
             });
-            expect(result[0]).toBe("00 AM");
+            expect(result[0]).toBe("12 AM");
             expect(result[1]).toBe("01 AM");
             expect(result[9]).toBe("09 AM");
             expect(result[10]).toBe("10 AM");
@@ -287,10 +287,10 @@ describe("generate12HourNumbers", () => {
             });
             expect(result[0]).toBe("");
             expect(result[1]).toBe("");
-            expect(result[2]).toBe(" 0 AM");
-            expect(result[3]).toBe(" 6 AM");
+            expect(result[2]).toBe("12 AM");
+            expect(result[3]).toBe("\u20076 AM");
             expect(result[4]).toBe("12 PM");
-            expect(result[5]).toBe(" 6 PM");
+            expect(result[5]).toBe("\u20076 PM");
             expect(result[6]).toBe("");
             expect(result[7]).toBe("");
             expect(result).toHaveLength(8);
@@ -302,8 +302,8 @@ describe("generate12HourNumbers", () => {
                 padWithNItems: 2,
                 disableInfiniteScroll: false,
             });
-            expect(result[0]).toBe(" 0 AM");
-            expect(result[3]).toBe(" 6 PM");
+            expect(result[0]).toBe("12 AM");
+            expect(result[3]).toBe("\u20076 PM");
             expect(result).toHaveLength(4);
         });
     });
@@ -317,10 +317,10 @@ describe("generate12HourNumbers", () => {
                 disableInfiniteScroll: false,
             });
             expect(result).toHaveLength(8);
-            expect(result[0]).toBe(" 0 AM");
-            expect(result[3]).toBe(" 6 PM");
-            expect(result[4]).toBe(" 0 AM");
-            expect(result[7]).toBe(" 6 PM");
+            expect(result[0]).toBe("12 AM");
+            expect(result[3]).toBe("\u20076 PM");
+            expect(result[4]).toBe("12 AM");
+            expect(result[7]).toBe("\u20076 PM");
         });
 
         it("repeats hours when repeatNTimes is 3", () => {
@@ -331,11 +331,11 @@ describe("generate12HourNumbers", () => {
                 disableInfiniteScroll: false,
             });
             expect(result).toHaveLength(6);
-            expect(result[0]).toBe(" 0 AM");
+            expect(result[0]).toBe("12 AM");
             expect(result[1]).toBe("12 PM");
-            expect(result[2]).toBe(" 0 AM");
+            expect(result[2]).toBe("12 AM");
             expect(result[3]).toBe("12 PM");
-            expect(result[4]).toBe(" 0 AM");
+            expect(result[4]).toBe("12 AM");
             expect(result[5]).toBe("12 PM");
         });
 
@@ -357,7 +357,7 @@ describe("generate12HourNumbers", () => {
                 padNumbersWithZero: true,
                 disableInfiniteScroll: true,
             });
-            expect(result).toEqual(["", "00 AM", "12 PM", ""]);
+            expect(result).toEqual(["", "12 AM", "12 PM", ""]);
         });
 
         it("combines all options", () => {
@@ -369,11 +369,11 @@ describe("generate12HourNumbers", () => {
                 disableInfiniteScroll: false,
             });
             expect(result).toHaveLength(8);
-            expect(result[0]).toBe("00 AM");
+            expect(result[0]).toBe("12 AM");
             expect(result[1]).toBe("06 AM");
             expect(result[2]).toBe("12 PM");
             expect(result[3]).toBe("06 PM");
-            expect(result[4]).toBe("00 AM");
+            expect(result[4]).toBe("12 AM");
             expect(result[7]).toBe("06 PM");
         });
     });
