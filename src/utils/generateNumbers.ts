@@ -107,14 +107,15 @@ export const generate12HourNumbers = (options: {
 }) => {
     let numbers: string[] = [];
 
-    // Generate numbers from 0 to 11 for AM
+    // Generate numbers from 12 AM to 11 AM
     for (let i = 0; i < 12; i += options.interval) {
+        const hour = i === 0 ? 12 : i;
         numbers.push(
-            `${padNumber(i, { padWithZero: options.padNumbersWithZero })} AM`
+            `${padNumber(hour, { padWithZero: options.padNumbersWithZero })} AM`
         );
     }
 
-    // Generate numbers from 12 to 11 for PM
+    // Generate numbers from 12 PM to 11 PM
     for (let i = 12; i < 24; i += options.interval) {
         const hour = i > 12 ? i - 12 : i;
         numbers.push(
