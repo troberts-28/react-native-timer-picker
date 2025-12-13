@@ -29,10 +29,10 @@ describe("padNumber", () => {
 
     describe("padding with space", () => {
         it("pads single digit with space", () => {
-            expect(padNumber(0, { padWithZero: false })).toBe(" 0");
-            expect(padNumber(1, { padWithZero: false })).toBe(" 1");
-            expect(padNumber(5, { padWithZero: false })).toBe(" 5");
-            expect(padNumber(9, { padWithZero: false })).toBe(" 9");
+            expect(padNumber(0, { padWithZero: false })).toBe("\u20070");
+            expect(padNumber(1, { padWithZero: false })).toBe("\u20071");
+            expect(padNumber(5, { padWithZero: false })).toBe("\u20075");
+            expect(padNumber(9, { padWithZero: false })).toBe("\u20079");
         });
 
         it("does not pad double digits", () => {
@@ -55,10 +55,10 @@ describe("padNumber", () => {
 
     describe("no options provided", () => {
         it("defaults to space padding for single digits", () => {
-            expect(padNumber(0)).toBe(" 0");
-            expect(padNumber(1)).toBe(" 1");
-            expect(padNumber(5)).toBe(" 5");
-            expect(padNumber(9)).toBe(" 9");
+            expect(padNumber(0)).toBe("\u20070");
+            expect(padNumber(1)).toBe("\u20071");
+            expect(padNumber(5)).toBe("\u20075");
+            expect(padNumber(9)).toBe("\u20079");
         });
 
         it("does not pad double digits", () => {
@@ -76,9 +76,9 @@ describe("padNumber", () => {
 
     describe("undefined padWithZero option", () => {
         it("defaults to space padding", () => {
-            expect(padNumber(0, {})).toBe(" 0");
-            expect(padNumber(5, {})).toBe(" 5");
-            expect(padNumber(9, {})).toBe(" 9");
+            expect(padNumber(0, {})).toBe("\u20070");
+            expect(padNumber(5, {})).toBe("\u20075");
+            expect(padNumber(9, {})).toBe("\u20079");
         });
 
         it("does not pad double digits", () => {
@@ -90,8 +90,8 @@ describe("padNumber", () => {
     describe("edge cases at boundary", () => {
         it("handles value exactly 9 (last single digit)", () => {
             expect(padNumber(9, { padWithZero: true })).toBe("09");
-            expect(padNumber(9, { padWithZero: false })).toBe(" 9");
-            expect(padNumber(9)).toBe(" 9");
+            expect(padNumber(9, { padWithZero: false })).toBe("\u20079");
+            expect(padNumber(9)).toBe("\u20079");
         });
 
         it("handles value exactly 10 (first double digit)", () => {
@@ -102,8 +102,8 @@ describe("padNumber", () => {
 
         it("handles value exactly 0", () => {
             expect(padNumber(0, { padWithZero: true })).toBe("00");
-            expect(padNumber(0, { padWithZero: false })).toBe(" 0");
-            expect(padNumber(0)).toBe(" 0");
+            expect(padNumber(0, { padWithZero: false })).toBe("\u20070");
+            expect(padNumber(0)).toBe("\u20070");
         });
     });
 
@@ -134,8 +134,8 @@ describe("padNumber", () => {
         });
 
         it("formats days without padding preference", () => {
-            expect(padNumber(1, { padWithZero: false })).toBe(" 1");
-            expect(padNumber(7, { padWithZero: false })).toBe(" 7");
+            expect(padNumber(1, { padWithZero: false })).toBe("\u20071");
+            expect(padNumber(7, { padWithZero: false })).toBe("\u20077");
             expect(padNumber(30, { padWithZero: false })).toBe("30");
             expect(padNumber(365, { padWithZero: false })).toBe("365");
         });
@@ -153,7 +153,7 @@ describe("padNumber", () => {
         it("correctly pads all single digits 0-9 with space", () => {
             for (let i = 0; i < 10; i++) {
                 const result = padNumber(i, { padWithZero: false });
-                expect(result).toBe(` ${i}`);
+                expect(result).toBe(`\u2007${i}`);
                 expect(result).toHaveLength(2);
             }
         });
