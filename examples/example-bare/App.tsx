@@ -10,7 +10,6 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import {
     LayoutAnimation,
     Platform,
-    Pressable,
     ScrollView,
     StyleSheet,
     Text,
@@ -361,91 +360,18 @@ export default function App() {
         );
     }, [pickerFeedback, screenWidth]);
 
-    const renderNavigationArrows = useMemo(() => {
-        const pageIndicesWithDarkBackground = [0, 3];
-        const isDarkBackground =
-            pageIndicesWithDarkBackground.includes(currentPageIndex);
-
-        const isFinalPage = currentPageIndex === 4;
-        const isFirstPage = currentPageIndex === 0;
-
-        return (
-            <>
-                {!isFinalPage ? (
-                    <Pressable
-                        onPress={() => {
-                            LayoutAnimation.configureNext(
-                                LayoutAnimation.Presets.easeInEaseOut
-                            );
-                            setCurrentPageIndex((currentPageIndex) => {
-                                scrollViewRef.current?.scrollTo({
-                                    x: screenWidth * (currentPageIndex + 1),
-                                    animated: true,
-                                });
-                                return currentPageIndex + 1;
-                            });
-                        }}
-                        style={({ pressed }) => [
-                            styles.chevronPressable,
-                            { right: 8 },
-                            pressed && styles.chevronPressable_pressed,
-                        ]}>
-                        <Text
-                            style={{
-                                color: isDarkBackground ? "#F1F1F1" : "#514242",
-                                fontSize: 32,
-                            }}>
-                            {"›"}
-                        </Text>
-                    </Pressable>
-                ) : null}
-                {!isFirstPage ? (
-                    <Pressable
-                        onPress={() => {
-                            LayoutAnimation.configureNext(
-                                LayoutAnimation.Presets.easeInEaseOut
-                            );
-                            setCurrentPageIndex((currentPageIndex) => {
-                                scrollViewRef.current?.scrollTo({
-                                    x: screenWidth * (currentPageIndex - 1),
-                                    animated: true,
-                                });
-                                return currentPageIndex - 1;
-                            });
-                        }}
-                        style={({ pressed }) => [
-                            styles.chevronPressable,
-                            { left: 8 },
-                            pressed && styles.chevronPressable_pressed,
-                        ]}>
-                        <Text
-                            style={{
-                                color: isDarkBackground ? "#F1F1F1" : "#514242",
-                                fontSize: 32,
-                            }}>
-                            {"‹"}
-                        </Text>
-                    </Pressable>
-                ) : null}
-            </>
-        );
-    }, [currentPageIndex, screenWidth]);
-
     return (
-        <>
-            <ScrollView
-                ref={scrollViewRef}
-                horizontal
-                onMomentumScrollEnd={onMomentumScrollEnd}
-                pagingEnabled>
-                {renderExample1}
-                {renderExample2}
-                {renderExample3}
-                {renderExample4}
-                {renderExample5}
-            </ScrollView>
-            {renderNavigationArrows}
-        </>
+        <ScrollView
+            ref={scrollViewRef}
+            horizontal
+            onMomentumScrollEnd={onMomentumScrollEnd}
+            pagingEnabled>
+            {renderExample1}
+            {renderExample2}
+            {renderExample3}
+            {renderExample4}
+            {renderExample5}
+        </ScrollView>
     );
 }
 
