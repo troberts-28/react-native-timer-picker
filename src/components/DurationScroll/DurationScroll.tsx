@@ -62,6 +62,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             pmLabel,
             repeatNumbersNTimes = 3,
             repeatNumbersNTimesNotExplicitlySet,
+            selectedValue,
             styles,
             testID,
         } = props;
@@ -225,6 +226,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                     is12HourPicker={is12HourPicker}
                     item={item}
                     pmLabel={pmLabel}
+                    selectedValue={selectedValue}
                     styles={styles}
                 />
             ),
@@ -235,6 +237,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
                 amLabel,
                 is12HourPicker,
                 pmLabel,
+                selectedValue,
                 styles,
             ]
         );

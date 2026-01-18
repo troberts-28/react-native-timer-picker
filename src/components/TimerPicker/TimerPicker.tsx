@@ -1,3 +1,4 @@
+
 import React, {
     forwardRef,
     useEffect,
@@ -221,6 +222,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         repeatNumbersNTimesNotExplicitlySet={
                             props?.repeatDayNumbersNTimes === undefined
                         }
+                        selectedValue={selectedDays}
                         styles={styles}
                         testID="duration-scroll-day"
                         {...otherProps}
@@ -253,6 +255,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         repeatNumbersNTimesNotExplicitlySet={
                             props?.repeatHourNumbersNTimes === undefined
                         }
+                        selectedValue={selectedHours}
                         styles={styles}
                         testID="duration-scroll-hour"
                         {...otherProps}
@@ -280,6 +283,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         repeatNumbersNTimesNotExplicitlySet={
                             props?.repeatMinuteNumbersNTimes === undefined
                         }
+                        selectedValue={selectedMinutes}
                         styles={styles}
                         testID="duration-scroll-minute"
                         {...otherProps}
@@ -307,6 +311,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         repeatNumbersNTimesNotExplicitlySet={
                             props?.repeatSecondNumbersNTimes === undefined
                         }
+                        selectedValue={selectedSeconds}
                         styles={styles}
                         testID="duration-scroll-second"
                         {...otherProps}

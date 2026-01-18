@@ -1,3 +1,4 @@
+
 import { StyleSheet } from "react-native";
 import type { TextStyle, ViewStyle } from "react-native";
 
@@ -17,6 +18,7 @@ export interface CustomTimerPickerStyles {
     pickerItemContainer?: ViewStyle & { height?: number };
     pickerLabel?: TextStyle;
     pickerLabelContainer?: ViewStyle;
+    selectedPickerItem?: TextStyle;
     text?: TextStyle;
     theme?: "light" | "dark";
 }
@@ -106,6 +108,15 @@ export const generateStyles = (
             color: textColor,
             ...customStyles?.text,
             ...customStyles?.pickerItem,
+        },
+        selectedPickerItem: {
+            textAlignVertical: "center",
+            fontSize: 25,
+            overflow: "visible",
+            color: textColor,
+            ...customStyles?.text,
+            ...customStyles?.pickerItem,
+            ...customStyles?.selectedPickerItem,
         },
         pickerAmPmContainer: {
             position: "absolute",
