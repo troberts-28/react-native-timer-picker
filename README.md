@@ -13,37 +13,37 @@ Works with Expo and bare React Native apps ✅
 
 Includes iOS-style haptic and audio feedback 🍏
 
-  - [Demos 📱](#demos-)
-  - [Installation 🚀](#installation-)
-    - [Peer Dependencies 👶](#peer-dependencies-)
-      - [Linear Gradient](#linear-gradient)
-      - [Masked View](#masked-view)
-  - [Examples 😎](#examples-)
-    - [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
-    - [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
-    - [Timer Picker Modal with Custom Buttons 🎨](#timer-picker-modal-with-custom-buttons-)
-    - [Timer Picker with Transparent Fade-Out (Dark Mode) 🌒](#timer-picker-with-transparent-fade-out-dark-mode-)
-    - [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
-  - [Props 💅](#props-)
-    - [TimerPicker ⏲️](#timerpicker-️)
-      - [Custom Styles 👗](#custom-styles-)
-      - [Performance](#performance)
-      - [Custom FlatList](#custom-flatlist)
-    - [TimerPickerModal ⏰](#timerpickermodal-)
-      - [Custom Styles 👕](#custom-styles--1)
-  - [Methods 🔄](#methods-)
-    - [TimerPicker](#timerpicker)
-    - [TimerPickerModal](#timerpickermodal)
-  - [Picker Feedback 📳🔉](#picker-feedback-)
-    - [Audio Feedack](#audio-feedack)
-    - [Haptic Feedback](#haptic-feedback)
-    - [Feedback Example](#feedback-example)
-    - [Expo-Specific Audio/Haptic Feedback (DEPRECATED)](#expo-specific-audiohaptic-feedback-deprecated)
-  - [Contributing 🧑‍🤝‍🧑](#contributing-)
-    - [Dev Setup](#dev-setup)
-    - [GitHub Guidelines](#github-guidelines)
-  - [Limitations ⚠](#limitations-)
-  - [License 📝](#license-)
+-   [Demos 📱](#demos-)
+-   [Installation 🚀](#installation-)
+    -   [Peer Dependencies 👶](#peer-dependencies-)
+        -   [Linear Gradient](#linear-gradient)
+        -   [Masked View](#masked-view)
+-   [Examples 😎](#examples-)
+    -   [Timer Picker Modal (Dark Mode) 🌚](#timer-picker-modal-dark-mode-)
+    -   [Timer Picker Modal (Light Mode) 🌞](#timer-picker-modal-light-mode-)
+    -   [Timer Picker Modal with Custom Buttons 🎨](#timer-picker-modal-with-custom-buttons-)
+    -   [Timer Picker with Transparent Fade-Out (Dark Mode) 🌒](#timer-picker-with-transparent-fade-out-dark-mode-)
+    -   [Timer Picker with Customisation (Light Mode) 🌔](#timer-picker-with-customisation-light-mode-)
+-   [Props 💅](#props-)
+    -   [TimerPicker ⏲️](#timerpicker-️)
+        -   [Custom Styles 👗](#custom-styles-)
+        -   [Performance](#performance)
+        -   [Custom FlatList](#custom-flatlist)
+    -   [TimerPickerModal ⏰](#timerpickermodal-)
+        -   [Custom Styles 👕](#custom-styles--1)
+-   [Methods 🔄](#methods-)
+    -   [TimerPicker](#timerpicker)
+    -   [TimerPickerModal](#timerpickermodal)
+-   [Picker Feedback 📳🔉](#picker-feedback-)
+    -   [Audio Feedack](#audio-feedack)
+    -   [Haptic Feedback](#haptic-feedback)
+    -   [Feedback Example](#feedback-example)
+    -   [Expo-Specific Audio/Haptic Feedback (DEPRECATED)](#expo-specific-audiohaptic-feedback-deprecated)
+-   [Contributing 🧑‍🤝‍🧑](#contributing-)
+    -   [Dev Setup](#dev-setup)
+    -   [GitHub Guidelines](#github-guidelines)
+-   [Limitations ⚠](#limitations-)
+-   [License 📝](#license-)
 
 <br>
 
@@ -527,69 +527,71 @@ return (
 
 |             Prop              | Description                                                                                                                                                                                                              |                                                                                              Type                                                                                               |            Default             | Required |
 | :---------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------: | :------: |
-|       onDurationChange        | Callback when the duration changes                                                                                                                                                                                       |                                                     `(duration: { days: number, hours: number, minutes: number, seconds: number }) => void`                                                     |               -                |  false   |
-|         initialValue          | Initial value for the picker                                                                                                                                                                                             |                                                             `{ days?: number, hours?: number, minutes?: number, seconds?: number }`                                                             |               -                |  false   |
+|      accessibilityLabel       | Accessibility label for the entire picker component                                                                                                                                                                      |                                                                                             String                                                                                              |               -                |  false   |
+|      accessibilityLabels      | Custom accessibility labels for each picker column. Supports `days`, `hours`, `minutes`, `seconds`, `picker`, and `hint` keys for internationalization                                                                   |                                             `{ days?: string, hours?: string, minutes?: string, seconds?: string, picker?: string, hint?: string }`                                             |               -                |  false   |
+| aggressivelyGetLatestDuration | Set to True to ask DurationScroll to aggressively update the latestDuration ref                                                                                                                                          |                                                                                             Boolean                                                                                             |             false              |  false   |
+|       allowFontScaling        | Allow font in the picker to scale with accessibility settings                                                                                                                                                            |                                                                                             Boolean                                                                                             |             false              |  false   |
+|            amLabel            | Set the AM label if using the 12-hour picker                                                                                                                                                                             |                                                                                             String                                                                                              |               am               |  false   |
+|          dayInterval          | The interval between values on the days picker                                                                                                                                                                           |                                                                                             Number                                                                                              |               1                |  false   |
+|           dayLabel            | Label for the days picker                                                                                                                                                                                                |                                                                                  String \| React.ReactElement                                                                                   |               d                |  false   |
+|           dayLimit            | Limit on the days it is possible to select                                                                                                                                                                               |                                                                                `{ max?: Number, min?: Number }`                                                                                 |               -                |  false   |
+|     daysPickerIsDisabled      | Disable the days picker                                                                                                                                                                                                  |                                                                                             Boolean                                                                                             |             false              |  false   |
+|       decelerationRate        | Set how quickly the picker decelerates after the user lifts their finger                                                                                                                                                 |                                                                                   'fast', 'normal', or Number                                                                                   |              0.88              |  false   |
+|     disableInfiniteScroll     | Disable the infinite scroll feature                                                                                                                                                                                      |                                                                                             Boolean                                                                                             |             false              |  false   |
+|           FlatList            | FlatList component used internally to implement each picker (day, hour, minutes and seconds). More info [below](#custom-flatlist)                                                                                        |                                                                 [react-native](https://reactnative.dev/docs/flatlist).FlatList                                                                  | `FlatList` from `react-native` |  false   |
 |           hideDays            | Hide the days picker                                                                                                                                                                                                     |                                                                                             Boolean                                                                                             |              true              |  false   |
 |           hideHours           | Hide the hours picker                                                                                                                                                                                                    |                                                                                             Boolean                                                                                             |             false              |  false   |
 |          hideMinutes          | Hide the minutes picker                                                                                                                                                                                                  |                                                                                             Boolean                                                                                             |             false              |  false   |
 |          hideSeconds          | Hide the seconds picker                                                                                                                                                                                                  |                                                                                             Boolean                                                                                             |             false              |  false   |
-|     daysPickerIsDisabled      | Disable the days picker                                                                                                                                                                                                  |                                                                                             Boolean                                                                                             |             false              |  false   |
-|     hoursPickerIsDisabled     | Disable the hours picker                                                                                                                                                                                                 |                                                                                             Boolean                                                                                             |             false              |  false   |
-|    minutesPickerIsDisabled    | Disable the minutes picker                                                                                                                                                                                               |                                                                                             Boolean                                                                                             |             false              |  false   |
-|    secondsPickerIsDisabled    | Disable the seconds picker                                                                                                                                                                                               |                                                                                             Boolean                                                                                             |             false              |  false   |
-|           dayLimit            | Limit on the days it is possible to select                                                                                                                                                                               |                                                                                `{ max?: Number, min?: Number }`                                                                                 |               -                |  false   |
+|         hourInterval          | The interval between values on the hours picker                                                                                                                                                                          |                                                                                             Number                                                                                              |               1                |  false   |
+|           hourLabel           | Label for the hours picker                                                                                                                                                                                               |                                                                                  String \| React.ReactElement                                                                                   |               h                |  false   |
 |           hourLimit           | Limit on the hours it is possible to select                                                                                                                                                                              |                                                                                `{ max?: Number, min?: Number }`                                                                                 |               -                |  false   |
-|          minuteLimit          | Limit on the minutes it is possible to select                                                                                                                                                                            |                                                                                `{ max?: Number, min?: Number }`                                                                                 |               -                |  false   |
-|          secondLimit          | Limit on the seconds it is possible to select                                                                                                                                                                            |                                                                                `{ max?: Number, min?: Number }`                                                                                 |               -                |  false   |
-|          maximumDays          | The highest value on the days picker                                                                                                                                                                                     |                                                                                             Number                                                                                              |               23               |  false   |
+|     hoursPickerIsDisabled     | Disable the hours picker                                                                                                                                                                                                 |                                                                                             Boolean                                                                                             |             false              |  false   |
+|         initialValue          | Initial value for the picker                                                                                                                                                                                             |                                                             `{ days?: number, hours?: number, minutes?: number, seconds?: number }`                                                             |               -                |  false   |
+|          maximumDays          | The highest value on the days picker                                                                                                                                                                                     |                                                                                             Number                                                                                              |               30               |  false   |
 |         maximumHours          | The highest value on the hours picker                                                                                                                                                                                    |                                                                                             Number                                                                                              |               23               |  false   |
 |        maximumMinutes         | The highest value on the minutes picker                                                                                                                                                                                  |                                                                                             Number                                                                                              |               59               |  false   |
 |        maximumSeconds         | The highest value on the seconds picker                                                                                                                                                                                  |                                                                                             Number                                                                                              |               59               |  false   |
-|          dayInterval          | The interval between values on the days picker                                                                                                                                                                           |                                                                                             Number                                                                                              |               1                |  false   |
-|         hourInterval          | The interval between values on the hours picker                                                                                                                                                                          |                                                                                             Number                                                                                              |               1                |  false   |
 |        minuteInterval         | The interval between values on the minutes picker                                                                                                                                                                        |                                                                                             Number                                                                                              |               1                |  false   |
-|        secondInterval         | The interval between values on the seconds picker                                                                                                                                                                        |                                                                                             Number                                                                                              |               1                |  false   |
-|           dayLabel            | Label for the days picker                                                                                                                                                                                                |                                                                                  String \| React.ReactElement                                                                                   |               d                |  false   |
-|           hourLabel           | Label for the hours picker                                                                                                                                                                                               |                                                                                  String \| React.ReactElement                                                                                   |               h                |  false   |
 |          minuteLabel          | Label for the minutes picker                                                                                                                                                                                             |                                                                                  String \| React.ReactElement                                                                                   |               m                |  false   |
-|          secondLabel          | Label for the seconds picker                                                                                                                                                                                             |                                                                                  String \| React.ReactElement                                                                                   |               s                |  false   |
+|          minuteLimit          | Limit on the minutes it is possible to select                                                                                                                                                                            |                                                                                `{ max?: Number, min?: Number }`                                                                                 |               -                |  false   |
+|    minutesPickerIsDisabled    | Disable the minutes picker                                                                                                                                                                                               |                                                                                             Boolean                                                                                             |             false              |  false   |
+|       onDurationChange        | Callback when the duration changes                                                                                                                                                                                       |                                                     `(duration: { days: number, hours: number, minutes: number, seconds: number }) => void`                                                     |               -                |  false   |
 |        padDaysWithZero        | Pad single-digit days in the picker with a zero                                                                                                                                                                          |                                                                                             Boolean                                                                                             |             false              |  false   |
 |       padHoursWithZero        | Pad single-digit hours in the picker with a zero                                                                                                                                                                         |                                                                                             Boolean                                                                                             |             false              |  false   |
 |      padMinutesWithZero       | Pad single-digit minutes in the picker with a zero                                                                                                                                                                       |                                                                                             Boolean                                                                                             |              true              |  false   |
 |      padSecondsWithZero       | Pad single-digit seconds in the picker with a zero                                                                                                                                                                       |                                                                                             Boolean                                                                                             |              true              |  false   |
 |         padWithNItems         | Number of items to pad the picker with on either side                                                                                                                                                                    |                                                                                             Number                                                                                              |               1                |  false   |
-| aggressivelyGetLatestDuration | Set to True to ask DurationScroll to aggressively update the latestDuration ref                                                                                                                                          |                                                                                             Boolean                                                                                             |             false              |  false   |
-|       allowFontScaling        | Allow font in the picker to scale with accessibility settings                                                                                                                                                            |                                                                                             Boolean                                                                                             |             false              |  false   |
-|        use12HourPicker        | Switch the hour picker to 12-hour format with an AM / PM label                                                                                                                                                           |                                                                                             Boolean                                                                                             |             false              |  false   |
-|            amLabel            | Set the AM label if using the 12-hour picker                                                                                                                                                                             |                                                                                             String                                                                                              |               am               |  false   |
 |            pmLabel            | Set the PM label if using the 12-hour picker                                                                                                                                                                             |                                                                                             String                                                                                              |               pm               |  false   |
 |    repeatDayNumbersNTimes     | Set the number of times the list of days is repeated in the picker                                                                                                                                                       |                                                                                             Number                                                                                              |               3                |  false   |
 |    repeatHourNumbersNTimes    | Set the number of times the list of hours is repeated in the picker                                                                                                                                                      |                                                                                             Number                                                                                              |               7                |  false   |
 |   repeatMinuteNumbersNTimes   | Set the number of times the list of minutes is repeated in the picker                                                                                                                                                    |                                                                                             Number                                                                                              |               3                |  false   |
 |   repeatSecondNumbersNTimes   | Set the number of times the list of seconds is repeated in the picker                                                                                                                                                    |                                                                                             Number                                                                                              |               3                |  false   |
-|     disableInfiniteScroll     | Disable the infinite scroll feature                                                                                                                                                                                      |                                                                                             Boolean                                                                                             |             false              |  false   |
+|        secondInterval         | The interval between values on the seconds picker                                                                                                                                                                        |                                                                                             Number                                                                                              |               1                |  false   |
+|          secondLabel          | Label for the seconds picker                                                                                                                                                                                             |                                                                                  String \| React.ReactElement                                                                                   |               s                |  false   |
+|          secondLimit          | Limit on the seconds it is possible to select                                                                                                                                                                            |                                                                                `{ max?: Number, min?: Number }`                                                                                 |               -                |  false   |
+|    secondsPickerIsDisabled    | Disable the seconds picker                                                                                                                                                                                               |                                                                                             Boolean                                                                                             |             false              |  false   |
+|        use12HourPicker        | Switch the hour picker to 12-hour format with an AM / PM label                                                                                                                                                           |                                                                                             Boolean                                                                                             |             false              |  false   |
 |        LinearGradient         | [Linear Gradient Component (required for picker fade-out)](#linear-gradient)                                                                                                                                             | [expo-linear-gradient](https://www.npmjs.com/package/expo-linear-gradient).LinearGradient or [react-native-linear-gradient](https://www.npmjs.com/package/react-native-linear-gradient).default |               -                |  false   |
 |          MaskedView           | [Masked View Component (required for picker fade-out on transparent background)](#masked-view)                                                                                                                           |                                      [@react-native-masked-view/masked-view](https://www.npmjs.com/package/@react-native-masked-view/masked-view).default                                       |               -                |  false   |
-|           FlatList            | FlatList component used internally to implement each picker (day, hour, minutes and seconds). More info [below](#custom-flatlist)                                                                                        |                                                                 [react-native](https://reactnative.dev/docs/flatlist).FlatList                                                                  | `FlatList` from `react-native` |  false   |
 |        pickerFeedback         | [Callback for providing audio/haptic feedback](#picker-feedback-) (fired whenever the picker ticks over a value)                                                                                                         |                                                                                 `() => void \| Promise<void> `                                                                                  |               -                |  false   |
-|     Haptics (DEPRECATED)      | [Expo Haptics Namespace](#expo-specific-audiohaptic-feedback-deprecated) (please use pickerFeedback instead)                                                                                                             |                                                                   [expo-haptics](https://www.npmjs.com/package/expo-haptics)                                                                    |               -                |  false   |
-|      Audio (DEPRECATED)       | [Expo AV Audio Class](#expo-specific-audiohaptic-feedback-deprecated)                                                                                                                                                    |                                                   [expo-av](https://www.npmjs.com/package/expo-av).Audio (please use pickerFeedback instead)                                                    |               -                |  false   |
-| clickSoundAsset (DEPRECATED)  | Custom sound asset for click sound (please use pickerFeedback instead), was required for offline click sound - download default [here](https://drive.google.com/uc?export=download&id=10e1YkbNsRh-vGx1jmS1Nntz8xzkBp4_I) |                                                                        require(.../somefolderpath) or {uri: www.someurl}                                                                        |               -                |  false   |
 |     pickerContainerProps      | Props for the picker container                                                                                                                                                                                           |                                                                               `React.ComponentProps<typeof View>`                                                                               |               -                |  false   |
 |  pickerGradientOverlayProps   | Props for the gradient overlay (supply a different `locations` array to adjust its position) overlays                                                                                                                    |                                                                                 `Partial<LinearGradientProps>`                                                                                  |               -                |  false   |
 |            styles             | Custom styles for the timer picker                                                                                                                                                                                       |                                                                           [CustomTimerPickerStyles](#custom-styles-)                                                                            |               -                |  false   |
-|       decelerationRate        | Set how quickly the picker decelerates after the user lifts their finger                                                                                                                                                 |                                                                                   'fast', 'normal', or Number                                                                                   |              0.88              |  false   |
+|     Haptics (DEPRECATED)      | [Expo Haptics Namespace](#expo-specific-audiohaptic-feedback-deprecated) (please use pickerFeedback instead)                                                                                                             |                                                                   [expo-haptics](https://www.npmjs.com/package/expo-haptics)                                                                    |               -                |  false   |
+|      Audio (DEPRECATED)       | [Expo AV Audio Class](#expo-specific-audiohaptic-feedback-deprecated)                                                                                                                                                    |                                                   [expo-av](https://www.npmjs.com/package/expo-av).Audio (please use pickerFeedback instead)                                                    |               -                |  false   |
+| clickSoundAsset (DEPRECATED)  | Custom sound asset for click sound (please use pickerFeedback instead), was required for offline click sound - download default [here](https://drive.google.com/uc?export=download&id=10e1YkbNsRh-vGx1jmS1Nntz8xzkBp4_I) |                                                                        require(.../somefolderpath) or {uri: www.someurl}                                                                        |               -                |  false   |
 
-#### Custom Styles 👗 
+#### Custom Styles 👗
 
 The component should look good straight out of the box, but you can use these styles to make it fit in with your App's theme:
 
-|               Style Prop               | Description                                                          |                   Type                   |
-| :------------------------------------: | :------------------------------------------------------------------- | :--------------------------------------: |
-|                 theme                  | Theme of the component                                               |            "light" \| "dark"             |
-|            backgroundColor             | Main background color                                                |                  string                  |
-|                  text                  | Base text style                                                      |                TextStyle                 |
-|       labelOffsetPercentage            | Percentage offset for horizonal label positioning relative to the picker                        |                  number                  |
+|      Style Prop       | Description                                                              |       Type        |
+| :-------------------: | :----------------------------------------------------------------------- | :---------------: |
+|         theme         | Theme of the component                                                   | "light" \| "dark" |
+|    backgroundColor    | Main background color                                                    |      string       |
+|         text          | Base text style                                                          |     TextStyle     |
+| labelOffsetPercentage | Percentage offset for horizonal label positioning relative to the picker |      number       |
 
 For deeper style customization, you can supply the following custom styles to adjust the component in any way. These are applied on top of the default styling so take a look at those [styles](src/components/TimerPicker/styles.ts) if something isn't adjusting in the way you'd expect.
 
@@ -643,6 +645,56 @@ Please note that this solution does not work for all bottom-sheet components (e.
 **Important**:
 The custom component needs to have the same interface as React Native's `<FlatList />` in order for it to work as expected. A complete reference of the current usage can be found [here](/src/components/DurationScroll/index.tsx).
 
+#### Accessibility ♿
+
+The TimerPicker component supports VoiceOver (iOS) and TalkBack (Android) screen readers. When a screen reader is enabled, users can:
+
+-   Navigate to each picker column (days, hours, minutes, seconds)
+-   Swipe up to increment the value
+-   Swipe down to decrement the value
+-   Hear immediate announcements of the new value after each adjustment
+
+**Basic Usage:**
+
+The component automatically detects when a screen reader is active and adjusts its behavior accordingly. No additional configuration is required for basic accessibility support.
+
+**Internationalization:**
+
+You can customize the accessibility labels for internationalization:
+
+```jsx
+<TimerPicker
+    accessibilityLabels={{
+        hours: "Heures",
+        minutes: "Minutes",
+        seconds: "Secondes",
+        hint: "Balayez vers le haut ou le bas pour ajuster",
+    }}
+    // ... other props
+/>
+```
+
+**How it works:**
+
+-   When a screen reader is **disabled**, users interact with the picker normally by scrolling
+-   When a screen reader is **enabled**, each picker column becomes an "adjustable" element that responds to swipe gestures
+-   The component uses the `useScreenReaderEnabled` hook to automatically detect screen reader state
+-   Values announced respect your `padWithZero` settings (e.g., "05" vs "5")
+-   12-hour format announcements include AM/PM (e.g., "03 PM")
+
+You can also use the `useScreenReaderEnabled` hook in your own components:
+
+```jsx
+import { useScreenReaderEnabled } from "react-native-timer-picker";
+
+function MyComponent() {
+    const isScreenReaderEnabled = useScreenReaderEnabled();
+
+    // Adjust your UI based on screen reader state
+    return <View accessible={!isScreenReaderEnabled}>...</View>;
+}
+```
+
 ### TimerPickerModal ⏰
 
 The TimerPickerModal component accepts all [TimerPicker props](#timerpicker-️), and the below additional props.
@@ -672,16 +724,16 @@ The TimerPickerModal component accepts all [TimerPicker props](#timerpicker-️)
 
 The following custom styles can be supplied to re-style the component in any way. You can also supply all of the styles specified in [CustomTimerPickerStyles](#custom-styles-). These are applied on top of the default styling so take a look at those [styles](src/components/TimerPickerModal/styles.ts) if something isn't adjusting in the way you'd expect.
 
-|    Style Prop    | Description                                |   Type    |
-| :--------------: | :----------------------------------------- | :-------: |
-|    container     | Style for the modal container              | ViewStyle |
-| contentContainer | Style for the modal content's container    | ViewStyle |
-| buttonContainer  | Style for the container for the buttons    | ViewStyle |
-|      button      | General style for both buttons             | TextStyle |
-|   cancelButton   | Style for the cancel button                | TextStyle |
-|  confirmButton   | Style for the confirm button               | TextStyle |
-|    modalTitle    | Style for the title of the modal           | TextStyle |
-|    ...           | Supply any of [TimerPicker's custom styles]((#custom-styles-))  | -         |
+|    Style Prop    | Description                                                      |   Type    |
+| :--------------: | :--------------------------------------------------------------- | :-------: |
+|    container     | Style for the modal container                                    | ViewStyle |
+| contentContainer | Style for the modal content's container                          | ViewStyle |
+| buttonContainer  | Style for the container for the buttons                          | ViewStyle |
+|      button      | General style for both buttons                                   | TextStyle |
+|   cancelButton   | Style for the cancel button                                      | TextStyle |
+|  confirmButton   | Style for the confirm button                                     | TextStyle |
+|    modalTitle    | Style for the title of the modal                                 | TextStyle |
+|       ...        | Supply any of [TimerPicker's custom styles](<(#custom-styles-)>) |     -     |
 
 <br>
 

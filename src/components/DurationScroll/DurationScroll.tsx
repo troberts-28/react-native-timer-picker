@@ -8,7 +8,12 @@ import React, {
     useMemo,
 } from "react";
 
-import { View, Text, FlatList as RNFlatList } from "react-native";
+import {
+    View,
+    Text,
+    FlatList as RNFlatList,
+    AccessibilityInfo,
+} from "react-native";
 import type {
     ViewabilityConfigCallbackPairs,
     FlatListProps,
@@ -36,6 +41,8 @@ const keyExtractor = (item: any, index: number) => index.toString();
 const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
     (props, ref) => {
         const {
+            accessibilityHint,
+            accessibilityLabel,
             aggressivelyGetLatestDuration,
             allowFontScaling = false,
             amLabel,
@@ -44,11 +51,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             decelerationRate = 0.88,
             disableInfiniteScroll = false,
             FlatList = RNFlatList,
+            formatValue,
             Haptics,
             initialValue = 0,
             interval,
             is12HourPicker,
             isDisabled,
+            isScreenReaderEnabled = false,
             label,
             limit,
             LinearGradient,
@@ -469,6 +478,81 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             [styles.pickerItemContainer.height]
         );
 
+        const handleAccessibilityAction = useCallback(
+            (event: { nativeEvent: { actionName: string } }) => {
+                const { actionName } = event.nativeEvent;
+
+                if (actionName === "increment") {
+                    let newValue = latestDuration.current + interval;
+
+                    // Wrap around to minimum if exceeding maximum
+                    if (newValue > adjustedLimited.max) {
+                        newValue = adjustedLimited.min;
+                    }
+
+                    flatListRef.current?.scrollToIndex({
+                        animated: true,
+                        index: getInitialScrollIndex({
+                            disableInfiniteScroll,
+                            interval,
+                            numberOfItems,
+                            padWithNItems,
+                            repeatNumbersNTimes: safeRepeatNumbersNTimes,
+                            value: newValue,
+                        }),
+                    });
+                    latestDuration.current = newValue;
+
+                    // Announce the new value to screen readers
+                    const announcement = formatValue
+                        ? formatValue(newValue)
+                        : String(newValue);
+                    AccessibilityInfo.announceForAccessibilityWithOptions(
+                        announcement,
+                        {
+                            queue: false,
+                        }
+                    );
+                } else if (actionName === "decrement") {
+                    let newValue = latestDuration.current - interval;
+
+                    // Wrap around to maximum if going below minimum
+                    if (newValue < adjustedLimited.min) {
+                        newValue = adjustedLimited.max;
+                    }
+
+                    flatListRef.current?.scrollToIndex({
+                        animated: true,
+                        index: getInitialScrollIndex({
+                            disableInfiniteScroll,
+                            interval,
+                            numberOfItems,
+                            padWithNItems,
+                            repeatNumbersNTimes: safeRepeatNumbersNTimes,
+                            value: newValue,
+                        }),
+                    });
+                    latestDuration.current = newValue;
+
+                    // Announce the new value to screen readers
+                    const announcement = formatValue
+                        ? formatValue(newValue)
+                        : String(newValue);
+                    AccessibilityInfo.announceForAccessibility(announcement);
+                }
+            },
+            [
+                adjustedLimited.max,
+                adjustedLimited.min,
+                disableInfiniteScroll,
+                formatValue,
+                interval,
+                numberOfItems,
+                padWithNItems,
+                safeRepeatNumbersNTimes,
+            ]
+        );
+
         useImperativeHandle(ref, () => ({
             reset: (options) => {
                 flatListRef.current?.scrollToIndex({
@@ -495,37 +579,83 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
         const renderContent = useMemo(() => {
             return (
                 <>
-                    <FlatList
-                        key={flatListRenderKey}
-                        ref={flatListRef}
-                        contentContainerStyle={
-                            styles.durationScrollFlatListContentContainer
-                        }
-                        data={numbersForFlatList}
-                        decelerationRate={decelerationRate}
-                        getItemLayout={getItemLayout}
-                        initialScrollIndex={initialScrollIndex}
-                        keyExtractor={keyExtractor}
-                        nestedScrollEnabled
-                        onMomentumScrollEnd={onMomentumScrollEnd}
-                        onScroll={onScroll}
-                        renderItem={renderItem}
-                        scrollEnabled={!isDisabled}
-                        scrollEventThrottle={16}
-                        showsVerticalScrollIndicator={false}
-                        snapToAlignment="start"
-                        // used in place of snapToInterval due to bug on Android
-                        snapToOffsets={[
-                            ...Array(numbersForFlatList.length),
-                        ].map((_, i) => i * styles.pickerItemContainer.height)}
-                        style={styles.durationScrollFlatList}
-                        testID="duration-scroll-flatlist"
-                        viewabilityConfigCallbackPairs={
-                            viewabilityConfigCallbackPairs
-                        }
-                        windowSize={numberOfItemsToShow}
-                    />
                     <View
+                        accessibilityActions={
+                            isScreenReaderEnabled
+                                ? [{ name: "increment" }, { name: "decrement" }]
+                                : undefined
+                        }
+                        accessibilityHint={
+                            isScreenReaderEnabled
+                                ? accessibilityHint
+                                : undefined
+                        }
+                        accessibilityLabel={
+                            isScreenReaderEnabled
+                                ? accessibilityLabel
+                                : undefined
+                        }
+                        accessibilityRole={
+                            isScreenReaderEnabled ? "adjustable" : undefined
+                        }
+                        accessibilityValue={
+                            isScreenReaderEnabled
+                                ? {
+                                      text: formatValue
+                                          ? formatValue(latestDuration.current)
+                                          : String(latestDuration.current),
+                                  }
+                                : undefined
+                        }
+                        accessible={isScreenReaderEnabled ? true : false}
+                        onAccessibilityAction={handleAccessibilityAction}>
+                        <FlatList
+                            key={flatListRenderKey}
+                            ref={flatListRef}
+                            accessible={
+                                isScreenReaderEnabled ? false : undefined
+                            }
+                            contentContainerStyle={
+                                styles.durationScrollFlatListContentContainer
+                            }
+                            data={numbersForFlatList}
+                            decelerationRate={decelerationRate}
+                            getItemLayout={getItemLayout}
+                            importantForAccessibility={
+                                isScreenReaderEnabled
+                                    ? "no-hide-descendants"
+                                    : undefined
+                            }
+                            initialScrollIndex={initialScrollIndex}
+                            keyExtractor={keyExtractor}
+                            nestedScrollEnabled
+                            onMomentumScrollEnd={onMomentumScrollEnd}
+                            onScroll={onScroll}
+                            renderItem={renderItem}
+                            scrollEnabled={!isDisabled}
+                            scrollEventThrottle={16}
+                            showsVerticalScrollIndicator={false}
+                            snapToAlignment="start"
+                            // used in place of snapToInterval due to bug on Android
+                            snapToOffsets={[
+                                ...Array(numbersForFlatList.length),
+                            ].map(
+                                (_, i) => i * styles.pickerItemContainer.height
+                            )}
+                            style={styles.durationScrollFlatList}
+                            testID="duration-scroll-flatlist"
+                            viewabilityConfigCallbackPairs={
+                                viewabilityConfigCallbackPairs
+                            }
+                            windowSize={numberOfItemsToShow}
+                        />
+                    </View>
+                    <View
+                        accessibilityElementsHidden={isScreenReaderEnabled}
+                        accessible={false}
+                        importantForAccessibility={
+                            isScreenReaderEnabled ? "no-hide-descendants" : "no"
+                        }
                         pointerEvents="none"
                         style={styles.pickerLabelContainer}>
                         {typeof label === "string" ? (
@@ -542,12 +672,17 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>(
             );
         }, [
             FlatList,
+            accessibilityHint,
+            accessibilityLabel,
             allowFontScaling,
             decelerationRate,
             flatListRenderKey,
+            formatValue,
             getItemLayout,
+            handleAccessibilityAction,
             initialScrollIndex,
             isDisabled,
+            isScreenReaderEnabled,
             label,
             numberOfItemsToShow,
             numbersForFlatList,
