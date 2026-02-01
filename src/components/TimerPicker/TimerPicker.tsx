@@ -158,28 +158,28 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 secondsDurationScrollRef.current?.reset(options);
             },
             setValue: (value, options) => {
-                if (value.days) {
+                if (value.days !== undefined && value.days !== null) {
                     setSelectedDays(value.days);
                     daysDurationScrollRef.current?.setValue(
                         value.days,
                         options
                     );
                 }
-                if (value.hours) {
+                if (value.hours !== undefined && value.hours !== null) {
                     setSelectedHours(value.hours);
                     hoursDurationScrollRef.current?.setValue(
                         value.hours,
                         options
                     );
                 }
-                if (value.minutes) {
+                if (value.minutes !== undefined && value.minutes !== null) {
                     setSelectedMinutes(value.minutes);
                     minutesDurationScrollRef.current?.setValue(
                         value.minutes,
                         options
                     );
                 }
-                if (value.seconds) {
+                if (value.seconds !== undefined && value.seconds !== null) {
                     setSelectedSeconds(value.seconds);
                     secondsDurationScrollRef.current?.setValue(
                         value.seconds,
