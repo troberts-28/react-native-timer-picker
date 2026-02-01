@@ -608,6 +608,7 @@ For deeper style customization, you can supply the following custom styles to ad
 |         durationScrollFlatList         | Style for the Flatlist in each picker                                |                ViewStyle                 |
 |    durationScrollFlatListContainer     | Style for the View that contains the Flatlist in each picker         |                ViewStyle                 |
 | durationScrollFlatListContentContainer | Style for the Flatlist's `contentContainerStyle` prop in each picker |                ViewStyle                 |
+|           selectedPickerItem           | Style for the currently selected individual picker number            |                TextStyle                 |
 
 **Note:** There are minor limitations on `pickerContainer.backgroundColor` and `pickerItemContainer.height`. These properties must be simple values (string and number respectively) as they are used in internal calculations for scroll positioning, gradient overlays, and snap behavior. Complex computed values or union types are not supported for these specific properties.
 

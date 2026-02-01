@@ -52,7 +52,7 @@ const PickerItem = React.memo<PickerItemProps>(
                     allowFontScaling={allowFontScaling}
                     style={[
                         styles.pickerItem,
-                        isSelected ? styles.selectedPickerItem : {},
+                        isSelected && styles.selectedPickerItem,
                         intItem > adjustedLimitedMax ||
                         intItem < adjustedLimitedMin
                             ? styles.disabledPickerItem
