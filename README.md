@@ -580,16 +580,16 @@ return (
 |            styles             | Custom styles for the timer picker                                                                                                                                                                                       |                                                                           [CustomTimerPickerStyles](#custom-styles-)                                                                            |               -                |  false   |
 |       decelerationRate        | Set how quickly the picker decelerates after the user lifts their finger                                                                                                                                                 |                                                                                   'fast', 'normal', or Number                                                                                   |              0.88              |  false   |
 
-#### Custom Styles 👗 
+#### Custom Styles 👗
 
 The component should look good straight out of the box, but you can use these styles to make it fit in with your App's theme:
 
-|               Style Prop               | Description                                                          |                   Type                   |
-| :------------------------------------: | :------------------------------------------------------------------- | :--------------------------------------: |
-|                 theme                  | Theme of the component                                               |            "light" \| "dark"             |
-|            backgroundColor             | Main background color                                                |                  string                  |
-|                  text                  | Base text style                                                      |                TextStyle                 |
-|       labelOffsetPercentage            | Percentage offset for horizonal label positioning relative to the picker                        |                  number                  |
+|      Style Prop       | Description                                                              |       Type        |
+| :-------------------: | :----------------------------------------------------------------------- | :---------------: |
+|         theme         | Theme of the component                                                   | "light" \| "dark" |
+|    backgroundColor    | Main background color                                                    |      string       |
+|         text          | Base text style                                                          |     TextStyle     |
+| labelOffsetPercentage | Percentage offset for horizonal label positioning relative to the picker |      number       |
 
 For deeper style customization, you can supply the following custom styles to adjust the component in any way. These are applied on top of the default styling so take a look at those [styles](src/components/TimerPicker/styles.ts) if something isn't adjusting in the way you'd expect.
 
@@ -601,8 +601,9 @@ For deeper style customization, you can supply the following custom styles to ad
 |          pickerAmPmContainer           | Style for the picker's labels                                        |                ViewStyle                 |
 |            pickerAmPmLabel             | Style for the picker's labels                                        |                TextStyle                 |
 |          pickerItemContainer           | Container for each number in the picker                              |     ViewStyle & { height?: number }      |
-|               pickerItem               | Style for each individual picker number                              |                TextStyle                 |
+|               pickerItem               | Style for each number                                                |                TextStyle                 |
 |           disabledPickerItem           | Style for any numbers outside any set limits                         |                TextStyle                 |
+|           selectedPickerItem           | Style for the currently selected number                              |                TextStyle                 |
 |        disabledPickerContainer         | Style for disabled pickers                                           |                ViewStyle                 |
 |         pickerGradientOverlay          | Style for the gradient overlay (fade out)                            |                ViewStyle                 |
 |         durationScrollFlatList         | Style for the Flatlist in each picker                                |                ViewStyle                 |
@@ -672,16 +673,16 @@ The TimerPickerModal component accepts all [TimerPicker props](#timerpicker-️)
 
 The following custom styles can be supplied to re-style the component in any way. You can also supply all of the styles specified in [CustomTimerPickerStyles](#custom-styles-). These are applied on top of the default styling so take a look at those [styles](src/components/TimerPickerModal/styles.ts) if something isn't adjusting in the way you'd expect.
 
-|    Style Prop    | Description                                |   Type    |
-| :--------------: | :----------------------------------------- | :-------: |
-|    container     | Style for the modal container              | ViewStyle |
-| contentContainer | Style for the modal content's container    | ViewStyle |
-| buttonContainer  | Style for the container for the buttons    | ViewStyle |
-|      button      | General style for both buttons             | TextStyle |
-|   cancelButton   | Style for the cancel button                | TextStyle |
-|  confirmButton   | Style for the confirm button               | TextStyle |
-|    modalTitle    | Style for the title of the modal           | TextStyle |
-|    ...           | Supply any of [TimerPicker's custom styles]((#custom-styles-))  | -         |
+|    Style Prop    | Description                                                      |   Type    |
+| :--------------: | :--------------------------------------------------------------- | :-------: |
+|    container     | Style for the modal container                                    | ViewStyle |
+| contentContainer | Style for the modal content's container                          | ViewStyle |
+| buttonContainer  | Style for the container for the buttons                          | ViewStyle |
+|      button      | General style for both buttons                                   | TextStyle |
+|   cancelButton   | Style for the cancel button                                      | TextStyle |
+|  confirmButton   | Style for the confirm button                                     | TextStyle |
+|    modalTitle    | Style for the title of the modal                                 | TextStyle |
+|       ...        | Supply any of [TimerPicker's custom styles](<(#custom-styles-)>) |     -     |
 
 <br>
 

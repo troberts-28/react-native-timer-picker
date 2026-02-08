@@ -13,9 +13,9 @@
     "dependencies": {
         "@expo/vector-icons": "^15.0.3",
         "@react-native-masked-view/masked-view": "0.3.2",
-        "expo": "~54.0.29",
-        "expo-asset": "~12.0.11",
-        "expo-font": "~14.0.10",
+        "expo": "~54.0.33",
+        "expo-asset": "~12.0.12",
+        "expo-font": "~14.0.11",
         "expo-haptics": "~15.0.8",
         "expo-linear-gradient": "~15.0.8",
         "react": "19.1.0",

@@ -32,6 +32,7 @@ export interface DurationScrollProps {
     pmLabel?: string;
     repeatNumbersNTimes?: number;
     repeatNumbersNTimesNotExplicitlySet: boolean;
+    selectedValue?: number;
     styles: ReturnType<typeof generateStyles>;
     testID?: string;
 }

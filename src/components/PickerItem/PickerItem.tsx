@@ -1,3 +1,4 @@
+
 import React from "react";
 
 import { View, Text } from "react-native";
@@ -12,6 +13,7 @@ interface PickerItemProps {
     is12HourPicker?: boolean;
     item: string;
     pmLabel?: string;
+    selectedValue?: number;
     styles: ReturnType<typeof generateStyles>;
 }
 
@@ -24,6 +26,7 @@ const PickerItem = React.memo<PickerItemProps>(
         is12HourPicker,
         item,
         pmLabel,
+        selectedValue,
         styles,
     }) => {
         let stringItem = item;
@@ -38,6 +41,8 @@ const PickerItem = React.memo<PickerItemProps>(
             intItem = parseInt(stringItem);
         }
 
+        const isSelected = intItem === selectedValue;
+
         return (
             <View
                 key={item}
@@ -47,6 +52,7 @@ const PickerItem = React.memo<PickerItemProps>(
                     allowFontScaling={allowFontScaling}
                     style={[
                         styles.pickerItem,
+                        isSelected && styles.selectedPickerItem,
                         intItem > adjustedLimitedMax ||
                         intItem < adjustedLimitedMin
                             ? styles.disabledPickerItem

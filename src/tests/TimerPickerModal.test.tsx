@@ -1,7 +1,8 @@
 import React from "react";
-import { TouchableOpacity, Text } from "react-native";
 
 import { render, fireEvent, cleanup } from "@testing-library/react-native";
+import { TouchableOpacity, Text } from "react-native";
+
 
 import TimerPickerModal from "../components/TimerPickerModal";
 
@@ -95,8 +96,8 @@ describe("TimerPickerModal", () => {
         const { getByText } = render(
             <TimerPickerModal
                 {...defaultProps}
-                confirmButtonText="OK"
                 cancelButtonText="Dismiss"
+                confirmButtonText="OK"
             />
         );
         expect(getByText("OK")).toBeDefined();
@@ -181,16 +182,16 @@ describe("TimerPickerModal", () => {
         const { getByTestId } = render(
             <TimerPickerModal
                 {...defaultProps}
-                modalTitle="Pick Duration"
-                confirmButtonText="Done"
                 cancelButtonText="Close"
-                hourLabel="h"
-                minuteLabel="m"
-                secondLabel="s"
+                confirmButtonText="Done"
+                hideDays={false}
                 hideHours={false}
                 hideMinutes={false}
                 hideSeconds={false}
-                hideDays={false}
+                hourLabel="h"
+                minuteLabel="m"
+                modalTitle="Pick Duration"
+                secondLabel="s"
             />
         );
         expect(getByTestId("timer-picker-modal")).toBeDefined();
