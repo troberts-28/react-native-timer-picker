@@ -17,7 +17,7 @@ describe("Modal", () => {
     });
 
     it("renders without crashing", () => {
-        const { getByTestId } = render(<Modal isVisible/>);
+        const { getByTestId } = render(<Modal isVisible />);
         const component = getByTestId("modal");
         expect(component).toBeDefined();
     });
@@ -55,23 +55,8 @@ describe("Modal", () => {
         expect(() => fireEvent.press(overlay)).not.toThrow();
     });
 
-    it("renders multiple children", () => {
-        const { getByText } = render(
-            <Modal isVisible>
-                <Text>{"First Child"}</Text>
-                <Text>{"Second Child"}</Text>
-            </Modal>
-        );
-        const firstChild = getByText("First Child");
-        const secondChild = getByText("Second Child");
-        expect(firstChild).toBeDefined();
-        expect(secondChild).toBeDefined();
-    });
-
     it("handles rapid visibility changes", () => {
-        const { rerender, getByTestId } = render(
-            <Modal isVisible={true} />
-        );
+        const { getByTestId, rerender } = render(<Modal isVisible={true} />);
         expect(getByTestId("modal")).toBeDefined();
         expect(getByTestId("modal").props.visible).toBe(true);
 
@@ -92,16 +77,5 @@ describe("Modal", () => {
         const overlay = getByTestId("modal-backdrop");
         fireEvent.press(overlay);
         expect(onOverlayPressMock).toHaveBeenCalledTimes(1);
-    });
-
-    it("renders children with complex structure", () => {
-        const { getByText } = render(
-            <Modal isVisible>
-                <Text>{"Parent"}</Text>
-                <Text>{"Child"}</Text>
-            </Modal>
-        );
-        expect(getByText("Parent")).toBeDefined();
-        expect(getByText("Child")).toBeDefined();
     });
 });

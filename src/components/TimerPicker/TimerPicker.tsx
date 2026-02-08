@@ -1,4 +1,3 @@
-
 import React, {
     forwardRef,
     useEffect,
@@ -159,28 +158,28 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 secondsDurationScrollRef.current?.reset(options);
             },
             setValue: (value, options) => {
-                if (value.days !== undefined && value.days !== null) {
+                if (value.days !== undefined) {
                     setSelectedDays(value.days);
                     daysDurationScrollRef.current?.setValue(
                         value.days,
                         options
                     );
                 }
-                if (value.hours !== undefined && value.hours !== null) {
+                if (value.hours !== undefined) {
                     setSelectedHours(value.hours);
                     hoursDurationScrollRef.current?.setValue(
                         value.hours,
                         options
                     );
                 }
-                if (value.minutes !== undefined && value.minutes !== null) {
+                if (value.minutes !== undefined) {
                     setSelectedMinutes(value.minutes);
                     minutesDurationScrollRef.current?.setValue(
                         value.minutes,
                         options
                     );
                 }
-                if (value.seconds !== undefined && value.seconds !== null) {
+                if (value.seconds !== undefined) {
                     setSelectedSeconds(value.seconds);
                     secondsDurationScrollRef.current?.setValue(
                         value.seconds,
