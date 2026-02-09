@@ -11,3 +11,5 @@ export {
     TimerPickerRef,
     CustomTimerPickerStyles,
 } from "./components/TimerPicker";
+
+export { useScreenReaderEnabled } from "./utils/useScreenReaderEnabled";

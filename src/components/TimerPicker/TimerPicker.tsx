@@ -10,6 +10,8 @@ import React, {
 import { View } from "react-native";
 
 import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
+import { padNumber } from "../../utils/padNumber";
+import { useScreenReaderEnabled } from "../../utils/useScreenReaderEnabled";
 import DurationScroll from "../DurationScroll";
 import type { DurationScrollRef } from "../DurationScroll";
 
@@ -19,6 +21,8 @@ import type { TimerPickerProps, TimerPickerRef } from "./types";
 const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
     (props, ref) => {
         const {
+            accessibilityLabel,
+            accessibilityLabels,
             aggressivelyGetLatestDuration = false,
             allowFontScaling = false,
             amLabel = "am",
@@ -66,6 +70,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
             ...otherProps
         } = props;
 
+        const isScreenReaderEnabled = useScreenReaderEnabled();
+
         useEffect(() => {
             if (otherProps.Audio) {
                 console.warn(
@@ -97,6 +103,28 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
 
             return Math.round(padWithNItems);
         }, [hideHours, padWithNItems]);
+
+        // Format functions for accessibility announcements
+        const formatDayValue = (value: number) =>
+            padDaysWithZero ? padNumber(value) : String(value);
+
+        const formatHourValue = (value: number) => {
+            if (use12HourPicker) {
+                const hour12 =
+                    value === 0 ? 12 : value > 12 ? value - 12 : value;
+                const period = value < 12 ? amLabel : pmLabel;
+                return padHoursWithZero
+                    ? `${padNumber(hour12)} ${period}`
+                    : `${hour12} ${period}`;
+            }
+            return padHoursWithZero ? padNumber(value) : String(value);
+        };
+
+        const formatMinuteValue = (value: number) =>
+            padMinutesWithZero ? padNumber(value) : String(value);
+
+        const formatSecondValue = (value: number) =>
+            padSecondsWithZero ? padNumber(value) : String(value);
 
         const safeInitialValue = useMemo(
             () =>
@@ -198,19 +226,24 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
         return (
             <View
                 {...pickerContainerProps}
+                accessible={isScreenReaderEnabled ? false : undefined}
                 style={styles.pickerContainer}
                 testID="timer-picker">
                 {!hideDays ? (
                     <DurationScroll
                         ref={daysDurationScrollRef}
+                        accessibilityHint={accessibilityLabels?.hint}
+                        accessibilityLabel={accessibilityLabels?.days ?? "Days"}
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
                         }
                         allowFontScaling={allowFontScaling}
                         disableInfiniteScroll={disableInfiniteScroll}
+                        formatValue={formatDayValue}
                         initialValue={safeInitialValue.days}
                         interval={dayInterval}
                         isDisabled={daysPickerIsDisabled}
+                        isScreenReaderEnabled={isScreenReaderEnabled}
                         label={dayLabel ?? "d"}
                         limit={dayLimit}
                         maximumValue={maximumDays}
@@ -230,6 +263,10 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 {!hideHours ? (
                     <DurationScroll
                         ref={hoursDurationScrollRef}
+                        accessibilityHint={accessibilityLabels?.hint}
+                        accessibilityLabel={
+                            accessibilityLabels?.hours ?? "Hours"
+                        }
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
                         }
@@ -237,10 +274,12 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                         amLabel={amLabel}
                         decelerationRate={decelerationRate}
                         disableInfiniteScroll={disableInfiniteScroll}
+                        formatValue={formatHourValue}
                         initialValue={safeInitialValue.hours}
                         interval={hourInterval}
                         is12HourPicker={use12HourPicker}
                         isDisabled={hoursPickerIsDisabled}
+                        isScreenReaderEnabled={isScreenReaderEnabled}
                         label={
                             hourLabel ?? (!use12HourPicker ? "h" : undefined)
                         }
@@ -263,15 +302,21 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 {!hideMinutes ? (
                     <DurationScroll
                         ref={minutesDurationScrollRef}
+                        accessibilityHint={accessibilityLabels?.hint}
+                        accessibilityLabel={
+                            accessibilityLabels?.minutes ?? "Minutes"
+                        }
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
                         }
                         allowFontScaling={allowFontScaling}
                         decelerationRate={decelerationRate}
                         disableInfiniteScroll={disableInfiniteScroll}
+                        formatValue={formatMinuteValue}
                         initialValue={safeInitialValue.minutes}
                         interval={minuteInterval}
                         isDisabled={minutesPickerIsDisabled}
+                        isScreenReaderEnabled={isScreenReaderEnabled}
                         label={minuteLabel ?? "m"}
                         limit={minuteLimit}
                         maximumValue={maximumMinutes}
@@ -291,15 +336,21 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>(
                 {!hideSeconds ? (
                     <DurationScroll
                         ref={secondsDurationScrollRef}
+                        accessibilityHint={accessibilityLabels?.hint}
+                        accessibilityLabel={
+                            accessibilityLabels?.seconds ?? "Seconds"
+                        }
                         aggressivelyGetLatestDuration={
                             aggressivelyGetLatestDuration
                         }
                         allowFontScaling={allowFontScaling}
                         decelerationRate={decelerationRate}
                         disableInfiniteScroll={disableInfiniteScroll}
+                        formatValue={formatSecondValue}
                         initialValue={safeInitialValue.seconds}
                         interval={secondInterval}
                         isDisabled={secondsPickerIsDisabled}
+                        isScreenReaderEnabled={isScreenReaderEnabled}
                         label={secondLabel ?? "s"}
                         limit={secondLimit}
                         maximumValue={maximumSeconds}

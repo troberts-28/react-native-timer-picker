@@ -42,6 +42,15 @@ export interface TimerPickerProps {
     LinearGradient?: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     MaskedView?: any;
+    accessibilityLabel?: string;
+    accessibilityLabels?: {
+        days?: string;
+        hint?: string;
+        hours?: string;
+        minutes?: string;
+        picker?: string;
+        seconds?: string;
+    };
     aggressivelyGetLatestDuration?: boolean;
     allowFontScaling?: boolean;
     amLabel?: string;
