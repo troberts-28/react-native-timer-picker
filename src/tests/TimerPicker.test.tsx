@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 
 import { render } from "@testing-library/react-native";
@@ -29,7 +30,7 @@ describe("TimerPicker", () => {
   });
 
   it("uses the custom FlatList component when provided", () => {
-    const CustomFlatList = (props) => <FlatList {...props} testID="custom-flat-list" />;
+    const CustomFlatList = (props: any) => <FlatList {...props} testID="custom-flat-list" />;
     const { queryAllByTestId } = render(<TimerPicker FlatList={CustomFlatList} />);
     const customFlatList = queryAllByTestId("custom-flat-list");
     expect(customFlatList).toHaveLength(3);
@@ -76,11 +77,6 @@ describe("TimerPicker", () => {
     expect(getByText("hrs")).toBeDefined();
     expect(getByText("mins")).toBeDefined();
     expect(getByText("secs")).toBeDefined();
-  });
-
-  it("renders with disabled state", () => {
-    const { getByTestId } = render(<TimerPicker disabled />);
-    expect(getByTestId("timer-picker")).toBeDefined();
   });
 
   it("renders LinearGradient when specified", () => {

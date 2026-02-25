@@ -170,6 +170,17 @@ export default defineConfig(
     },
   },
   {
+    // Add React Native runtime globals for example apps
+    files: ["examples/**"],
+    languageOptions: {
+      globals: {
+        atob: "readonly",
+        btoa: "readonly",
+        fetch: "readonly",
+      },
+    },
+  },
+  {
     // disable type-aware linting on JS files
     files: ["**/*.js"],
     ...tseslint.configs.disableTypeChecked,

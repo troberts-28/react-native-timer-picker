@@ -1,11 +1,12 @@
 {
-    "extends": "@react-native/typescript-config/tsconfig.json",
-    "compilerOptions": {
-        "strict": true,
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "paths": {
-            "react": ["./node_modules/@types/react"]
-        }
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "paths": {
+      "react": ["./node_modules/@types/react"]
     }
+  },
+  "include": ["."]
 }

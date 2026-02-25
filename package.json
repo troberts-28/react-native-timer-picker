@@ -24,12 +24,12 @@
     "start-bare:ios": "yarn workspace example-bare ios && yarn workspace example-bare start",
     "test": "jest --forceExit --silent",
     "build": "bob build",
-    "ts": "tsc --noEmit",
+    "ts": "tsc --noEmit && tsc --noEmit -p examples/example-expo && tsc --noEmit -p examples/example-bare",
     "clean": "rm yarn.lock && rm -rf ./node_modules && yarn install",
-    "lint": "eslint src/",
-    "lint:fix": "eslint src/ --fix",
-    "format": "prettier --check ./src",
-    "format:fix": "prettier --write ./src",
+    "lint": "eslint src/ examples/",
+    "lint:fix": "eslint src/ examples/ --fix",
+    "format": "prettier --check ./src ./examples",
+    "format:fix": "prettier --write ./src ./examples",
     "prepare": "yarn build"
   },
   "homepage": "https://github.com/troberts-28/react-native-timer-picker",
@@ -114,7 +114,7 @@
     "react-native": "0.72.0",
     "react-native-builder-bob": "^0.18.3",
     "react-test-renderer": "18.2.0",
-    "typescript": "^4.7.4",
+    "typescript": "~5.8.0",
     "typescript-eslint": "^8.33.0"
   },
   "react-native-builder-bob": {

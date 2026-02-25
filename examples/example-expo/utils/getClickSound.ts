@@ -13,11 +13,8 @@ import { Asset } from "expo-asset";
  * // Use clickSound with Audio API or other audio playback methods
  */
 export const getClickSound = async () => {
-    const [asset] = await Asset.loadAsync(
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        require("../assets/select_click.mp3")
-    );
+  const [asset] = await Asset.loadAsync(require("../assets/select_click.mp3"));
 
-    const response = await fetch(asset.uri);
-    return await response.arrayBuffer();
+  const response = await fetch(asset.uri);
+  return await response.arrayBuffer();
 };
