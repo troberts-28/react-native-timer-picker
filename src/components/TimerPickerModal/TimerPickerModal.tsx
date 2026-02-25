@@ -14,10 +14,8 @@ import Modal from "../Modal";
 import TimerPicker from "../TimerPicker";
 import type { TimerPickerRef } from "../TimerPicker";
 import type { PerColumnValue, PickerColumn } from "../TimerPicker/styles";
-import { generateStyles } from "./styles";
+import { DEFAULT_COLUMN_WIDTH, generateStyles } from "./styles";
 import type { TimerPickerModalRef, TimerPickerModalProps } from "./types";
-
-const DEFAULT_COLUMN_WIDTH = 58;
 
 const resolveColumnWidth = (
   pickerColumnWidth: PerColumnValue | undefined,

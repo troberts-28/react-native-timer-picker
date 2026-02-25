@@ -210,7 +210,11 @@ export default function App() {
           }}
           pickerFeedback={pickerFeedback}
           setIsVisible={setShowPickerExample3}
-          styles={{ theme: "dark" }}
+          styles={{
+            pickerLabelGap: 10,
+            text: { fontWeight: "bold" },
+            theme: "dark",
+          }}
           visible={showPickerExample3}
         />
       </View>

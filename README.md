@@ -13,6 +13,7 @@ Works with Expo and bare React Native apps ✅
 
 Includes iOS-style haptic and audio feedback 🍏
 
+- [React Native Timer Picker ⏰🕰️⏳](#react-native-timer-picker-️)
   - [Demos 📱](#demos-)
   - [Installation 🚀](#installation-)
     - [Peer Dependencies 👶](#peer-dependencies-)
@@ -289,6 +290,9 @@ return (
             setIsVisible={setShowPicker}
             styles={{
                 theme: "light",
+                pickerColumnWidth: {
+                    hours: 90,
+                },
             }}
             use12HourPicker
             visible={showPicker}
@@ -426,6 +430,8 @@ return (
             setIsVisible={setShowPicker}
             styles={{
                 theme: "dark",
+                pickerLabelGap: 10,
+                text: { fontSize: 18 },
             }}
             visible={showPicker}
         />

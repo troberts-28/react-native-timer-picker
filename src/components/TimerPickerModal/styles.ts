@@ -3,6 +3,8 @@ import type { DimensionValue, TextStyle, ViewStyle } from "react-native";
 
 import type { CustomTimerPickerStyles } from "../TimerPicker/styles";
 
+export const DEFAULT_COLUMN_WIDTH = 70;
+
 export interface CustomTimerPickerModalStyles extends CustomTimerPickerStyles {
   button?: TextStyle;
   buttonContainer?: ViewStyle;
@@ -39,7 +41,10 @@ export const generateStyles = (
   const totalColumnWidth = variables.totalColumnWidth;
   const modalPadding = (customContentContainerStyle?.paddingHorizontal as number) ?? 20;
   const labelOverhang = 20;
-  const computedWidth = Math.max(116, totalColumnWidth + modalPadding * 2 + labelOverhang);
+  const computedWidth = Math.max(
+    DEFAULT_COLUMN_WIDTH * 2,
+    totalColumnWidth + modalPadding * 2 + labelOverhang
+  );
 
   return StyleSheet.create({
     button: {
