@@ -13,6 +13,7 @@ Works with Expo and bare React Native apps ✅
 
 Includes iOS-style haptic and audio feedback 🍏
 
+- [React Native Timer Picker ⏰🕰️⏳](#react-native-timer-picker-️)
   - [Demos 📱](#demos-)
   - [Installation 🚀](#installation-)
     - [Peer Dependencies 👶](#peer-dependencies-)
@@ -289,6 +290,9 @@ return (
             setIsVisible={setShowPicker}
             styles={{
                 theme: "light",
+                pickerColumnWidth: {
+                    hours: 90,
+                },
             }}
             use12HourPicker
             visible={showPicker}
@@ -426,6 +430,8 @@ return (
             setIsVisible={setShowPicker}
             styles={{
                 theme: "dark",
+                pickerLabelGap: 10,
+                text: { fontSize: 18 },
             }}
             visible={showPicker}
         />
@@ -464,14 +470,13 @@ return (
                 pickerItem: {
                     fontSize: 34,
                 },
-                pickerLabelContainer: {
-                    marginTop: -4,
-                    right: 0,
-                    left: undefined,
-                },
                 pickerLabel: {
                     fontSize: 32,
                 },
+                pickerLabelContainer: {
+                    marginTop: -4,
+                },
+                pickerLabelGap: 23,
                 pickerContainer: {
                     paddingHorizontal: 50,
                 },
@@ -502,7 +507,7 @@ return (
             secondLabel="sec"
             styles={{
                 theme: "light",
-                labelOffsetPercentage: 0,
+                pickerLabelGap: 8,
                 pickerItem: {
                     fontSize: 34,
                 },
@@ -582,14 +587,18 @@ return (
 
 #### Custom Styles 👗
 
-The component should look good straight out of the box, but you can use these styles to make it fit in with your App's theme:
+The component should look good straight out of the box, but you can use these easy styles to make it fit in with your App's theme:
 
-|      Style Prop       | Description                                                              |       Type        |
-| :-------------------: | :----------------------------------------------------------------------- | :---------------: |
-|         theme         | Theme of the component                                                   | "light" \| "dark" |
-|    backgroundColor    | Main background color                                                    |      string       |
-|         text          | Base text style                                                          |     TextStyle     |
-| labelOffsetPercentage | Percentage offset for horizonal label positioning relative to the picker |      number       |
+|                Style Prop                 | Description                                                                                                                                              |        Type        |
+| :---------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------: |
+|                   theme                   | Theme of the component                                                                                                                                   | "light" \| "dark"  |
+|              backgroundColor              | Main background color                                                                                                                                    |       string       |
+|                   text                    | Base text style                                                                                                                                          |     TextStyle      |
+|              pickerLabelGap               | Pixel gap between the label and the picker number column. Can be a single number or a per-column object (e.g. `{ hours: 10, minutes: 8 }`). Default: `6` | `PerColumnValue`\* |
+|             pickerColumnWidth             | Width of individual picker columns in pixels. Can be a single number or a per-column object. Overrides default flex-based sizing when set                 | `PerColumnValue`\* |
+| labelOffsetPercentage **(DEPRECATED)**    | Percentage offset for horizontal label positioning relative to the picker (use `pickerLabelGap` instead)                                                 |       number       |
+
+**\*`PerColumnValue` type:** `number | { days?: number, hours?: number, minutes?: number, seconds?: number }` — pass a single number for all columns, or an object to set values per column. Omitted columns use the default.
 
 For deeper style customization, you can supply the following custom styles to adjust the component in any way. These are applied on top of the default styling so take a look at those [styles](src/components/TimerPicker/styles.ts) if something isn't adjusting in the way you'd expect.
 

@@ -173,6 +173,9 @@ export default function App() {
           pickerFeedback={pickerFeedback}
           setIsVisible={setShowPickerExample2}
           styles={{
+            pickerColumnWidth: {
+              hours: 90,
+            },
             theme: "light",
           }}
           use12HourPicker
@@ -217,6 +220,8 @@ export default function App() {
           pickerFeedback={pickerFeedback}
           setIsVisible={setShowPickerExample3}
           styles={{
+            pickerLabelGap: 10,
+            text: { fontSize: 18 },
             theme: "dark",
           }}
           visible={showPickerExample3}
@@ -253,10 +258,9 @@ export default function App() {
               fontSize: 32,
             },
             pickerLabelContainer: {
-              left: undefined,
               marginTop: -4,
-              right: 0,
             },
+            pickerLabelGap: 23,
             theme: "dark",
           }}
         />
@@ -275,7 +279,6 @@ export default function App() {
           pickerFeedback={pickerFeedback}
           secondLabel="sec"
           styles={{
-            labelOffsetPercentage: 0,
             pickerContainer: {
               paddingHorizontal: 50,
             },
@@ -285,6 +288,7 @@ export default function App() {
             pickerLabel: {
               fontSize: 26,
             },
+            pickerLabelGap: 8,
             theme: "light",
           }}
         />

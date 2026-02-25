@@ -13,7 +13,23 @@ import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
 import DurationScroll from "../DurationScroll";
 import type { DurationScrollRef } from "../DurationScroll";
 import { generateStyles } from "./styles";
+import type { PerColumnValue, PickerColumn } from "./styles";
 import type { TimerPickerProps, TimerPickerRef } from "./types";
+
+const resolvePerColumn = (
+  value: PerColumnValue | undefined,
+  column: PickerColumn
+): number | undefined => {
+  if (value == null) {
+    return undefined;
+  }
+
+  if (typeof value === "number") {
+    return value;
+  }
+
+  return value[column];
+};
 
 const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) => {
   const {
@@ -80,7 +96,24 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
         'The "clickSoundAsset" prop is deprecated and will be removed in a future version. Please use the "pickerFeedback" prop instead.'
       );
     }
-  }, [otherProps.Audio, otherProps.Haptics, otherProps.clickSoundAsset]);
+    if (customStyles?.labelOffsetPercentage != null) {
+      if (customStyles?.pickerLabelGap != null) {
+        console.warn(
+          "labelOffsetPercentage is ignored when pickerLabelGap is set. Please remove labelOffsetPercentage."
+        );
+      } else {
+        console.warn(
+          'The "labelOffsetPercentage" style prop is deprecated and will be removed in a future version. Please use the "pickerLabelGap" style prop instead.'
+        );
+      }
+    }
+  }, [
+    otherProps.Audio,
+    otherProps.Haptics,
+    otherProps.clickSoundAsset,
+    customStyles?.labelOffsetPercentage,
+    customStyles?.pickerLabelGap,
+  ]);
 
   const safePadWithNItems = useMemo(() => {
     if (padWithNItems < 0 || isNaN(padWithNItems)) {
@@ -106,6 +139,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
       }),
     [initialValue?.days, initialValue?.hours, initialValue?.minutes, initialValue?.seconds]
   );
+
+  const pickerLabelGap = customStyles?.pickerLabelGap;
+  const pickerColumnWidth = customStyles?.pickerColumnWidth;
 
   const styles = useMemo(
     () => generateStyles(customStyles),
@@ -187,6 +223,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
           onDurationChange={setSelectedDays}
           padNumbersWithZero={padDaysWithZero}
           padWithNItems={safePadWithNItems}
+          pickerColumnWidth={resolvePerColumn(pickerColumnWidth, "days")}
+          pickerLabelGap={resolvePerColumn(pickerLabelGap, "days")}
           repeatNumbersNTimes={repeatDayNumbersNTimes}
           repeatNumbersNTimesNotExplicitlySet={props?.repeatDayNumbersNTimes === undefined}
           selectedValue={selectedDays}
@@ -213,6 +251,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
           onDurationChange={setSelectedHours}
           padNumbersWithZero={padHoursWithZero}
           padWithNItems={safePadWithNItems}
+          pickerColumnWidth={resolvePerColumn(pickerColumnWidth, "hours")}
+          pickerLabelGap={resolvePerColumn(pickerLabelGap, "hours")}
           pmLabel={pmLabel}
           repeatNumbersNTimes={repeatHourNumbersNTimes}
           repeatNumbersNTimesNotExplicitlySet={props?.repeatHourNumbersNTimes === undefined}
@@ -238,6 +278,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
           onDurationChange={setSelectedMinutes}
           padNumbersWithZero={padMinutesWithZero}
           padWithNItems={safePadWithNItems}
+          pickerColumnWidth={resolvePerColumn(pickerColumnWidth, "minutes")}
+          pickerLabelGap={resolvePerColumn(pickerLabelGap, "minutes")}
           repeatNumbersNTimes={repeatMinuteNumbersNTimes}
           repeatNumbersNTimesNotExplicitlySet={props?.repeatMinuteNumbersNTimes === undefined}
           selectedValue={selectedMinutes}
@@ -262,6 +304,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
           onDurationChange={setSelectedSeconds}
           padNumbersWithZero={padSecondsWithZero}
           padWithNItems={safePadWithNItems}
+          pickerColumnWidth={resolvePerColumn(pickerColumnWidth, "seconds")}
+          pickerLabelGap={resolvePerColumn(pickerLabelGap, "seconds")}
           repeatNumbersNTimes={repeatSecondNumbersNTimes}
           repeatNumbersNTimesNotExplicitlySet={props?.repeatSecondNumbersNTimes === undefined}
           selectedValue={selectedSeconds}

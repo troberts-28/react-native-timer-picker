@@ -45,8 +45,10 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     onDurationChange,
     padNumbersWithZero = false,
     padWithNItems,
+    pickerColumnWidth,
     pickerFeedback,
     pickerGradientOverlayProps,
+    pickerLabelGap,
     pmLabel,
     repeatNumbersNTimes = 3,
     repeatNumbersNTimesNotExplicitlySet,
@@ -54,6 +56,24 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     styles,
     testID,
   } = props;
+
+  const labelPositionStyle = useMemo(() => {
+    // When the style already has an explicit `left` (from legacy percentage system or
+    // user override), don't apply pixel-based positioning.
+    if (styles.pickerLabelContainer.left != null) {
+      return undefined;
+    }
+
+    const gap = pickerLabelGap ?? 6;
+    const fontSize = styles.pickerItem.fontSize ?? 25;
+    const maxDigitCount = Math.max(2, String(maximumValue).length);
+    const halfNumberWidth = (maxDigitCount * fontSize * 0.55) / 2;
+
+    return {
+      left: "50%" as const,
+      marginLeft: halfNumberWidth + gap,
+    };
+  }, [maximumValue, pickerLabelGap, styles.pickerItem.fontSize, styles.pickerLabelContainer.left]);
 
   const numberOfItems = useMemo(() => {
     // guard against negative maximum values
@@ -210,6 +230,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
         amLabel={amLabel}
         is12HourPicker={is12HourPicker}
         item={item}
+        pickerAmPmPositionStyle={labelPositionStyle}
         pmLabel={pmLabel}
         selectedValue={selectedValue}
         styles={styles}
@@ -221,6 +242,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
       allowFontScaling,
       amLabel,
       is12HourPicker,
+      labelPositionStyle,
       pmLabel,
       selectedValue,
       styles,
@@ -488,7 +510,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
           viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs}
           windowSize={numberOfItemsToShow}
         />
-        <View pointerEvents="none" style={styles.pickerLabelContainer}>
+        <View pointerEvents="none" style={[styles.pickerLabelContainer, labelPositionStyle]}>
           {typeof label === "string" ? (
             <Text allowFontScaling={allowFontScaling} style={styles.pickerLabel}>
               {label}
@@ -508,6 +530,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     initialScrollIndex,
     isDisabled,
     label,
+    labelPositionStyle,
     numberOfItemsToShow,
     numbersForFlatList,
     onMomentumScrollEnd,
@@ -571,6 +594,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
       pointerEvents={isDisabled ? "none" : undefined}
       style={[
         styles.durationScrollFlatListContainer,
+        pickerColumnWidth != null && { flex: 0, width: pickerColumnWidth },
         {
           height: styles.pickerItemContainer.height * numberOfItemsToShow,
         },

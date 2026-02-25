@@ -13,8 +13,24 @@ import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
 import Modal from "../Modal";
 import TimerPicker from "../TimerPicker";
 import type { TimerPickerRef } from "../TimerPicker";
-import { generateStyles } from "./styles";
+import type { PerColumnValue, PickerColumn } from "../TimerPicker/styles";
+import { DEFAULT_COLUMN_WIDTH, generateStyles } from "./styles";
 import type { TimerPickerModalRef, TimerPickerModalProps } from "./types";
+
+const resolveColumnWidth = (
+  pickerColumnWidth: PerColumnValue | undefined,
+  column: PickerColumn
+): number => {
+  if (pickerColumnWidth == null) {
+    return DEFAULT_COLUMN_WIDTH;
+  }
+
+  if (typeof pickerColumnWidth === "number") {
+    return pickerColumnWidth;
+  }
+
+  return pickerColumnWidth[column] ?? DEFAULT_COLUMN_WIDTH;
+};
 
 const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>((props, ref) => {
   const {
@@ -26,6 +42,10 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
     containerProps,
     contentContainerProps,
     hideCancelButton = false,
+    hideDays = true,
+    hideHours = false,
+    hideMinutes = false,
+    hideSeconds = false,
     initialValue,
     modalProps,
     modalTitle,
@@ -39,8 +59,17 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
     ...otherProps
   } = props;
 
+  const pickerColumnWidth = customStyles?.pickerColumnWidth;
+
+  const totalColumnWidth =
+    (!hideDays ? resolveColumnWidth(pickerColumnWidth, "days") : 0) +
+    (!hideHours ? resolveColumnWidth(pickerColumnWidth, "hours") : 0) +
+    (!hideMinutes ? resolveColumnWidth(pickerColumnWidth, "minutes") : 0) +
+    (!hideSeconds ? resolveColumnWidth(pickerColumnWidth, "seconds") : 0);
+
   const styles = generateStyles(customStyles, {
     hasModalTitle: Boolean(modalTitle),
+    totalColumnWidth,
   });
 
   const timerPickerRef = useRef<TimerPickerRef>(null);
@@ -147,6 +176,10 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
           ) : null}
           <TimerPicker
             ref={timerPickerRef}
+            hideDays={hideDays}
+            hideHours={hideHours}
+            hideMinutes={hideMinutes}
+            hideSeconds={hideSeconds}
             initialValue={confirmedDuration}
             {...otherProps}
             aggressivelyGetLatestDuration

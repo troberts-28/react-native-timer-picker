@@ -28,8 +28,10 @@ export interface DurationScrollProps {
   onDurationChange: (duration: number) => void;
   padNumbersWithZero?: boolean;
   padWithNItems: number;
+  pickerColumnWidth?: number;
   pickerFeedback?: () => void | Promise<void>;
   pickerGradientOverlayProps?: Partial<LinearGradientProps>;
+  pickerLabelGap?: number;
   pmLabel?: string;
   repeatNumbersNTimes?: number;
   repeatNumbersNTimesNotExplicitlySet: boolean;
