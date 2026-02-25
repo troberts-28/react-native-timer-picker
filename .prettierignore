@@ -1,0 +1,6 @@
+dist
+node_modules
+.expo
+.yarn
+examples/example-bare/android
+examples/example-bare/ios

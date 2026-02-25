@@ -2,5 +2,5 @@
 import React from "react";
 
 export default function LinearGradient(props) {
-    return <div {...props} />;
+  return <div {...props} />;
 }

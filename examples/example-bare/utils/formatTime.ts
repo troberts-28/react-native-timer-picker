@@ -15,25 +15,25 @@
  * formatTime({ hours: 23 }) // returns "23"
  */
 export const formatTime = ({
-    hours,
-    minutes,
-    seconds,
+  hours,
+  minutes,
+  seconds,
 }: {
-    hours?: number;
-    minutes?: number;
-    seconds?: number;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
 }): string => {
-    const timeParts = [];
+  const timeParts = [];
 
-    if (hours !== undefined) {
-        timeParts.push(hours.toString().padStart(2, "0"));
-    }
-    if (minutes !== undefined) {
-        timeParts.push(minutes.toString().padStart(2, "0"));
-    }
-    if (seconds !== undefined) {
-        timeParts.push(seconds.toString().padStart(2, "0"));
-    }
+  if (hours !== undefined) {
+    timeParts.push(hours.toString().padStart(2, "0"));
+  }
+  if (minutes !== undefined) {
+    timeParts.push(minutes.toString().padStart(2, "0"));
+  }
+  if (seconds !== undefined) {
+    timeParts.push(seconds.toString().padStart(2, "0"));
+  }
 
-    return timeParts.join(":");
+  return timeParts.join(":");
 };

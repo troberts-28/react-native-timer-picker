@@ -23,13 +23,10 @@
  * padNumber(15)
  * // Returns: '15'
  */
-export const padNumber = (
-    value: number,
-    options?: { padWithZero?: boolean }
-): string => {
-    if (value < 10) {
-        return (options?.padWithZero ? "0" : "\u2007") + value;
-    } else {
-        return String(value);
-    }
+export const padNumber = (value: number, options?: { padWithZero?: boolean }): string => {
+  if (value < 10) {
+    return (options?.padWithZero ? "0" : "\u2007") + value;
+  } else {
+    return String(value);
+  }
 };
