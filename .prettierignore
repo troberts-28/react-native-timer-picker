@@ -4,3 +4,4 @@ node_modules
 .yarn
 examples/example-bare/android
 examples/example-bare/ios
+*.md
