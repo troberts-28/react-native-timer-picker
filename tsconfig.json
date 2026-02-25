@@ -1,27 +1,29 @@
 {
-    "compilerOptions": {
-        "target": "esnext",
-        "module": "commonjs",
-        "lib": ["esnext"],
-        "allowJs": true,
-        "jsx": "react-native",
-        "strict": true,
-        "moduleResolution": "node",
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "rootDir": "src",
-        "declaration": true,
-        "paths": {
-            "react": ["./node_modules/@types/react"]
-        }
-    },
-    "exclude": [
-        "examples/*",
-        "dist/*",
-        "src/tests",
-        "babel.config.js",
-        "jest.config.js",
-        "README.md"
-    ]
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": ["esnext"],
+    "allowJs": true,
+    "jsx": "react-native",
+    "strict": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "rootDir": "src",
+    "declaration": true,
+    "paths": {
+      "react": ["./node_modules/@types/react"]
+    }
+  },
+  "exclude": [
+    "examples/*",
+    "dist/*",
+    "babel.config.js",
+    "jest.config.js",
+    "eslint.config.mjs",
+    "README.md",
+    "src/tests/__mocks__/expo-linear-gradient.js"
+  ]
 }
