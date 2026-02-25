@@ -151,6 +151,7 @@ export default function App() {
                 </TouchableOpacity>
                 <TimerPickerModal
                     closeOnOverlayPress
+                    hideCancelButton
                     LinearGradient={LinearGradient}
                     modalProps={{ overlayOpacity: 0.2 }}
                     modalTitle="Set Alarm"

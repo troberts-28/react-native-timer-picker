@@ -35,35 +35,33 @@ import { padNumber } from "./padNumber";
  * // Returns: ['0', '2', '4', '6', '8', '0', '2', '4', '6', '8', '0', '2', '4', '6', '8']
  */
 export const generateNumbers = (
-    numberOfItems: number,
-    options: {
-        disableInfiniteScroll?: boolean;
-        interval: number;
-        padNumbersWithZero?: boolean;
-        padWithNItems: number;
-        repeatNTimes: number;
-    }
+  numberOfItems: number,
+  options: {
+    disableInfiniteScroll?: boolean;
+    interval: number;
+    padNumbersWithZero?: boolean;
+    padWithNItems: number;
+    repeatNTimes: number;
+  }
 ) => {
-    if (numberOfItems <= 0) {
-        return [];
-    }
+  if (numberOfItems <= 0) {
+    return [];
+  }
 
-    let numbers: string[] = [];
-    for (let i = 0; i < numberOfItems; i++) {
-        const value = i * options.interval;
-        numbers.push(
-            padNumber(value, { padWithZero: options.padNumbersWithZero })
-        );
-    }
+  let numbers: string[] = [];
+  for (let i = 0; i < numberOfItems; i++) {
+    const value = i * options.interval;
+    numbers.push(padNumber(value, { padWithZero: options.padNumbersWithZero }));
+  }
 
-    if (options.repeatNTimes > 1) {
-        numbers = Array(options.repeatNTimes).fill(numbers).flat();
-    }
-    if (options.disableInfiniteScroll || options.repeatNTimes === 1) {
-        numbers.push(...Array(options.padWithNItems).fill(""));
-        numbers.unshift(...Array(options.padWithNItems).fill(""));
-    }
-    return numbers;
+  if (options.repeatNTimes > 1) {
+    numbers = Array(options.repeatNTimes).fill(numbers).flat();
+  }
+  if (options.disableInfiniteScroll || options.repeatNTimes === 1) {
+    numbers.push(...Array(options.padWithNItems).fill(""));
+    numbers.unshift(...Array(options.padWithNItems).fill(""));
+  }
+  return numbers;
 };
 
 /**
@@ -99,38 +97,34 @@ export const generateNumbers = (
  * // Returns: ['12 AM', '2 AM', '4 AM', ..., '10 PM', '12 AM', '2 AM', ...]
  */
 export const generate12HourNumbers = (options: {
-    disableInfiniteScroll?: boolean;
-    interval: number;
-    padNumbersWithZero?: boolean;
-    padWithNItems: number;
-    repeatNTimes?: number;
+  disableInfiniteScroll?: boolean;
+  interval: number;
+  padNumbersWithZero?: boolean;
+  padWithNItems: number;
+  repeatNTimes?: number;
 }) => {
-    let numbers: string[] = [];
+  let numbers: string[] = [];
 
-    // Generate numbers from 12 AM to 11 AM
-    for (let i = 0; i < 12; i += options.interval) {
-        const hour = i === 0 ? 12 : i;
-        numbers.push(
-            `${padNumber(hour, { padWithZero: options.padNumbersWithZero })} AM`
-        );
-    }
+  // Generate numbers from 12 AM to 11 AM
+  for (let i = 0; i < 12; i += options.interval) {
+    const hour = i === 0 ? 12 : i;
+    numbers.push(`${padNumber(hour, { padWithZero: options.padNumbersWithZero })} AM`);
+  }
 
-    // Generate numbers from 12 PM to 11 PM
-    for (let i = 12; i < 24; i += options.interval) {
-        const hour = i > 12 ? i - 12 : i;
-        numbers.push(
-            `${padNumber(hour, { padWithZero: options.padNumbersWithZero })} PM`
-        );
-    }
+  // Generate numbers from 12 PM to 11 PM
+  for (let i = 12; i < 24; i += options.interval) {
+    const hour = i > 12 ? i - 12 : i;
+    numbers.push(`${padNumber(hour, { padWithZero: options.padNumbersWithZero })} PM`);
+  }
 
-    if ((options.repeatNTimes ?? 1) > 1) {
-        numbers = Array(options.repeatNTimes).fill(numbers).flat();
-    }
+  if ((options.repeatNTimes ?? 1) > 1) {
+    numbers = Array(options.repeatNTimes).fill(numbers).flat();
+  }
 
-    if (options.disableInfiniteScroll) {
-        numbers.push(...Array(options.padWithNItems).fill(""));
-        numbers.unshift(...Array(options.padWithNItems).fill(""));
-    }
+  if (options.disableInfiniteScroll) {
+    numbers.push(...Array(options.padWithNItems).fill(""));
+    numbers.unshift(...Array(options.padWithNItems).fill(""));
+  }
 
-    return numbers;
+  return numbers;
 };
