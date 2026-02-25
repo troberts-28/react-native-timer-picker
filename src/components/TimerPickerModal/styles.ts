@@ -20,8 +20,9 @@ const LIGHT_MODE_TEXT_COLOR = "#1B1B1B";
 
 export const generateStyles = (
   customStyles: CustomTimerPickerModalStyles | undefined,
-  variables?: {
+  variables: {
     hasModalTitle: boolean;
+    totalColumnWidth: number;
   }
 ) => {
   const {
@@ -34,6 +35,11 @@ export const generateStyles = (
     modalTitle: customModalTitleStyle,
     ...customTimerPickerStyles
   } = customStyles ?? {};
+
+  const totalColumnWidth = variables.totalColumnWidth;
+  const modalPadding = (customContentContainerStyle?.paddingHorizontal as number) ?? 20;
+  const labelOverhang = 20;
+  const computedWidth = Math.max(116, totalColumnWidth + modalPadding * 2 + labelOverhang);
 
   return StyleSheet.create({
     button: {
@@ -83,6 +89,7 @@ export const generateStyles = (
       justifyContent: "center",
       overflow: "hidden",
       paddingHorizontal: 20,
+      width: computedWidth,
       ...customContentContainerStyle,
     },
     modalTitle: {
