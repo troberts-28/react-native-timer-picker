@@ -119,7 +119,6 @@ export default function App() {
         </TouchableOpacity>
         <TimerPickerModal
           closeOnOverlayPress
-          hideCancelButton
           LinearGradient={LinearGradient}
           modalProps={{ overlayOpacity: 0.2 }}
           modalTitle="Set Alarm"
@@ -166,7 +165,12 @@ export default function App() {
           }}
           pickerFeedback={pickerFeedback}
           setIsVisible={setShowPickerExample2}
-          styles={{ theme: "light" }}
+          styles={{
+            theme: "light",
+            pickerColumnWidth: {
+              hours: 90,
+            },
+          }}
           use12HourPicker
           visible={showPickerExample2}
         />
@@ -241,10 +245,9 @@ export default function App() {
               fontSize: 32,
             },
             pickerLabelContainer: {
-              left: undefined,
               marginTop: -4,
-              right: 0,
             },
+            pickerLabelGap: 23,
             theme: "dark",
           }}
         />
@@ -263,7 +266,6 @@ export default function App() {
           pickerFeedback={pickerFeedback}
           secondLabel="sec"
           styles={{
-            labelOffsetPercentage: 0,
             pickerContainer: {
               paddingHorizontal: 50,
             },
@@ -273,6 +275,7 @@ export default function App() {
             pickerLabel: {
               fontSize: 26,
             },
+            pickerLabelGap: 8,
             theme: "light",
           }}
         />
@@ -350,6 +353,7 @@ export default function App() {
         horizontal
         onMomentumScrollEnd={onMomentumScrollEnd}
         pagingEnabled
+        showsHorizontalScrollIndicator={false}
       >
         {renderExample1}
         {renderExample2}

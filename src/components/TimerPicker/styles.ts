@@ -1,6 +1,10 @@
 import { StyleSheet } from "react-native";
 import type { TextStyle, ViewStyle } from "react-native";
 
+export type PickerColumn = "days" | "hours" | "minutes" | "seconds";
+
+export type PerColumnValue = number | Partial<Record<PickerColumn, number>>;
+
 export interface CustomTimerPickerStyles {
   backgroundColor?: string;
   disabledPickerContainer?: ViewStyle;
@@ -8,15 +12,18 @@ export interface CustomTimerPickerStyles {
   durationScrollFlatList?: ViewStyle;
   durationScrollFlatListContainer?: ViewStyle;
   durationScrollFlatListContentContainer?: ViewStyle;
+  /** @deprecated Use pickerLabelGap instead. Will be removed in a future version. */
   labelOffsetPercentage?: number;
   pickerAmPmContainer?: ViewStyle;
   pickerAmPmLabel?: TextStyle;
+  pickerColumnWidth?: PerColumnValue;
   pickerContainer?: ViewStyle & { backgroundColor?: string };
   pickerGradientOverlay?: ViewStyle;
   pickerItem?: TextStyle;
   pickerItemContainer?: ViewStyle & { height?: number };
   pickerLabel?: TextStyle;
   pickerLabelContainer?: ViewStyle;
+  pickerLabelGap?: PerColumnValue;
   selectedPickerItem?: TextStyle;
   text?: TextStyle;
   theme?: "light" | "dark";
@@ -49,9 +56,13 @@ export const generateStyles = (customStyles: CustomTimerPickerStyles | undefined
   const pickerLabelVerticalOffset = pickerItemFontSize - pickerLabelFontSize - 1;
   const pickerAmPmVerticalOffset = pickerItemFontSize - pickerAmPmFontSize - 1;
 
-  // The label is absolutely positioned, so we need to offset it for it to appear
-  // in the correct position. We offset it to the left of the container so that
-  // the width of the label doesn't impact its position.
+  // Determine whether to use the legacy percentage-based label positioning.
+  // The new pixel-based system (pickerLabelGap) is the default.
+  // The old system is only used when labelOffsetPercentage is explicitly set
+  // without pickerLabelGap.
+  const useLegacyLabelPosition =
+    customStyles?.labelOffsetPercentage != null && customStyles?.pickerLabelGap == null;
+
   const extraLabelOffsetPercentage = customStyles?.labelOffsetPercentage ?? 8;
   const baseLeftOffsetPercentage = 70;
   const labelOffsetPercentage = baseLeftOffsetPercentage + extraLabelOffsetPercentage;
@@ -85,10 +96,12 @@ export const generateStyles = (customStyles: CustomTimerPickerStyles | undefined
     pickerAmPmContainer: {
       bottom: 0,
       justifyContent: "center",
-      left: `${labelOffsetPercentage}%`,
       marginTop: pickerAmPmVerticalOffset,
       position: "absolute",
       top: 0,
+      // Only apply percentage-based left when using legacy positioning.
+      // The new pixel-based positioning is applied per-column in PickerItem.
+      ...(useLegacyLabelPosition ? { left: `${labelOffsetPercentage}%` } : undefined),
       ...customStyles?.pickerLabelContainer,
       ...customStyles?.pickerAmPmContainer,
     },
@@ -137,10 +150,12 @@ export const generateStyles = (customStyles: CustomTimerPickerStyles | undefined
     pickerLabelContainer: {
       bottom: 0,
       justifyContent: "center",
-      left: `${labelOffsetPercentage}%`,
       marginTop: pickerLabelVerticalOffset,
       position: "absolute",
       top: 0,
+      // Only apply percentage-based left when using legacy positioning.
+      // The new pixel-based positioning is applied per-column in DurationScroll.
+      ...(useLegacyLabelPosition ? { left: `${labelOffsetPercentage}%` } : undefined),
       ...customStyles?.pickerLabelContainer,
     },
     selectedPickerItem: {

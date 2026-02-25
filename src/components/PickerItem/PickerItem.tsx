@@ -11,6 +11,7 @@ interface PickerItemProps {
   amLabel?: string;
   is12HourPicker?: boolean;
   item: string;
+  pickerAmPmPositionStyle?: { left: "50%"; marginLeft: number };
   pmLabel?: string;
   selectedValue?: number;
   styles: ReturnType<typeof generateStyles>;
@@ -24,6 +25,7 @@ const PickerItem = React.memo<PickerItemProps>(
     amLabel,
     is12HourPicker,
     item,
+    pickerAmPmPositionStyle,
     pmLabel,
     selectedValue,
     styles,
@@ -57,7 +59,7 @@ const PickerItem = React.memo<PickerItemProps>(
           {stringItem}
         </Text>
         {is12HourPicker && (
-          <View style={styles.pickerAmPmContainer}>
+          <View style={[styles.pickerAmPmContainer, pickerAmPmPositionStyle]}>
             <Text allowFontScaling={allowFontScaling} style={styles.pickerAmPmLabel}>
               {isAm ? amLabel : pmLabel}
             </Text>
