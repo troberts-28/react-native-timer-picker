@@ -25,5 +25,7 @@ jobs:
         run: npm install -g npm@latest
       - name: Install dependencies
         run: yarn
+      - name: Build
+        run: yarn build
       - name: Release
         run: npm publish
