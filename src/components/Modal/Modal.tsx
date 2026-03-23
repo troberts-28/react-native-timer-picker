@@ -25,7 +25,7 @@ export const Modal = (props: ModalProps) => {
     testID = "modal",
   } = props;
 
-  const { height: screenHeight, width: screenWidth } = useWindowDimensions();
+  const { height: screenHeight } = useWindowDimensions();
 
   const isMounted = useRef(false);
   const animatedOpacity = useRef(new Animated.Value(0));
@@ -65,7 +65,6 @@ export const Modal = (props: ModalProps) => {
       duration: animationDuration,
       easing: Easing.inOut(Easing.quad),
       toValue: 1,
-      // Using native driver in the modal makes the content flash
       useNativeDriver: true,
     }).start();
   }, [animationDuration]);
@@ -75,7 +74,6 @@ export const Modal = (props: ModalProps) => {
       duration: animationDuration,
       easing: Easing.inOut(Easing.quad),
       toValue: 0,
-      // Using native driver in the modal makes the content flash
       useNativeDriver: true,
     }).start(() => {
       if (isMounted.current) {
@@ -96,20 +94,14 @@ export const Modal = (props: ModalProps) => {
   return (
     <ReactNativeModal
       animationType="fade"
+      statusBarTranslucent
       transparent
       visible={isVisible}
       {...modalProps}
       testID={testID}
     >
       <TouchableWithoutFeedback onPress={onOverlayPress} testID="modal-backdrop">
-        <Animated.View
-          style={[
-            styles.backdrop,
-            backdropAnimatedStyle,
-            { height: screenHeight, width: screenWidth },
-            overlayStyle,
-          ]}
-        />
+        <Animated.View style={[styles.backdrop, backdropAnimatedStyle, overlayStyle]} />
       </TouchableWithoutFeedback>
       <Animated.View
         pointerEvents="box-none"
