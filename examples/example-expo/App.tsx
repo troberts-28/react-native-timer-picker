@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaskedView from "@react-native-masked-view/masked-view";
@@ -12,7 +12,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  useWindowDimensions,
 } from "react-native";
 import type { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 // import { AudioContext, type AudioBuffer } from "react-native-audio-api";
@@ -23,12 +22,11 @@ import { formatTime } from "./utils/formatTime";
 // import { getClickSound } from "./utils/getClickSound";
 
 export default function App() {
-  const { width: screenWidth } = useWindowDimensions();
-
   const scrollViewRef = useRef<ScrollView>(null);
   // const audioContextRef = useRef<AudioContext | null>(null);
   // const audioBufferRef = useRef<AudioBuffer | null>(null);
 
+  const [pageWidth, setPageWidth] = useState(0);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [showPickerExample1, setShowPickerExample1] = useState(false);
   const [showPickerExample2, setShowPickerExample2] = useState(false);
@@ -59,23 +57,26 @@ export default function App() {
   //     };
   // }, []);
 
-  useEffect(() => {
-    // when changing to landscape mode, scroll to the nearest page index
-    scrollViewRef.current?.scrollTo({
-      animated: false,
-      x: screenWidth * currentPageIndex,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [screenWidth]);
+  const onRootLayout = useCallback(
+    (event: { nativeEvent: { layout: { width: number } } }) => {
+      const { width } = event.nativeEvent.layout;
+      setPageWidth(width);
+      scrollViewRef.current?.scrollTo({
+        animated: false,
+        x: width * currentPageIndex,
+      });
+    },
+    [currentPageIndex]
+  );
 
   const onMomentumScrollEnd = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       const { contentOffset } = event.nativeEvent;
-      const newPageIndex = Math.round(contentOffset.x / screenWidth) as 0 | 1;
+      const newPageIndex = Math.round(contentOffset.x / pageWidth) as 0 | 1;
       setCurrentPageIndex(newPageIndex);
     },
-    [screenWidth]
+    [pageWidth]
   );
 
   const pickerFeedback = useCallback(() => {
@@ -101,7 +102,7 @@ export default function App() {
 
   const renderExample1 = useMemo(() => {
     return (
-      <View style={[styles.container, styles.page1Container, { width: screenWidth }]}>
+      <View style={[styles.container, styles.page1Container, { width: pageWidth }]}>
         <Text style={styles.textDark}>
           {alarmStringExample1 !== null ? "Alarm set for" : "No alarm set"}
         </Text>
@@ -134,11 +135,11 @@ export default function App() {
         />
       </View>
     );
-  }, [alarmStringExample1, pickerFeedback, screenWidth, showPickerExample1]);
+  }, [alarmStringExample1, pickerFeedback, pageWidth, showPickerExample1]);
 
   const renderExample2 = useMemo(() => {
     return (
-      <View style={[styles.container, styles.page2Container, { width: screenWidth }]}>
+      <View style={[styles.container, styles.page2Container, { width: pageWidth }]}>
         <Text style={styles.textLight}>
           {alarmStringExample2 !== null ? "Alarm set for" : "No alarm set"}
         </Text>
@@ -166,21 +167,21 @@ export default function App() {
           pickerFeedback={pickerFeedback}
           setIsVisible={setShowPickerExample2}
           styles={{
-            theme: "light",
             pickerColumnWidth: {
               hours: 90,
             },
+            theme: "light",
           }}
           use12HourPicker
           visible={showPickerExample2}
         />
       </View>
     );
-  }, [alarmStringExample2, pickerFeedback, screenWidth, showPickerExample2]);
+  }, [alarmStringExample2, pickerFeedback, pageWidth, showPickerExample2]);
 
   const renderExample3 = useMemo(() => {
     return (
-      <View style={[styles.container, styles.page3Container, { width: screenWidth }]}>
+      <View style={[styles.container, styles.page3Container, { width: pageWidth }]}>
         <Text style={styles.textLight}>
           {alarmStringExample3 !== null ? "Alarm set for" : "No alarm set"}
         </Text>
@@ -219,7 +220,7 @@ export default function App() {
         />
       </View>
     );
-  }, [alarmStringExample3, pickerFeedback, screenWidth, showPickerExample3]);
+  }, [alarmStringExample3, pickerFeedback, pageWidth, showPickerExample3]);
 
   const renderExample4 = useMemo(() => {
     return (
@@ -227,7 +228,7 @@ export default function App() {
         colors={["#202020", "#220578"]}
         end={{ x: 1, y: 1 }}
         start={{ x: 0, y: 0 }}
-        style={[styles.container, { width: screenWidth }]}
+        style={[styles.container, { width: pageWidth }]}
       >
         <TimerPicker
           hourLabel=":"
@@ -257,11 +258,11 @@ export default function App() {
         />
       </LinearGradient>
     );
-  }, [pickerFeedback, screenWidth]);
+  }, [pickerFeedback, pageWidth]);
 
   const renderExample5 = useMemo(() => {
     return (
-      <View style={[styles.container, styles.page5Container, { width: screenWidth }]}>
+      <View style={[styles.container, styles.page5Container, { width: pageWidth }]}>
         <TimerPicker
           hideHours
           LinearGradient={LinearGradient}
@@ -285,7 +286,7 @@ export default function App() {
         />
       </View>
     );
-  }, [pickerFeedback, screenWidth]);
+  }, [pickerFeedback, pageWidth]);
 
   const renderNavigationArrows = useMemo(() => {
     const pageIndicesWithDarkBackground = [0, 3];
@@ -303,7 +304,7 @@ export default function App() {
               setCurrentPageIndex((currentPageIndex) => {
                 scrollViewRef.current?.scrollTo({
                   animated: true,
-                  x: screenWidth * (currentPageIndex + 1),
+                  x: pageWidth * (currentPageIndex + 1),
                 });
                 return currentPageIndex + 1;
               });
@@ -328,7 +329,7 @@ export default function App() {
               setCurrentPageIndex((currentPageIndex) => {
                 scrollViewRef.current?.scrollTo({
                   animated: true,
-                  x: screenWidth * (currentPageIndex - 1),
+                  x: pageWidth * (currentPageIndex - 1),
                 });
                 return currentPageIndex - 1;
               });
@@ -348,10 +349,10 @@ export default function App() {
         ) : null}
       </>
     );
-  }, [currentPageIndex, screenWidth]);
+  }, [currentPageIndex, pageWidth]);
 
   return (
-    <>
+    <View onLayout={onRootLayout} style={styles.root}>
       <ScrollView
         ref={scrollViewRef}
         horizontal
@@ -366,7 +367,7 @@ export default function App() {
         {renderExample5}
       </ScrollView>
       {renderNavigationArrows}
-    </>
+    </View>
   );
 }
 
@@ -421,6 +422,9 @@ const styles = StyleSheet.create({
   },
   page5Container: {
     backgroundColor: "#F1F1F1",
+  },
+  root: {
+    flex: 1,
   },
   textDark: {
     color: "#F1F1F1",
