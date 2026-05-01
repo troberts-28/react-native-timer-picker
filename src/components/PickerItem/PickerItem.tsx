@@ -40,6 +40,18 @@ const PickerItem = React.memo<PickerItemProps>(
       isAm = item.includes("AM");
       stringItem = item.replace(/\s[AP]M/g, "");
       intItem = parseInt(stringItem);
+
+      // Convert back to 24-hour value to match limit comparisons
+      if (!isAm && intItem !== 12) {
+        intItem += 12;
+      } else if (isAm && intItem === 12) {
+        intItem = 0;
+      }
+
+      // Handle cross-midnight overflow (e.g. limit.max = 29 meaning 5 AM next day)
+      if (adjustedLimitedMax >= 24 && intItem <= adjustedLimitedMax - 24) {
+        intItem += 24;
+      }
     }
 
     const isSelected = intItem === selectedValue;
