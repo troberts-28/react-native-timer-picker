@@ -43,7 +43,7 @@ export const getAdjustedLimit = (
   }
 
   // guard against limits that are out of bounds
-  const adjustedMaxLimit = limit.max !== undefined ? Math.min(limit.max, maxValue) : maxValue;
+  const adjustedMaxLimit = limit.max !== undefined ? limit.max : maxValue;
   const adjustedMinLimit = limit.min !== undefined ? Math.max(limit.min, 0) : 0;
 
   // guard against invalid limits
