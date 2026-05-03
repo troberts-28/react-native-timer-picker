@@ -165,6 +165,11 @@ describe("getAdjustedLimit", () => {
       const result = getAdjustedLimit({ max: 17, min: 9 }, 24, 1);
       expect(result).toEqual({ max: 17, min: 9 }); // 9 AM to 5 PM
     });
+    it("handles cross-midnight 12-hour picker limit (e.g. night shift 8 PM - 5 AM)", () => {
+      // max=29 means hour 29 in extended range => 5 AM next day
+      const result = getAdjustedLimit({ max: 29, min: 20 }, 24, 1);
+      expect(result).toEqual({ max: 29, min: 20 });
+    });
 
     it("handles typical minutes picker (0-59)", () => {
       const result = getAdjustedLimit({ max: 45, min: 0 }, 60, 1);

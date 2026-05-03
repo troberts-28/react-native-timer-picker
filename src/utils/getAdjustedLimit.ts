@@ -16,9 +16,9 @@ import type { Limit } from "../components/DurationScroll/types";
  * // Returns: { max: 15, min: 5 }
  *
  * @example
- * // With out-of-bounds limits
+ * // With out-of-bounds limits (max is no longer clamped)
  * getAdjustedLimit({ min: -5, max: 25 }, 20, 1)
- * // Returns: { max: 19, min: 0 }
+ * // Returns: { max: 25, min: 0 }
  *
  * @example
  * // With invalid limits (max < min)

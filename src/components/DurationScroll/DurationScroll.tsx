@@ -249,6 +249,17 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     ]
   );
 
+  const get12HourDurationForLimitComparison = useCallback(
+    (duration: number) => {
+      if (!is12HourPicker) return duration;
+      if (adjustedLimited.max >= 24 && duration <= adjustedLimited.max - 24) {
+        return duration + 24;
+      }
+      return duration;
+    },
+    [is12HourPicker, adjustedLimited.max]
+  );
+
   const onScroll = useCallback<NonNullable<FlatListProps<string>["onScroll"]>>(
     (e) => {
       // this function is only used when the picker is in a modal and/or has Haptic/Audio feedback
@@ -268,12 +279,16 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
           yContentOffset: e.nativeEvent.contentOffset.y,
         });
 
-        if (newValues.duration !== latestDuration.current) {
+        const comparableDuration = get12HourDurationForLimitComparison(newValues.duration);
+
+        if (comparableDuration !== latestDuration.current) {
           // check limits
-          if (newValues.duration > adjustedLimited.max) {
+          if (comparableDuration > adjustedLimited.max) {
             newValues.duration = adjustedLimited.max;
-          } else if (newValues.duration < adjustedLimited.min) {
+          } else if (comparableDuration < adjustedLimited.min) {
             newValues.duration = adjustedLimited.min;
+          } else {
+            newValues.duration = comparableDuration;
           }
 
           latestDuration.current = newValues.duration;
@@ -320,6 +335,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
       adjustedLimited.max,
       adjustedLimited.min,
       aggressivelyGetLatestDuration,
+      get12HourDurationForLimitComparison,
       playClickSound,
       disableInfiniteScroll,
       interval,
@@ -342,9 +358,11 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
         yContentOffset: e.nativeEvent.contentOffset.y,
       });
 
+      const comparableDuration = get12HourDurationForLimitComparison(newValues.duration);
+
       // check limits
-      if (newValues.duration > adjustedLimited.max) {
-        const targetScrollIndex = newValues.index - (newValues.duration - adjustedLimited.max);
+      if (comparableDuration > adjustedLimited.max) {
+        const targetScrollIndex = newValues.index - (comparableDuration - adjustedLimited.max);
         flatListRef.current?.scrollToIndex({
           animated: true,
           index:
@@ -352,8 +370,8 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
             targetScrollIndex >= 0 ? targetScrollIndex : adjustedLimited.max - 1,
         }); // scroll down to max
         newValues.duration = adjustedLimited.max;
-      } else if (newValues.duration < adjustedLimited.min) {
-        const targetScrollIndex = newValues.index + (adjustedLimited.min - newValues.duration);
+      } else if (comparableDuration < adjustedLimited.min) {
+        const targetScrollIndex = newValues.index + (adjustedLimited.min - comparableDuration);
         flatListRef.current?.scrollToIndex({
           animated: true,
           index:
@@ -363,12 +381,15 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
               : adjustedLimited.min,
         }); // scroll up to min
         newValues.duration = adjustedLimited.min;
+      } else {
+        newValues.duration = comparableDuration;
       }
 
       onDurationChange(newValues.duration);
     },
     [
       disableInfiniteScroll,
+      get12HourDurationForLimitComparison,
       interval,
       styles.pickerItemContainer.height,
       numberOfItems,
