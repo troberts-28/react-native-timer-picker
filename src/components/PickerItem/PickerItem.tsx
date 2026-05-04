@@ -105,6 +105,8 @@ const PickerItem = React.memo<PickerItemProps>(
             styles.pickerItem,
             isSelected && styles.selectedPickerItem,
             isDisabled ? styles.disabledPickerItem : {},
+            isAmPmPicker && styles.separateAmPmItem,
+            isAmPmPicker && isSelected && styles.selectedSeparateAmPmItem,
           ]}
         >
           {stringItem}

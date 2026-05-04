@@ -19,6 +19,8 @@ const styles = {
   pickerLabel: {},
   pickerLabelContainer: {},
   selectedPickerItem: { fontWeight: "bold" as const },
+  selectedSeparateAmPmItem: {},
+  separateAmPmItem: {},
 } as ReturnType<typeof generateStyles>;
 
 const renderItem = (props: {
@@ -361,6 +363,76 @@ describe("PickerItem", () => {
         selectedValue: 0,
       });
       expect(isSelectedStyle(getByText("오전"))).toBe(true);
+    });
+
+    describe("custom AM/PM styling", () => {
+      const customStyles = {
+        ...styles,
+        selectedSeparateAmPmItem: { color: "tomato" } as const,
+        separateAmPmItem: { fontSize: 14 } as const,
+      } as ReturnType<typeof generateStyles>;
+
+      const renderWithCustom = (props: Parameters<typeof renderItem>[0]) =>
+        render(
+          <PickerItem
+            adjustedLimitedMax={props.adjustedLimitedMax}
+            adjustedLimitedMin={props.adjustedLimitedMin}
+            allowFontScaling={false}
+            amLabel={props.amLabel ?? "AM"}
+            isAmPmPicker={props.isAmPmPicker}
+            item={props.item}
+            pmLabel={props.pmLabel ?? "PM"}
+            selectedValue={props.selectedValue}
+            styles={customStyles}
+          />
+        );
+
+      it("applies separateAmPmItem to AM/PM rows", () => {
+        const { getByText } = renderWithCustom({
+          adjustedLimitedMax: 1,
+          adjustedLimitedMin: 0,
+          isAmPmPicker: true,
+          item: "AM",
+        });
+        const flat = (getByText("AM").props.style as Array<Record<string, unknown>>).flat();
+        expect(flat.some((s) => s && s.fontSize === 14)).toBe(true);
+      });
+
+      it("applies selectedSeparateAmPmItem only to the selected AM/PM row", () => {
+        const { getByText: getSelected } = renderWithCustom({
+          adjustedLimitedMax: 1,
+          adjustedLimitedMin: 0,
+          isAmPmPicker: true,
+          item: "AM",
+          selectedValue: 0,
+        });
+        const selectedFlat = (
+          getSelected("AM").props.style as Array<Record<string, unknown>>
+        ).flat();
+        expect(selectedFlat.some((s) => s && s.color === "tomato")).toBe(true);
+
+        const { getByText: getUnselected } = renderWithCustom({
+          adjustedLimitedMax: 1,
+          adjustedLimitedMin: 0,
+          isAmPmPicker: true,
+          item: "PM",
+          selectedValue: 0,
+        });
+        const unselectedFlat = (
+          getUnselected("PM").props.style as Array<Record<string, unknown>>
+        ).flat();
+        expect(unselectedFlat.some((s) => s && s.color === "tomato")).toBe(false);
+      });
+
+      it("does not apply separateAmPmItem to non-AM/PM rows", () => {
+        const { getByText } = renderWithCustom({
+          adjustedLimitedMax: 11,
+          adjustedLimitedMin: 0,
+          item: "05",
+        });
+        const flat = (getByText("05").props.style as Array<Record<string, unknown>>).flat();
+        expect(flat.some((s) => s && s.fontSize === 14)).toBe(false);
+      });
     });
 
     describe("greying is disabled (AM/PM is always freely toggleable)", () => {

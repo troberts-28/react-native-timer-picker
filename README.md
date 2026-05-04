@@ -610,6 +610,8 @@ For deeper style customization, you can supply the following custom styles to ad
 |              pickerLabel               | Style for the picker's labels                                        |                TextStyle                 |
 |          pickerAmPmContainer           | Style for the picker's labels                                        |                ViewStyle                 |
 |            pickerAmPmLabel             | Style for the picker's labels                                        |                TextStyle                 |
+|             separateAmPmItem            | Style for rows in the standalone AM/PM column when `separateAmPmPicker` is enabled. Layered on top of `pickerItem` |  TextStyle  |
+|         selectedSeparateAmPmItem        | Style for the centred (selected) row in the standalone AM/PM column when `separateAmPmPicker` is enabled. Layered on top of `separateAmPmItem` |  TextStyle  |
 |          pickerItemContainer           | Container for each number in the picker                              |     ViewStyle & { height?: number }      |
 |               pickerItem               | Style for each number                                                |                TextStyle                 |
 |           disabledPickerItem           | Style for any numbers outside any set limits                         |                TextStyle                 |

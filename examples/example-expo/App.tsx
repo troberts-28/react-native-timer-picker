@@ -209,7 +209,11 @@ export default function App() {
         pmLabel="PM"
         separateAmPmPicker
         setIsVisible={setShowPickerSeparateAmPm}
-        styles={{ theme: "light" }}
+        styles={{
+          selectedSeparateAmPmItem: { color: "#1B6EF1" },
+          separateAmPmItem: { fontSize: 16, fontWeight: "600" },
+          theme: "light",
+        }}
         use12HourPicker
         visible={showPickerSeparateAmPm}
       />
