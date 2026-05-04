@@ -2,7 +2,10 @@ import type { Limit } from "../components/DurationScroll/types";
 
 /**
  * Adjusts and validates the min/max limits for a scrollable number picker.
- * Ensures limits are within valid bounds and handles edge cases.
+ *
+ * `max` is clamped to the picker's maximum value and `min` is clamped to 0.
+ * `max < min` is allowed and means a wraparound range (e.g. `{ min: 20, max: 5 }`
+ * on the hours picker selects 8 PM through 5 AM the next day).
  *
  * @param {Limit | undefined} limit - The input limit object containing optional min and max values
  * @param {number} numberOfItems - Total number of items in the picker
@@ -16,14 +19,14 @@ import type { Limit } from "../components/DurationScroll/types";
  * // Returns: { max: 15, min: 5 }
  *
  * @example
- * // With out-of-bounds limits (max is no longer clamped)
+ * // With out-of-bounds limits
  * getAdjustedLimit({ min: -5, max: 25 }, 20, 1)
- * // Returns: { max: 25, min: 0 }
+ * // Returns: { max: 19, min: 0 }
  *
  * @example
- * // With invalid limits (max < min)
- * getAdjustedLimit({ min: 15, max: 5 }, 20, 1)
- * // Returns: { max: 19, min: 0 }
+ * // Wraparound range (e.g. 8 PM through 5 AM on the hours picker)
+ * getAdjustedLimit({ min: 20, max: 5 }, 24, 1)
+ * // Returns: { max: 5, min: 20 }
  */
 export const getAdjustedLimit = (
   limit: Limit | undefined,
@@ -42,17 +45,8 @@ export const getAdjustedLimit = (
     };
   }
 
-  // guard against limits that are out of bounds
-  const adjustedMaxLimit = limit.max !== undefined ? limit.max : maxValue;
+  const adjustedMaxLimit = limit.max !== undefined ? Math.min(limit.max, maxValue) : maxValue;
   const adjustedMinLimit = limit.min !== undefined ? Math.max(limit.min, 0) : 0;
-
-  // guard against invalid limits
-  if (adjustedMaxLimit < adjustedMinLimit) {
-    return {
-      max: maxValue,
-      min: 0,
-    };
-  }
 
   return {
     max: adjustedMaxLimit,

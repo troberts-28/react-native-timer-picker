@@ -63,51 +63,46 @@ describe("getAdjustedLimit", () => {
   });
 
   describe("out-of-bounds limits", () => {
-    it("adjusts max when it exceeds maximum value", () => {
+    it("clamps max when it exceeds maximum value", () => {
       const result = getAdjustedLimit({ max: 100, min: 5 }, 20, 1);
-      expect(result).toEqual({ max: 100, min: 5 });
+      expect(result).toEqual({ max: 19, min: 5 });
     });
 
-    it("adjusts min when it is negative", () => {
+    it("clamps min when it is negative", () => {
       const result = getAdjustedLimit({ max: 15, min: -5 }, 20, 1);
       expect(result).toEqual({ max: 15, min: 0 });
     });
 
-    it("adjusts both limits when out of bounds", () => {
+    it("clamps both limits when out of bounds", () => {
       const result = getAdjustedLimit({ max: 100, min: -10 }, 20, 1);
-      expect(result).toEqual({ max: 100, min: 0 });
+      expect(result).toEqual({ max: 19, min: 0 });
     });
 
-    it("adjusts max when only max is out of bounds", () => {
+    it("clamps max when only max is out of bounds", () => {
       const result = getAdjustedLimit({ max: 100 }, 20, 1);
-      expect(result).toEqual({ max: 100, min: 0 });
+      expect(result).toEqual({ max: 19, min: 0 });
     });
 
-    it("allows max beyond maxValue for cross-midnight hour limits (e.g. 8 PM to 5 AM)", () => {
-      const result = getAdjustedLimit({ max: 29, min: 20 }, 24, 1);
-      expect(result).toEqual({ max: 29, min: 20 });
-    });
-
-    it("adjusts min when only min is out of bounds", () => {
+    it("clamps min when only min is out of bounds", () => {
       const result = getAdjustedLimit({ min: -10 }, 20, 1);
       expect(result).toEqual({ max: 19, min: 0 });
     });
   });
 
-  describe("invalid limits (max < min)", () => {
-    it("returns default limits when adjusted max < adjusted min", () => {
+  describe("wraparound limits (max < min)", () => {
+    it("preserves max < min for wraparound ranges", () => {
       const result = getAdjustedLimit({ max: 5, min: 15 }, 20, 1);
-      expect(result).toEqual({ max: 19, min: 0 });
+      expect(result).toEqual({ max: 5, min: 15 });
     });
 
-    it("handles edge case where both are equal after adjustment", () => {
+    it("handles edge case where both are equal", () => {
       const result = getAdjustedLimit({ max: 10, min: 10 }, 20, 1);
       expect(result).toEqual({ max: 10, min: 10 });
     });
 
-    it("returns default when min is too high and max is too low", () => {
+    it("preserves wraparound after clamping out-of-bounds values", () => {
       const result = getAdjustedLimit({ max: 5, min: 50 }, 20, 1);
-      expect(result).toEqual({ max: 19, min: 0 });
+      expect(result).toEqual({ max: 5, min: 50 });
     });
   });
 
@@ -149,6 +144,11 @@ describe("getAdjustedLimit", () => {
       expect(result).toEqual({ max: 150, min: 50 });
     });
 
+    it("clamps max above maxValue down to maxValue", () => {
+      const result = getAdjustedLimit({ max: 100, min: 50 }, 50, 1);
+      expect(result).toEqual({ max: 49, min: 50 });
+    });
+
     it("handles zero min limit", () => {
       const result = getAdjustedLimit({ max: 0, min: 0 }, 60, 1);
       expect(result).toEqual({ max: 0, min: 0 });
@@ -166,9 +166,9 @@ describe("getAdjustedLimit", () => {
       expect(result).toEqual({ max: 17, min: 9 }); // 9 AM to 5 PM
     });
     it("handles cross-midnight 12-hour picker limit (e.g. night shift 8 PM - 5 AM)", () => {
-      // max=29 means hour 29 in extended range => 5 AM next day
-      const result = getAdjustedLimit({ max: 29, min: 20 }, 24, 1);
-      expect(result).toEqual({ max: 29, min: 20 });
+      // wraparound: max < min means the range wraps across midnight
+      const result = getAdjustedLimit({ max: 5, min: 20 }, 24, 1);
+      expect(result).toEqual({ max: 5, min: 20 });
     });
 
     it("handles typical minutes picker (0-59)", () => {
