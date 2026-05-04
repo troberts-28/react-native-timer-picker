@@ -16,6 +16,7 @@ import { generate12HourNumbers, generateNumbers } from "../../utils/generateNumb
 import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
 import { getDurationAndIndexFromScrollOffset } from "../../utils/getDurationAndIndexFromScrollOffset";
 import { getInitialScrollIndex } from "../../utils/getInitialScrollIndex";
+import { isWithinLimit } from "../../utils/isWithinLimit";
 import PickerItem from "../PickerItem";
 import type { DurationScrollProps, DurationScrollRef, ExpoAvAudioInstance } from "./types";
 
@@ -249,15 +250,23 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     ]
   );
 
-  const get12HourDurationForLimitComparison = useCallback(
-    (duration: number) => {
-      if (!is12HourPicker) return duration;
-      if (adjustedLimited.max >= 24 && duration <= adjustedLimited.max - 24) {
-        return duration + 24;
+  // returns the in-range value that's closest (in scroll distance) to `value`,
+  // honouring wraparound limits where max < min.
+  const getNearestInRangeValue = useCallback(
+    (value: number) => {
+      const { max, min } = adjustedLimited;
+      if (isWithinLimit(value, min, max)) return value;
+
+      if (max < min) {
+        // wraparound: `value` lies in the gap between max and min
+        const distanceForwardToMin = min - value;
+        const distanceBackwardToMax = value - max;
+        return distanceForwardToMin <= distanceBackwardToMax ? min : max;
       }
-      return duration;
+
+      return value > max ? max : min;
     },
-    [is12HourPicker, adjustedLimited.max]
+    [adjustedLimited]
   );
 
   const onScroll = useCallback<NonNullable<FlatListProps<string>["onScroll"]>>(
@@ -279,18 +288,8 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
           yContentOffset: e.nativeEvent.contentOffset.y,
         });
 
-        const comparableDuration = get12HourDurationForLimitComparison(newValues.duration);
-
-        if (comparableDuration !== latestDuration.current) {
-          // check limits
-          if (comparableDuration > adjustedLimited.max) {
-            newValues.duration = adjustedLimited.max;
-          } else if (comparableDuration < adjustedLimited.min) {
-            newValues.duration = adjustedLimited.min;
-          } else {
-            newValues.duration = comparableDuration;
-          }
-
+        if (newValues.duration !== latestDuration.current) {
+          newValues.duration = getNearestInRangeValue(newValues.duration);
           latestDuration.current = newValues.duration;
         }
       }
@@ -332,10 +331,8 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
-      adjustedLimited.max,
-      adjustedLimited.min,
       aggressivelyGetLatestDuration,
-      get12HourDurationForLimitComparison,
+      getNearestInRangeValue,
       playClickSound,
       disableInfiniteScroll,
       interval,
@@ -358,44 +355,42 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
         yContentOffset: e.nativeEvent.contentOffset.y,
       });
 
-      const comparableDuration = get12HourDurationForLimitComparison(newValues.duration);
+      const snappedDuration = getNearestInRangeValue(newValues.duration);
 
-      // check limits
-      if (comparableDuration > adjustedLimited.max) {
-        const targetScrollIndex = newValues.index - (comparableDuration - adjustedLimited.max);
-        flatListRef.current?.scrollToIndex({
-          animated: true,
-          index:
-            // guard against scrolling beyond end of list
-            targetScrollIndex >= 0 ? targetScrollIndex : adjustedLimited.max - 1,
-        }); // scroll down to max
-        newValues.duration = adjustedLimited.max;
-      } else if (comparableDuration < adjustedLimited.min) {
-        const targetScrollIndex = newValues.index + (adjustedLimited.min - comparableDuration);
-        flatListRef.current?.scrollToIndex({
-          animated: true,
-          index:
-            // guard against scrolling beyond end of list
-            targetScrollIndex <= numbersForFlatList.length - 1
-              ? targetScrollIndex
-              : adjustedLimited.min,
-        }); // scroll up to min
-        newValues.duration = adjustedLimited.min;
-      } else {
-        newValues.duration = comparableDuration;
+      if (snappedDuration !== newValues.duration) {
+        // value is out of limit range — scroll to whichever boundary we snapped to
+        const snapToMax = snappedDuration === adjustedLimited.max;
+
+        if (snapToMax) {
+          const targetScrollIndex = newValues.index - (newValues.duration - snappedDuration);
+          flatListRef.current?.scrollToIndex({
+            animated: true,
+            index: targetScrollIndex >= 0 ? targetScrollIndex : snappedDuration - 1,
+          });
+        } else {
+          const targetScrollIndex = newValues.index + (snappedDuration - newValues.duration);
+          flatListRef.current?.scrollToIndex({
+            animated: true,
+            index:
+              targetScrollIndex <= numbersForFlatList.length - 1
+                ? targetScrollIndex
+                : snappedDuration,
+          });
+        }
       }
+
+      newValues.duration = snappedDuration;
 
       onDurationChange(newValues.duration);
     },
     [
       disableInfiniteScroll,
-      get12HourDurationForLimitComparison,
+      getNearestInRangeValue,
       interval,
       styles.pickerItemContainer.height,
       numberOfItems,
       padWithNItems,
       adjustedLimited.max,
-      adjustedLimited.min,
       onDurationChange,
       numbersForFlatList.length,
     ]
