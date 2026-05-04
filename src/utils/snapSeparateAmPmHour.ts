@@ -11,14 +11,16 @@ const resolveLimit = (limit: Limit | undefined): { max: number; min: number } | 
 };
 
 /**
- * Returns the cycleIdx in [0, 11] nearest to `rawCycleIdx` such that
- * `(cycleIdx, currentAmPm)` is within `hourLimit`. If no value in the column's
- * range satisfies the limit, `rawCycleIdx` is returned unchanged (no snap).
+ * Returns the cycleIdx in the rendered hour column nearest to `rawCycleIdx` such that
+ * `(cycleIdx, currentAmPm)` is within `hourLimit`. Iterates in `interval` steps to mirror
+ * the values actually rendered by `generate12HourCycleNumbers`. If no value in the column
+ * satisfies the limit, `rawCycleIdx` is returned unchanged.
  */
 export const findNearestValidCycleIdx = (
   rawCycleIdx: number,
   currentAmPm: number,
-  hourLimit: Limit | undefined
+  hourLimit: Limit | undefined,
+  interval = 1
 ): number => {
   const resolved = resolveLimit(hourLimit);
   if (!resolved) return rawCycleIdx;
@@ -29,7 +31,7 @@ export const findNearestValidCycleIdx = (
 
   let best: number | null = null;
   let bestDistance = Infinity;
-  for (let i = 0; i <= 11; i++) {
+  for (let i = 0; i < 12; i += interval) {
     if (!isWithinLimit(combineToHour24(i, currentAmPm), resolved.min, resolved.max)) continue;
     const distance = Math.abs(i - rawCycleIdx);
     if (distance < bestDistance) {

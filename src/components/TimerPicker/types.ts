@@ -1,17 +1,18 @@
 import type React from "react";
-import { type RefObject } from "react";
 
 import type { View } from "react-native";
 
 import type { LinearGradientProps, SoundAsset, Limit } from "../DurationScroll/types";
 import type { CustomTimerPickerStyles } from "./styles";
 
+export type LatestDurationRef = { readonly current: number };
+
 export interface TimerPickerRef {
   latestDuration: {
-    days: RefObject<number> | undefined;
-    hours: RefObject<number> | undefined;
-    minutes: RefObject<number> | undefined;
-    seconds: RefObject<number> | undefined;
+    days: LatestDurationRef | undefined;
+    hours: LatestDurationRef | undefined;
+    minutes: LatestDurationRef | undefined;
+    seconds: LatestDurationRef | undefined;
   };
   reset: (options?: { animated?: boolean }) => void;
   setValue: (

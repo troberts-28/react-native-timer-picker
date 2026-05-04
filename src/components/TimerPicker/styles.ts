@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import type { TextStyle, ViewStyle } from "react-native";
 
-export type PickerColumn = "days" | "hours" | "minutes" | "seconds";
+export type PickerColumn = "amPm" | "days" | "hours" | "minutes" | "seconds";
 
 export type PerColumnValue = number | Partial<Record<PickerColumn, number>>;
 

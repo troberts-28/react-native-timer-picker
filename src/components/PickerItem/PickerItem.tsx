@@ -3,8 +3,6 @@ import React from "react";
 import { View, Text } from "react-native";
 
 import { isWithinLimit } from "../../utils/isWithinLimit";
-import { combineToHour24 } from "../../utils/separateAmPmHour";
-import type { Limit } from "../DurationScroll/types";
 import type { generateStyles } from "../TimerPicker/styles";
 
 interface PickerItemProps {
@@ -12,10 +10,9 @@ interface PickerItemProps {
   adjustedLimitedMin: number;
   allowFontScaling: boolean;
   amLabel?: string;
-  combinedHourLimit?: Limit;
-  currentAmPm?: number;
   is12HourPicker?: boolean;
   isAmPmPicker?: boolean;
+  isItemDisabled?: (value: number) => boolean;
   item: string;
   pickerAmPmPositionStyle?: { left: "50%"; marginLeft: number };
   pmLabel?: string;
@@ -24,21 +21,15 @@ interface PickerItemProps {
   styles: ReturnType<typeof generateStyles>;
 }
 
-const isCombinedHourInRange = (hour24: number, limit: Limit | undefined): boolean => {
-  if (!limit || (limit.min === undefined && limit.max === undefined)) return true;
-  return isWithinLimit(hour24, limit.min ?? 0, limit.max ?? 23);
-};
-
 const PickerItem = React.memo<PickerItemProps>(
   ({
     adjustedLimitedMax,
     adjustedLimitedMin,
     allowFontScaling,
     amLabel,
-    combinedHourLimit,
-    currentAmPm,
     is12HourPicker,
     isAmPmPicker,
+    isItemDisabled,
     item,
     pickerAmPmPositionStyle,
     pmLabel,
@@ -83,16 +74,10 @@ const PickerItem = React.memo<PickerItemProps>(
 
     let isDisabled: boolean;
     if (isAmPmPicker) {
-      // The AM/PM column is always freely toggleable so users can navigate to a
-      // different half of the clock; the hour column handles all limit enforcement
-      // (greying + snap-back) once AM/PM has been chosen.
+      // AM/PM is always freely toggleable; the hour column does all limit enforcement.
       isDisabled = false;
-    } else if (is12HourPicker && separateAmPmPicker) {
-      // Hour cycle row folds into 24h with the current AM/PM.
-      isDisabled =
-        !isNaN(intItem) &&
-        currentAmPm !== undefined &&
-        !isCombinedHourInRange(combineToHour24(intItem, currentAmPm), combinedHourLimit);
+    } else if (isItemDisabled) {
+      isDisabled = !isNaN(intItem) && isItemDisabled(intItem);
     } else {
       isDisabled = !isWithinLimit(intItem, adjustedLimitedMin, adjustedLimitedMax);
     }

@@ -82,4 +82,35 @@ describe("findNearestValidCycleIdx", () => {
     expect(findNearestValidCycleIdx(0, 0, { max: 5 })).toBe(0); // 12 AM = 0, valid
     expect(findNearestValidCycleIdx(11, 0, { max: 5 })).toBe(5);
   });
+
+  describe("with hourInterval", () => {
+    // generate12HourCycleNumbers iterates `i = 0; i < 12; i += interval`. The snap
+    // helper must mirror that so it never returns a cycleIdx not present in the column.
+    it.each([
+      // interval=2 → cycle indices [0, 2, 4, 6, 8, 10]
+      [2, 0, 0, { max: 17, min: 9 }, 10], // raw 0 AM invalid; nearest valid AM cycleIdx is 10
+      [2, 5, 0, { max: 17, min: 9 }, 10], // raw 5 (not in column) invalid; nearest is 10
+      [2, 4, 1, { max: 17, min: 9 }, 4], // raw 4 PM = 16, valid → unchanged
+      // interval=3 → cycle indices [0, 3, 6, 9]
+      [3, 0, 0, { max: 17, min: 9 }, 9], // 12 AM invalid; only 9 AM in column is in range
+      [3, 6, 1, { max: 17, min: 9 }, 3], // 6 PM=18 invalid; nearest valid PM cycleIdx is 3 (3 PM=15)
+      // interval=4 → cycle indices [0, 4, 8]
+      [4, 0, 0, { max: 17, min: 9 }, 0], // no AM cycleIdx in column is valid → no snap (returns input)
+      [4, 0, 1, { max: 17, min: 9 }, 0], // 12 PM=12 IS in [9,17] → unchanged
+      [4, 0, 1, { max: 17, min: 13 }, 4], // 12 PM=12 invalid in [13,17]; nearest PM is 4 (4 PM=16)
+    ])("interval=%i, raw=%i, amPm=%i, limit=%p → %i", (interval, raw, amPm, limit, expected) => {
+      expect(findNearestValidCycleIdx(raw, amPm, limit, interval)).toBe(expected);
+    });
+
+    it("never returns a cycleIdx outside the rendered set when called with a valid raw", () => {
+      // interval=2: rendered cycle indices are {0,2,4,6,8,10}. The raw cycleIdx in real
+      // usage always comes from getDurationAndIndexFromScrollOffset (= multiple of interval).
+      const limit = { max: 17, min: 9 };
+      const renderedSet = [0, 2, 4, 6, 8, 10];
+      for (const raw of renderedSet) {
+        const result = findNearestValidCycleIdx(raw, 0, limit, 2);
+        expect(renderedSet.includes(result)).toBe(true);
+      }
+    });
+  });
 });

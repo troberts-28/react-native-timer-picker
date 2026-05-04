@@ -3,7 +3,6 @@ import React from "react";
 import { render } from "@testing-library/react-native";
 import type { ReactTestInstance } from "react-test-renderer";
 
-import type { Limit } from "../components/DurationScroll/types";
 import PickerItem from "../components/PickerItem";
 import type { generateStyles } from "../components/TimerPicker/styles";
 
@@ -27,10 +26,9 @@ const renderItem = (props: {
   adjustedLimitedMax: number;
   adjustedLimitedMin: number;
   amLabel?: string;
-  combinedHourLimit?: Limit;
-  currentAmPm?: number;
   is12HourPicker?: boolean;
   isAmPmPicker?: boolean;
+  isItemDisabled?: (value: number) => boolean;
   item: string;
   pmLabel?: string;
   selectedValue?: number;
@@ -42,10 +40,9 @@ const renderItem = (props: {
       adjustedLimitedMin={props.adjustedLimitedMin}
       allowFontScaling={false}
       amLabel={props.amLabel ?? "AM"}
-      combinedHourLimit={props.combinedHourLimit}
-      currentAmPm={props.currentAmPm}
       is12HourPicker={props.is12HourPicker}
       isAmPmPicker={props.isAmPmPicker}
+      isItemDisabled={props.isItemDisabled}
       item={props.item}
       pmLabel={props.pmLabel ?? "PM"}
       selectedValue={props.selectedValue}
@@ -225,11 +222,12 @@ describe("PickerItem", () => {
       expect(isSelectedStyle(getByText("03"))).toBe(true);
     });
 
-    it("does not grey items when no combinedHourLimit is provided", () => {
+    it("falls back to column-local limit when no isItemDisabled callback is provided", () => {
+      // In actual usage, the cycle hour column receives limit={undefined}, so
+      // adjustedLimited covers 0..11 and no row is greyed by default.
       const { getByText } = renderItem({
-        adjustedLimitedMax: 5,
+        adjustedLimitedMax: 11,
         adjustedLimitedMin: 0,
-        currentAmPm: 0,
         is12HourPicker: true,
         item: "11",
         separateAmPmPicker: true,
@@ -237,83 +235,55 @@ describe("PickerItem", () => {
       expect(isDisabledStyle(getByText("11"))).toBe(false);
     });
 
-    describe("greying with normal hourLimit { min: 9, max: 17 }", () => {
-      const limit = { max: 17, min: 9 };
-
-      it.each([
-        ["12", 0, true], // 12 AM = 0, out of range
-        ["08", 0, true],
-        ["09", 0, false],
-        ["11", 0, false],
-      ])("AM (currentAmPm=0): row %s greyed=%s", (row, currentAmPm, greyed) => {
+    describe("greying via isItemDisabled callback", () => {
+      it("calls isItemDisabled with the parsed cycleIdx ('12' → 0)", () => {
+        const isItemDisabled = jest.fn((value: number) => value === 0);
         const { getByText } = renderItem({
           adjustedLimitedMax: 11,
           adjustedLimitedMin: 0,
-          combinedHourLimit: limit,
-          currentAmPm,
           is12HourPicker: true,
-          item: row,
+          isItemDisabled,
+          item: "12",
           separateAmPmPicker: true,
         });
-        expect(isDisabledStyle(getByText(row))).toBe(greyed);
+        expect(isItemDisabled).toHaveBeenCalledWith(0);
+        expect(isDisabledStyle(getByText("12"))).toBe(true);
       });
 
-      it.each([
-        ["12", 1, false], // 12 PM = 12, in range
-        ["05", 1, false], // 5 PM = 17, in range
-        ["06", 1, true], // 6 PM = 18, out of range
-        ["11", 1, true],
-      ])("PM (currentAmPm=1): row %s greyed=%s", (row, currentAmPm, greyed) => {
+      it("calls isItemDisabled with the parsed cycleIdx ('05' → 5)", () => {
+        const isItemDisabled = jest.fn(() => false);
         const { getByText } = renderItem({
           adjustedLimitedMax: 11,
           adjustedLimitedMin: 0,
-          combinedHourLimit: limit,
-          currentAmPm,
           is12HourPicker: true,
-          item: row,
+          isItemDisabled,
+          item: "05",
           separateAmPmPicker: true,
         });
-        expect(isDisabledStyle(getByText(row))).toBe(greyed);
-      });
-    });
-
-    describe("greying with wraparound hourLimit { min: 20, max: 5 }", () => {
-      const limit = { max: 5, min: 20 };
-
-      it.each([
-        ["12", 0, false], // 12 AM = 0, in range
-        ["05", 0, false], // 5 AM = 5, in range
-        ["06", 0, true], // 6 AM = 6, out of range
-        ["11", 0, true],
-      ])("AM (currentAmPm=0): row %s greyed=%s", (row, currentAmPm, greyed) => {
-        const { getByText } = renderItem({
-          adjustedLimitedMax: 11,
-          adjustedLimitedMin: 0,
-          combinedHourLimit: limit,
-          currentAmPm,
-          is12HourPicker: true,
-          item: row,
-          separateAmPmPicker: true,
-        });
-        expect(isDisabledStyle(getByText(row))).toBe(greyed);
+        expect(isItemDisabled).toHaveBeenCalledWith(5);
+        expect(isDisabledStyle(getByText("05"))).toBe(false);
       });
 
-      it.each([
-        ["12", 1, true], // 12 PM = 12, out of range
-        ["07", 1, true],
-        ["08", 1, false], // 8 PM = 20, in range
-        ["11", 1, false], // 11 PM = 23, in range
-      ])("PM (currentAmPm=1): row %s greyed=%s", (row, currentAmPm, greyed) => {
-        const { getByText } = renderItem({
+      it("greys when callback returns true, not when false", () => {
+        const { getByText: a } = renderItem({
           adjustedLimitedMax: 11,
           adjustedLimitedMin: 0,
-          combinedHourLimit: limit,
-          currentAmPm,
           is12HourPicker: true,
-          item: row,
+          isItemDisabled: () => true,
+          item: "07",
           separateAmPmPicker: true,
         });
-        expect(isDisabledStyle(getByText(row))).toBe(greyed);
+        expect(isDisabledStyle(a("07"))).toBe(true);
+
+        const { getByText: b } = renderItem({
+          adjustedLimitedMax: 11,
+          adjustedLimitedMin: 0,
+          is12HourPicker: true,
+          isItemDisabled: () => false,
+          item: "07",
+          separateAmPmPicker: true,
+        });
+        expect(isDisabledStyle(b("07"))).toBe(false);
       });
     });
   });
@@ -438,17 +408,14 @@ describe("PickerItem", () => {
     describe("greying is disabled (AM/PM is always freely toggleable)", () => {
       // The AM/PM column is intentionally limit-free so the user can always toggle
       // halves to reach any valid hour. The hour column does the limit enforcement.
-      it.each([
-        ["AM", { max: 17, min: 9 }],
-        ["PM", { max: 17, min: 9 }],
-        ["AM", { max: 5, min: 20 }],
-        ["PM", { max: 5, min: 20 }],
-      ])("row %s is never greyed", (row, limit) => {
+      // Even with an isItemDisabled callback that always returns true, AM/PM rows
+      // never grey.
+      it.each([["AM"], ["PM"]])("row %s is never greyed", (row) => {
         const { getByText } = renderItem({
           adjustedLimitedMax: 1,
           adjustedLimitedMin: 0,
-          combinedHourLimit: limit,
           isAmPmPicker: true,
+          isItemDisabled: () => true,
           item: row,
         });
         expect(isDisabledStyle(getByText(row))).toBe(false);

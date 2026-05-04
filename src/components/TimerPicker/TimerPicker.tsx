@@ -10,6 +10,7 @@ import React, {
 import { View } from "react-native";
 
 import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
+import { isWithinLimit } from "../../utils/isWithinLimit";
 import { combineToHour24, splitHour24 } from "../../utils/separateAmPmHour";
 import { findNearestValidCycleIdx } from "../../utils/snapSeparateAmPmHour";
 import DurationScroll from "../DurationScroll";
@@ -175,13 +176,6 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
   const [selectedMinutes, setSelectedMinutes] = useState(safeInitialValue.minutes);
   const [selectedSeconds, setSelectedSeconds] = useState(safeInitialValue.seconds);
 
-  // Mirror selectedAmPm into a ref so the hour-cycle snap handler always reads the
-  // freshest AM/PM context without forcing a callback re-creation per state change.
-  const selectedAmPmRef = useRef(selectedAmPm);
-  useEffect(() => {
-    selectedAmPmRef.current = selectedAmPm;
-  }, [selectedAmPm]);
-
   useEffect(() => {
     const hours = useSeparateAmPm ? combineToHour24(selectedHours, selectedAmPm) : selectedHours;
     onDurationChange?.({
@@ -199,22 +193,27 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
   const minutesDurationScrollRef = useRef<DurationScrollRef>(null);
   const secondsDurationScrollRef = useRef<DurationScrollRef>(null);
 
-  // Snap-aware hour-cycle change handler (separate AM/PM mode). When the user lands on
-  // a cycleIdx whose combined 24h value falls outside hourLimit, snap to the nearest
-  // valid cycleIdx given the current AM/PM. If no value in the column's range is valid,
-  // do not snap. The AM/PM column is intentionally limit-free so users can always
-  // toggle halves to reach any valid hour.
-  const handleHourCycleChange = (rawCycleIdx: number) => {
-    const snapped = findNearestValidCycleIdx(rawCycleIdx, selectedAmPmRef.current, hourLimit);
-    setSelectedHours(snapped);
-    if (snapped !== rawCycleIdx) {
-      hoursDurationScrollRef.current?.setValue(snapped, { animated: true });
+  // In separateAmPmPicker mode the hour column's snap and greying both depend on the
+  // currently selected AM/PM. These callbacks fold the cross-column context in;
+  // DurationScroll uses `getValidValue` for momentum-scroll snapping and `isItemDisabled`
+  // for per-row greying via PickerItem.
+  const getValidHourCycleIdx = (rawCycleIdx: number) =>
+    findNearestValidCycleIdx(rawCycleIdx, selectedAmPm, hourLimit, hourInterval);
+
+  const isHourCycleDisabled = (cycleIdx: number) => {
+    if (!hourLimit || (hourLimit.min === undefined && hourLimit.max === undefined)) {
+      return false;
     }
+    return !isWithinLimit(
+      combineToHour24(cycleIdx, selectedAmPm),
+      hourLimit.min ?? 0,
+      hourLimit.max ?? 23
+    );
   };
 
   // In separateAmPmPicker mode the public `latestDuration.hours` must combine the cycle
   // index and the AM/PM flag back into a 24-hour value.
-  const combinedHoursLatestDuration = useMemo(
+  const combinedHoursLatestDuration = useMemo<{ readonly current: number }>(
     () => ({
       get current() {
         const cycleIdx = hoursDurationScrollRef.current?.latestDuration.current ?? 0;
@@ -229,7 +228,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
     latestDuration: {
       days: daysDurationScrollRef.current?.latestDuration,
       hours: useSeparateAmPm
-        ? (combinedHoursLatestDuration as { current: number })
+        ? combinedHoursLatestDuration
         : hoursDurationScrollRef.current?.latestDuration,
       minutes: minutesDurationScrollRef.current?.latestDuration,
       seconds: secondsDurationScrollRef.current?.latestDuration,
@@ -311,18 +310,18 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
           aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
           allowFontScaling={allowFontScaling}
           amLabel={amLabel}
-          combinedHourLimit={useSeparateAmPm ? hourLimit : undefined}
-          currentAmPm={useSeparateAmPm ? selectedAmPm : undefined}
           decelerationRate={decelerationRate}
           disableInfiniteScroll={disableInfiniteScroll}
+          getValidValue={useSeparateAmPm ? getValidHourCycleIdx : undefined}
           initialValue={useSeparateAmPm ? initialHourSplit.cycleIdx : safeInitialValue.hours}
           interval={hourInterval}
           is12HourPicker={use12HourPicker}
           isDisabled={hoursPickerIsDisabled}
+          isItemDisabled={useSeparateAmPm ? isHourCycleDisabled : undefined}
           label={hourLabel ?? (!use12HourPicker ? "h" : undefined)}
           limit={useSeparateAmPm ? undefined : hourLimit}
           maximumValue={useSeparateAmPm ? 11 : maximumHours}
-          onDurationChange={useSeparateAmPm ? handleHourCycleChange : setSelectedHours}
+          onDurationChange={setSelectedHours}
           padNumbersWithZero={padHoursWithZero}
           padWithNItems={safePadWithNItems}
           pickerColumnWidth={resolvePerColumn(pickerColumnWidth, "hours")}
@@ -404,6 +403,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
           maximumValue={1}
           onDurationChange={setSelectedAmPm}
           padWithNItems={safePadWithNItems}
+          pickerColumnWidth={resolvePerColumn(pickerColumnWidth, "amPm")}
           pmLabel={pmLabel}
           repeatNumbersNTimes={1}
           repeatNumbersNTimesNotExplicitlySet={false}

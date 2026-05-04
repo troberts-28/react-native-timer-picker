@@ -35,17 +35,17 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     amLabel,
     Audio,
     clickSoundAsset,
-    combinedHourLimit,
-    currentAmPm,
     decelerationRate = 0.88,
     disableInfiniteScroll = false,
     FlatList = RNFlatList,
+    getValidValue,
     Haptics,
     initialValue = 0,
     interval,
     is12HourPicker,
     isAmPmPicker,
     isDisabled,
+    isItemDisabled,
     label,
     limit,
     LinearGradient,
@@ -262,10 +262,9 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
         adjustedLimitedMin={adjustedLimited.min}
         allowFontScaling={allowFontScaling}
         amLabel={amLabel}
-        combinedHourLimit={combinedHourLimit}
-        currentAmPm={currentAmPm}
         is12HourPicker={is12HourPicker}
         isAmPmPicker={isAmPmPicker}
+        isItemDisabled={isItemDisabled}
         item={item}
         pickerAmPmPositionStyle={labelPositionStyle}
         pmLabel={pmLabel}
@@ -279,10 +278,9 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
       adjustedLimited.min,
       allowFontScaling,
       amLabel,
-      combinedHourLimit,
-      currentAmPm,
       is12HourPicker,
       isAmPmPicker,
+      isItemDisabled,
       labelPositionStyle,
       pmLabel,
       selectedValue,
@@ -292,8 +290,11 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
   );
 
   const getNearestInRangeValue = useCallback(
-    (value: number) => getNearestInRange(value, adjustedLimited.min, adjustedLimited.max),
-    [adjustedLimited]
+    (value: number) =>
+      getValidValue
+        ? getValidValue(value)
+        : getNearestInRange(value, adjustedLimited.min, adjustedLimited.max),
+    [adjustedLimited, getValidValue]
   );
 
   const onScroll = useCallback<NonNullable<FlatListProps<string>["onScroll"]>>(

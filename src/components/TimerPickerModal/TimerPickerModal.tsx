@@ -69,7 +69,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
     (!hideHours ? resolveColumnWidth(pickerColumnWidth, "hours") : 0) +
     (!hideMinutes ? resolveColumnWidth(pickerColumnWidth, "minutes") : 0) +
     (!hideSeconds ? resolveColumnWidth(pickerColumnWidth, "seconds") : 0) +
-    (hasSeparateAmPmColumn ? DEFAULT_COLUMN_WIDTH : 0);
+    (hasSeparateAmPmColumn ? resolveColumnWidth(pickerColumnWidth, "amPm") : 0);
 
   const styles = generateStyles(customStyles, {
     hasModalTitle: Boolean(modalTitle),
