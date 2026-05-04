@@ -12,11 +12,16 @@ import { View, Text, FlatList as RNFlatList } from "react-native";
 import type { ViewabilityConfigCallbackPairs, FlatListProps } from "react-native";
 
 import { colorToRgba } from "../../utils/colorToRgba";
-import { generate12HourNumbers, generateNumbers } from "../../utils/generateNumbers";
+import {
+  generate12HourCycleNumbers,
+  generate12HourNumbers,
+  generateAmPmItems,
+  generateNumbers,
+} from "../../utils/generateNumbers";
 import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
 import { getDurationAndIndexFromScrollOffset } from "../../utils/getDurationAndIndexFromScrollOffset";
 import { getInitialScrollIndex } from "../../utils/getInitialScrollIndex";
-import { isWithinLimit } from "../../utils/isWithinLimit";
+import { getNearestInRange } from "../../utils/getNearestInRange";
 import PickerItem from "../PickerItem";
 import type { DurationScrollProps, DurationScrollRef, ExpoAvAudioInstance } from "./types";
 
@@ -30,6 +35,8 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     amLabel,
     Audio,
     clickSoundAsset,
+    combinedHourLimit,
+    currentAmPm,
     decelerationRate = 0.88,
     disableInfiniteScroll = false,
     FlatList = RNFlatList,
@@ -37,6 +44,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     initialValue = 0,
     interval,
     is12HourPicker,
+    isAmPmPicker,
     isDisabled,
     label,
     limit,
@@ -54,6 +62,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     repeatNumbersNTimes = 3,
     repeatNumbersNTimesNotExplicitlySet,
     selectedValue,
+    separateAmPmPicker,
     styles,
     testID,
   } = props;
@@ -113,7 +122,27 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
   ]);
 
   const numbersForFlatList = useMemo(() => {
+    if (isAmPmPicker) {
+      return generateAmPmItems({
+        amLabel: amLabel ?? "am",
+        padWithNItems,
+        pmLabel: pmLabel ?? "pm",
+      });
+    }
+
     if (is12HourPicker) {
+      // When AM/PM is rendered as a separate column, the hour column shows
+      // 12, 1, 2, ..., 11 (no AM/PM suffix).
+      if (separateAmPmPicker) {
+        return generate12HourCycleNumbers({
+          disableInfiniteScroll,
+          interval,
+          padNumbersWithZero,
+          padWithNItems,
+          repeatNTimes: safeRepeatNumbersNTimes,
+        });
+      }
+
       return generate12HourNumbers({
         disableInfiniteScroll,
         interval,
@@ -131,13 +160,17 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
       repeatNTimes: safeRepeatNumbersNTimes,
     });
   }, [
+    amLabel,
     disableInfiniteScroll,
     is12HourPicker,
+    isAmPmPicker,
     interval,
     numberOfItems,
     padNumbersWithZero,
     padWithNItems,
+    pmLabel,
     safeRepeatNumbersNTimes,
+    separateAmPmPicker,
   ]);
 
   const initialScrollIndex = useMemo(
@@ -229,11 +262,15 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
         adjustedLimitedMin={adjustedLimited.min}
         allowFontScaling={allowFontScaling}
         amLabel={amLabel}
+        combinedHourLimit={combinedHourLimit}
+        currentAmPm={currentAmPm}
         is12HourPicker={is12HourPicker}
+        isAmPmPicker={isAmPmPicker}
         item={item}
         pickerAmPmPositionStyle={labelPositionStyle}
         pmLabel={pmLabel}
         selectedValue={selectedValue}
+        separateAmPmPicker={separateAmPmPicker}
         styles={styles}
       />
     ),
@@ -242,30 +279,20 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
       adjustedLimited.min,
       allowFontScaling,
       amLabel,
+      combinedHourLimit,
+      currentAmPm,
       is12HourPicker,
+      isAmPmPicker,
       labelPositionStyle,
       pmLabel,
       selectedValue,
+      separateAmPmPicker,
       styles,
     ]
   );
 
-  // returns the in-range value that's closest (in scroll distance) to `value`,
-  // honouring wraparound limits where max < min.
   const getNearestInRangeValue = useCallback(
-    (value: number) => {
-      const { max, min } = adjustedLimited;
-      if (isWithinLimit(value, min, max)) return value;
-
-      if (max < min) {
-        // wraparound: `value` lies in the gap between max and min
-        const distanceForwardToMin = min - value;
-        const distanceBackwardToMax = value - max;
-        return distanceForwardToMin <= distanceBackwardToMax ? min : max;
-      }
-
-      return value > max ? max : min;
-    },
+    (value: number) => getNearestInRange(value, adjustedLimited.min, adjustedLimited.max),
     [adjustedLimited]
   );
 

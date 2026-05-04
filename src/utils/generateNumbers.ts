@@ -128,3 +128,64 @@ export const generate12HourNumbers = (options: {
 
   return numbers;
 };
+
+/**
+ * Generates an array of formatted hour strings for the 12-hour clock cycle (no AM/PM suffix),
+ * intended for the hours column when the AM/PM column is rendered separately.
+ *
+ * Index 0 always represents the noon/midnight slot and displays as "12"; subsequent indices
+ * follow the supplied interval starting from 1. Internal value 0 → "12", value k → display k.
+ *
+ * @example
+ * // Generate the full 12-hour cycle padded with zeros
+ * generate12HourCycleNumbers({
+ *   interval: 1,
+ *   padWithNItems: 0,
+ *   padNumbersWithZero: true,
+ *   repeatNTimes: 1,
+ *   disableInfiniteScroll: true,
+ * })
+ * // Returns: ['12', '01', '02', ..., '11']
+ */
+export const generate12HourCycleNumbers = (options: {
+  disableInfiniteScroll?: boolean;
+  interval: number;
+  padNumbersWithZero?: boolean;
+  padWithNItems: number;
+  repeatNTimes: number;
+}) => {
+  let numbers: string[] = [];
+
+  for (let i = 0; i < 12; i += options.interval) {
+    const hour = i === 0 ? 12 : i;
+    numbers.push(padNumber(hour, { padWithZero: options.padNumbersWithZero }));
+  }
+
+  if (options.repeatNTimes > 1) {
+    numbers = Array(options.repeatNTimes).fill(numbers).flat();
+  }
+
+  if (options.disableInfiniteScroll || options.repeatNTimes === 1) {
+    numbers.push(...Array(options.padWithNItems).fill(""));
+    numbers.unshift(...Array(options.padWithNItems).fill(""));
+  }
+
+  return numbers;
+};
+
+/**
+ * Generates the items shown in the standalone AM/PM picker column. The column is non-looping
+ * and always padded so that AM and PM line up with the centre row.
+ *
+ * @example
+ * generateAmPmItems({ amLabel: 'AM', pmLabel: 'PM', padWithNItems: 1 })
+ * // Returns: ['', 'AM', 'PM', '']
+ */
+export const generateAmPmItems = (options: {
+  amLabel: string;
+  padWithNItems: number;
+  pmLabel: string;
+}) => {
+  const padding: string[] = Array(options.padWithNItems).fill("");
+  return [...padding, options.amLabel, options.pmLabel, ...padding];
+};

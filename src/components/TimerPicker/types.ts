@@ -94,6 +94,11 @@ export interface TimerPickerProps {
   secondLabel?: string | React.ReactElement;
   secondLimit?: Limit;
   secondsPickerIsDisabled?: boolean;
+  /**
+   * Render AM/PM as a separate scrollable column instead of appending it to each hour.
+   * Only takes effect when `use12HourPicker` is true. Defaults to `false`.
+   */
+  separateAmPmPicker?: boolean;
   styles?: CustomTimerPickerStyles;
   use12HourPicker?: boolean;
 }

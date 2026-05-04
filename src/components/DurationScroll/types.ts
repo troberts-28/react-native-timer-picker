@@ -12,6 +12,8 @@ export interface DurationScrollProps {
   amLabel?: string;
   Audio?: any;
   clickSoundAsset?: SoundAsset;
+  combinedHourLimit?: Limit;
+  currentAmPm?: number;
   decelerationRate?: number | "normal" | "fast";
   disableInfiniteScroll?: boolean;
   FlatList?: any;
@@ -19,6 +21,7 @@ export interface DurationScrollProps {
   initialValue?: number;
   interval: number;
   is12HourPicker?: boolean;
+  isAmPmPicker?: boolean;
   isDisabled?: boolean;
   label?: string | React.ReactElement;
   limit?: Limit;
@@ -36,6 +39,7 @@ export interface DurationScrollProps {
   repeatNumbersNTimes?: number;
   repeatNumbersNTimesNotExplicitlySet: boolean;
   selectedValue?: number;
+  separateAmPmPicker?: boolean;
   styles: ReturnType<typeof generateStyles>;
   testID?: string;
 }

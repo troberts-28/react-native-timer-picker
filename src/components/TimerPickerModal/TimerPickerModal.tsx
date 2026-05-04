@@ -60,12 +60,16 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
   } = props;
 
   const pickerColumnWidth = customStyles?.pickerColumnWidth;
+  const hasSeparateAmPmColumn = Boolean(
+    otherProps.use12HourPicker && otherProps.separateAmPmPicker && !hideHours
+  );
 
   const totalColumnWidth =
     (!hideDays ? resolveColumnWidth(pickerColumnWidth, "days") : 0) +
     (!hideHours ? resolveColumnWidth(pickerColumnWidth, "hours") : 0) +
     (!hideMinutes ? resolveColumnWidth(pickerColumnWidth, "minutes") : 0) +
-    (!hideSeconds ? resolveColumnWidth(pickerColumnWidth, "seconds") : 0);
+    (!hideSeconds ? resolveColumnWidth(pickerColumnWidth, "seconds") : 0) +
+    (hasSeparateAmPmColumn ? DEFAULT_COLUMN_WIDTH : 0);
 
   const styles = generateStyles(customStyles, {
     hasModalTitle: Boolean(modalTitle),
