@@ -65,7 +65,7 @@ describe("getAdjustedLimit", () => {
   describe("out-of-bounds limits", () => {
     it("adjusts max when it exceeds maximum value", () => {
       const result = getAdjustedLimit({ max: 100, min: 5 }, 20, 1);
-      expect(result).toEqual({ max: 19, min: 5 });
+      expect(result).toEqual({ max: 100, min: 5 });
     });
 
     it("adjusts min when it is negative", () => {
@@ -75,12 +75,17 @@ describe("getAdjustedLimit", () => {
 
     it("adjusts both limits when out of bounds", () => {
       const result = getAdjustedLimit({ max: 100, min: -10 }, 20, 1);
-      expect(result).toEqual({ max: 19, min: 0 });
+      expect(result).toEqual({ max: 100, min: 0 });
     });
 
     it("adjusts max when only max is out of bounds", () => {
       const result = getAdjustedLimit({ max: 100 }, 20, 1);
-      expect(result).toEqual({ max: 19, min: 0 });
+      expect(result).toEqual({ max: 100, min: 0 });
+    });
+
+    it("allows max beyond maxValue for cross-midnight hour limits (e.g. 8 PM to 5 AM)", () => {
+      const result = getAdjustedLimit({ max: 29, min: 20 }, 24, 1);
+      expect(result).toEqual({ max: 29, min: 20 });
     });
 
     it("adjusts min when only min is out of bounds", () => {
@@ -159,6 +164,11 @@ describe("getAdjustedLimit", () => {
     it("handles typical hours picker (0-23)", () => {
       const result = getAdjustedLimit({ max: 17, min: 9 }, 24, 1);
       expect(result).toEqual({ max: 17, min: 9 }); // 9 AM to 5 PM
+    });
+    it("handles cross-midnight 12-hour picker limit (e.g. night shift 8 PM - 5 AM)", () => {
+      // max=29 means hour 29 in extended range => 5 AM next day
+      const result = getAdjustedLimit({ max: 29, min: 20 }, 24, 1);
+      expect(result).toEqual({ max: 29, min: 20 });
     });
 
     it("handles typical minutes picker (0-59)", () => {

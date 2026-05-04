@@ -16,9 +16,9 @@ import type { Limit } from "../components/DurationScroll/types";
  * // Returns: { max: 15, min: 5 }
  *
  * @example
- * // With out-of-bounds limits
+ * // With out-of-bounds limits (max is no longer clamped)
  * getAdjustedLimit({ min: -5, max: 25 }, 20, 1)
- * // Returns: { max: 19, min: 0 }
+ * // Returns: { max: 25, min: 0 }
  *
  * @example
  * // With invalid limits (max < min)
@@ -43,7 +43,7 @@ export const getAdjustedLimit = (
   }
 
   // guard against limits that are out of bounds
-  const adjustedMaxLimit = limit.max !== undefined ? Math.min(limit.max, maxValue) : maxValue;
+  const adjustedMaxLimit = limit.max !== undefined ? limit.max : maxValue;
   const adjustedMinLimit = limit.min !== undefined ? Math.max(limit.min, 0) : 0;
 
   // guard against invalid limits

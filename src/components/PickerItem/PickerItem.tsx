@@ -40,6 +40,16 @@ const PickerItem = React.memo<PickerItemProps>(
       isAm = item.includes("AM");
       stringItem = item.replace(/\s[AP]M/g, "");
       intItem = parseInt(stringItem);
+
+      if (!isAm && intItem !== 12) {
+        intItem += 12;
+      } else if (isAm && intItem === 12) {
+        intItem = 0;
+      }
+
+      if (adjustedLimitedMax >= 24 && intItem <= adjustedLimitedMax - 24) {
+        intItem += 24;
+      }
     }
 
     const isSelected = intItem === selectedValue;
