@@ -8,7 +8,7 @@ type CustomButtonProps = {
   onPress?: () => void;
 };
 
-export const CustomButton: React.FC<CustomButtonProps> = ({ label, onPress }) => {
+export const CustomButton = ({ label, onPress }: CustomButtonProps) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.customButtonContainer}>
       <LinearGradient

@@ -4,13 +4,6 @@ const { getDefaultConfig } = require("expo/metro-config");
 
 const config = getDefaultConfig(__dirname);
 
-config.transformer.getTransformOptions = async () => ({
-  transform: {
-    experimentalImportSupport: false,
-    inlineRequires: false,
-  },
-});
-
 const extraNodeModules = {
   "react-native-timer-picker": path.resolve(__dirname, "../../src"),
 };
@@ -21,6 +14,6 @@ config.resolver.extraNodeModules = new Proxy(extraNodeModules, {
     name in target ? target[name] : path.join(process.cwd(), `node_modules/${name}`),
 });
 
-config.watchFolders = [path.resolve(__dirname, "../../src")];
+config.watchFolders = [...(config.watchFolders ?? []), path.resolve(__dirname, "../../src")];
 
 module.exports = config;

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaskedView from "@react-native-masked-view/masked-view";
@@ -33,7 +33,8 @@ export default function App() {
   const [showPickerExample3, setShowPickerExample3] = useState(false);
   const [alarmStringExample1, setAlarmStringExample1] = useState<string | null>(null);
   const [alarmStringExample2, setAlarmStringExample2] = useState<string | null>(null);
-  const [alarmStringExample3, setAlarmStringExample3] = useState<string>("00:00:00");
+  const [alarmStringExample3, setAlarmStringExample3] = useState("00:00:00");
+  const [hourLimitTestValue, setHourLimitTestValue] = useState(20);
 
   // N.B. Uncomment this to use audio (requires development build)
   // useEffect(() => {
@@ -57,29 +58,23 @@ export default function App() {
   //     };
   // }, []);
 
-  const onRootLayout = useCallback(
-    (event: { nativeEvent: { layout: { width: number } } }) => {
-      const { width } = event.nativeEvent.layout;
-      setPageWidth(width);
-      scrollViewRef.current?.scrollTo({
-        animated: false,
-        x: width * currentPageIndex,
-      });
-    },
-    [currentPageIndex]
-  );
+  const onRootLayout = (event: { nativeEvent: { layout: { width: number } } }) => {
+    const { width } = event.nativeEvent.layout;
+    setPageWidth(width);
+    scrollViewRef.current?.scrollTo({
+      animated: false,
+      x: width * currentPageIndex,
+    });
+  };
 
-  const onMomentumScrollEnd = useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      const { contentOffset } = event.nativeEvent;
-      const newPageIndex = Math.round(contentOffset.x / pageWidth) as 0 | 1;
-      setCurrentPageIndex(newPageIndex);
-    },
-    [pageWidth]
-  );
+  const onMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    const { contentOffset } = event.nativeEvent;
+    const newPageIndex = Math.round(contentOffset.x / pageWidth) as 0 | 1;
+    setCurrentPageIndex(newPageIndex);
+  };
 
-  const pickerFeedback = useCallback(() => {
+  const pickerFeedback = () => {
     try {
       Haptics.selectionAsync();
 
@@ -98,258 +93,285 @@ export default function App() {
     } catch (error) {
       console.warn("Picker feedback failed:", error);
     }
-  }, []);
+  };
 
-  const renderExample1 = useMemo(() => {
-    return (
-      <View style={[styles.container, styles.page1Container, { width: pageWidth }]}>
-        <Text style={styles.textDark}>
-          {alarmStringExample1 !== null ? "Alarm set for" : "No alarm set"}
-        </Text>
-        <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerExample1(true)}>
-          <View style={styles.touchableContainer}>
-            {alarmStringExample1 !== null ? (
-              <Text style={styles.alarmTextDark}>{alarmStringExample1}</Text>
-            ) : null}
-            <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerExample1(true)}>
-              <View style={styles.buttonContainer}>
-                <Text style={[styles.button, styles.buttonDark]}>{"Set Alarm 🔔"}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <TimerPickerModal
-          closeOnOverlayPress
-          LinearGradient={LinearGradient}
-          modalProps={{ overlayOpacity: 0.2 }}
-          modalTitle="Set Alarm"
-          onCancel={() => setShowPickerExample1(false)}
-          onConfirm={(pickedDuration) => {
-            setAlarmStringExample1(formatTime(pickedDuration));
-            setShowPickerExample1(false);
-          }}
-          pickerFeedback={pickerFeedback}
-          setIsVisible={setShowPickerExample1}
-          styles={{ theme: "dark" }}
-          visible={showPickerExample1}
-        />
+  const renderExample1 = (
+    <View style={[styles.container, styles.page1Container, { width: pageWidth }]}>
+      <Text style={styles.textDark}>
+        {alarmStringExample1 !== null ? "Alarm set for" : "No alarm set"}
+      </Text>
+      <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerExample1(true)}>
+        <View style={styles.touchableContainer}>
+          {alarmStringExample1 !== null ? (
+            <Text style={styles.alarmTextDark}>{alarmStringExample1}</Text>
+          ) : null}
+          <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerExample1(true)}>
+            <View style={styles.buttonContainer}>
+              <Text style={[styles.button, styles.buttonDark]}>{"Set Alarm 🔔"}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+      <TimerPickerModal
+        closeOnOverlayPress
+        LinearGradient={LinearGradient}
+        modalProps={{ overlayOpacity: 0.2 }}
+        modalTitle="Set Alarm"
+        onCancel={() => setShowPickerExample1(false)}
+        onConfirm={(pickedDuration) => {
+          setAlarmStringExample1(formatTime(pickedDuration));
+          setShowPickerExample1(false);
+        }}
+        pickerFeedback={pickerFeedback}
+        setIsVisible={setShowPickerExample1}
+        styles={{ theme: "dark" }}
+        visible={showPickerExample1}
+      />
+    </View>
+  );
+
+  const renderExample2 = (
+    <View style={[styles.container, styles.page2Container, { width: pageWidth }]}>
+      <Text style={styles.textLight}>
+        {alarmStringExample2 !== null ? "Alarm set for" : "No alarm set"}
+      </Text>
+      <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerExample2(true)}>
+        <View style={styles.touchableContainer}>
+          {alarmStringExample2 !== null ? (
+            <Text style={styles.alarmTextLight}>{alarmStringExample2}</Text>
+          ) : null}
+          <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerExample2(true)}>
+            <View style={styles.buttonContainer}>
+              <Text style={[styles.button, styles.buttonLight]}>{"Set Alarm 🔔"}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+      <TimerPickerModal
+        closeOnOverlayPress
+        LinearGradient={LinearGradient}
+        modalTitle="Set Alarm"
+        onCancel={() => setShowPickerExample2(false)}
+        onConfirm={(pickedDuration) => {
+          setAlarmStringExample2(formatTime(pickedDuration));
+          setShowPickerExample2(false);
+        }}
+        pickerFeedback={pickerFeedback}
+        setIsVisible={setShowPickerExample2}
+        styles={{
+          pickerColumnWidth: {
+            hours: 90,
+          },
+          theme: "light",
+        }}
+        use12HourPicker
+        visible={showPickerExample2}
+      />
+    </View>
+  );
+
+  const renderExample3 = (
+    <View style={[styles.container, styles.page3Container, { width: pageWidth }]}>
+      <Text style={styles.textLight}>
+        {alarmStringExample3 !== null ? "Alarm set for" : "No alarm set"}
+      </Text>
+      <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerExample3(true)}>
+        <View style={styles.touchableContainer}>
+          {alarmStringExample3 !== null ? (
+            <Text style={styles.alarmTextLight}>{alarmStringExample3}</Text>
+          ) : null}
+          <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerExample3(true)}>
+            <View style={styles.buttonContainer}>
+              <Text style={[styles.button, styles.buttonLight]}>{"Set Alarm 🔔"}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+      <TimerPickerModal
+        cancelButton={<CustomButton label="Cancel" />}
+        closeOnOverlayPress
+        confirmButton={<CustomButton label="Confirm" />}
+        LinearGradient={LinearGradient}
+        modalProps={{ overlayOpacity: 0.2 }}
+        modalTitle="Set Alarm"
+        onCancel={() => setShowPickerExample3(false)}
+        onConfirm={(pickedDuration) => {
+          setAlarmStringExample3(formatTime(pickedDuration));
+          setShowPickerExample3(false);
+        }}
+        pickerFeedback={pickerFeedback}
+        setIsVisible={setShowPickerExample3}
+        styles={{
+          pickerLabelGap: 10,
+          text: { fontWeight: "bold" },
+          theme: "dark",
+        }}
+        visible={showPickerExample3}
+      />
+    </View>
+  );
+
+  const renderExample4 = (
+    <LinearGradient
+      colors={["#202020", "#220578"]}
+      end={{ x: 1, y: 1 }}
+      start={{ x: 0, y: 0 }}
+      style={[styles.container, { width: pageWidth }]}
+    >
+      <TimerPicker
+        hourLabel=":"
+        LinearGradient={LinearGradient}
+        MaskedView={MaskedView}
+        minuteLabel=":"
+        padWithNItems={2}
+        pickerFeedback={pickerFeedback}
+        secondLabel=""
+        styles={{
+          backgroundColor: "transparent",
+          pickerContainer: {
+            paddingHorizontal: 50,
+          },
+          pickerItem: {
+            fontSize: 34,
+          },
+          pickerLabel: {
+            fontSize: 32,
+          },
+          pickerLabelContainer: {
+            marginTop: -4,
+          },
+          pickerLabelGap: 23,
+          theme: "dark",
+        }}
+      />
+    </LinearGradient>
+  );
+
+  const renderExample5 = (
+    <View style={[styles.container, styles.page5Container, { width: pageWidth }]}>
+      <TimerPicker
+        hideHours
+        LinearGradient={LinearGradient}
+        minuteLabel="min"
+        padWithNItems={3}
+        pickerFeedback={pickerFeedback}
+        secondLabel="sec"
+        styles={{
+          pickerContainer: {
+            paddingHorizontal: 50,
+          },
+          pickerItem: {
+            fontSize: 34,
+          },
+          pickerLabel: {
+            fontSize: 26,
+          },
+          pickerLabelGap: 8,
+          theme: "light",
+        }}
+      />
+    </View>
+  );
+
+  const formatLiveValue = (value: number) => {
+    const ampmHour = value === 0 ? 12 : value > 12 ? value - 12 : value;
+    const ampm = value < 12 ? "AM" : "PM";
+    return `${value} (${ampmHour} ${ampm})`;
+  };
+
+  const renderHourLimitTest = (
+    <View style={[styles.container, styles.page6Container, { width: pageWidth }]}>
+      <Text style={[styles.textDark, styles.testTitle]}>Cross-midnight hourLimit test</Text>
+      <Text style={styles.testInstructions}>
+        {"use12HourPicker + hourLimit={ min: 20, max: 5 }\n(8 PM through 5 AM, wraparound)"}
+      </Text>
+      <Text style={styles.testInstructions}>
+        {
+          "Try scrolling the hours column into the AM region.\nAM hours 12, 1, 2, 3, 4, 5 should be selectable.\n6 AM - 7 PM should snap to nearest boundary."
+        }
+      </Text>
+      <View style={styles.liveValueBox}>
+        <Text style={styles.liveValueLabel}>Live reported hour value:</Text>
+        <Text style={styles.liveValueText}>{formatLiveValue(hourLimitTestValue)}</Text>
       </View>
-    );
-  }, [alarmStringExample1, pickerFeedback, pageWidth, showPickerExample1]);
+      <TimerPicker
+        hideSeconds
+        hourLimit={{ max: 5, min: 20 }}
+        initialValue={{ hours: 20, minutes: 0, seconds: 0 }}
+        LinearGradient={LinearGradient}
+        onDurationChange={(d) => setHourLimitTestValue(d.hours)}
+        padWithNItems={2}
+        pickerFeedback={pickerFeedback}
+        styles={{
+          pickerColumnWidth: { hours: 110 },
+          pickerItem: { fontSize: 28 },
+          pickerLabel: { fontSize: 22 },
+          theme: "dark",
+        }}
+        use12HourPicker
+      />
+    </View>
+  );
 
-  const renderExample2 = useMemo(() => {
-    return (
-      <View style={[styles.container, styles.page2Container, { width: pageWidth }]}>
-        <Text style={styles.textLight}>
-          {alarmStringExample2 !== null ? "Alarm set for" : "No alarm set"}
-        </Text>
-        <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerExample2(true)}>
-          <View style={styles.touchableContainer}>
-            {alarmStringExample2 !== null ? (
-              <Text style={styles.alarmTextLight}>{alarmStringExample2}</Text>
-            ) : null}
-            <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerExample2(true)}>
-              <View style={styles.buttonContainer}>
-                <Text style={[styles.button, styles.buttonLight]}>{"Set Alarm 🔔"}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <TimerPickerModal
-          closeOnOverlayPress
-          LinearGradient={LinearGradient}
-          modalTitle="Set Alarm"
-          onCancel={() => setShowPickerExample2(false)}
-          onConfirm={(pickedDuration) => {
-            setAlarmStringExample2(formatTime(pickedDuration));
-            setShowPickerExample2(false);
-          }}
-          pickerFeedback={pickerFeedback}
-          setIsVisible={setShowPickerExample2}
-          styles={{
-            pickerColumnWidth: {
-              hours: 90,
-            },
-            theme: "light",
-          }}
-          use12HourPicker
-          visible={showPickerExample2}
-        />
-      </View>
-    );
-  }, [alarmStringExample2, pickerFeedback, pageWidth, showPickerExample2]);
+  const pageIndicesWithDarkBackground = [0, 3, 5];
+  const isDarkBackground = pageIndicesWithDarkBackground.includes(currentPageIndex);
+  const isFinalPage = currentPageIndex === 5;
+  const isFirstPage = currentPageIndex === 0;
 
-  const renderExample3 = useMemo(() => {
-    return (
-      <View style={[styles.container, styles.page3Container, { width: pageWidth }]}>
-        <Text style={styles.textLight}>
-          {alarmStringExample3 !== null ? "Alarm set for" : "No alarm set"}
-        </Text>
-        <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerExample3(true)}>
-          <View style={styles.touchableContainer}>
-            {alarmStringExample3 !== null ? (
-              <Text style={styles.alarmTextLight}>{alarmStringExample3}</Text>
-            ) : null}
-            <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerExample3(true)}>
-              <View style={styles.buttonContainer}>
-                <Text style={[styles.button, styles.buttonLight]}>{"Set Alarm 🔔"}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-        <TimerPickerModal
-          cancelButton={<CustomButton label="Cancel" />}
-          closeOnOverlayPress
-          confirmButton={<CustomButton label="Confirm" />}
-          LinearGradient={LinearGradient}
-          modalProps={{ overlayOpacity: 0.2 }}
-          modalTitle="Set Alarm"
-          onCancel={() => setShowPickerExample3(false)}
-          onConfirm={(pickedDuration) => {
-            setAlarmStringExample3(formatTime(pickedDuration));
-            setShowPickerExample3(false);
-          }}
-          pickerFeedback={pickerFeedback}
-          setIsVisible={setShowPickerExample3}
-          styles={{
-            pickerLabelGap: 10,
-            text: { fontWeight: "bold" },
-            theme: "dark",
-          }}
-          visible={showPickerExample3}
-        />
-      </View>
-    );
-  }, [alarmStringExample3, pickerFeedback, pageWidth, showPickerExample3]);
-
-  const renderExample4 = useMemo(() => {
-    return (
-      <LinearGradient
-        colors={["#202020", "#220578"]}
-        end={{ x: 1, y: 1 }}
-        start={{ x: 0, y: 0 }}
-        style={[styles.container, { width: pageWidth }]}
-      >
-        <TimerPicker
-          hourLabel=":"
-          LinearGradient={LinearGradient}
-          MaskedView={MaskedView}
-          minuteLabel=":"
-          padWithNItems={2}
-          pickerFeedback={pickerFeedback}
-          secondLabel=""
-          styles={{
-            backgroundColor: "transparent",
-            pickerContainer: {
-              paddingHorizontal: 50,
-            },
-            pickerItem: {
-              fontSize: 34,
-            },
-            pickerLabel: {
-              fontSize: 32,
-            },
-            pickerLabelContainer: {
-              marginTop: -4,
-            },
-            pickerLabelGap: 23,
-            theme: "dark",
-          }}
-        />
-      </LinearGradient>
-    );
-  }, [pickerFeedback, pageWidth]);
-
-  const renderExample5 = useMemo(() => {
-    return (
-      <View style={[styles.container, styles.page5Container, { width: pageWidth }]}>
-        <TimerPicker
-          hideHours
-          LinearGradient={LinearGradient}
-          minuteLabel="min"
-          padWithNItems={3}
-          pickerFeedback={pickerFeedback}
-          secondLabel="sec"
-          styles={{
-            pickerContainer: {
-              paddingHorizontal: 50,
-            },
-            pickerItem: {
-              fontSize: 34,
-            },
-            pickerLabel: {
-              fontSize: 26,
-            },
-            pickerLabelGap: 8,
-            theme: "light",
-          }}
-        />
-      </View>
-    );
-  }, [pickerFeedback, pageWidth]);
-
-  const renderNavigationArrows = useMemo(() => {
-    const pageIndicesWithDarkBackground = [0, 3];
-    const isDarkBackground = pageIndicesWithDarkBackground.includes(currentPageIndex);
-
-    const isFinalPage = currentPageIndex === 4;
-    const isFirstPage = currentPageIndex === 0;
-
-    return (
-      <>
-        {!isFinalPage ? (
-          <Pressable
-            onPress={() => {
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-              setCurrentPageIndex((currentPageIndex) => {
-                scrollViewRef.current?.scrollTo({
-                  animated: true,
-                  x: pageWidth * (currentPageIndex + 1),
-                });
-                return currentPageIndex + 1;
+  const renderNavigationArrows = (
+    <>
+      {!isFinalPage ? (
+        <Pressable
+          onPress={() => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            setCurrentPageIndex((currentPageIndex) => {
+              scrollViewRef.current?.scrollTo({
+                animated: true,
+                x: pageWidth * (currentPageIndex + 1),
               });
-            }}
-            style={({ pressed }) => [
-              styles.chevronPressable,
-              { right: 8 },
-              pressed && styles.chevronPressable_pressed,
-            ]}
-          >
-            <Ionicons
-              color={isDarkBackground ? "#F1F1F1" : "#514242"}
-              name="chevron-forward"
-              size={32}
-            />
-          </Pressable>
-        ) : null}
-        {!isFirstPage ? (
-          <Pressable
-            onPress={() => {
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-              setCurrentPageIndex((currentPageIndex) => {
-                scrollViewRef.current?.scrollTo({
-                  animated: true,
-                  x: pageWidth * (currentPageIndex - 1),
-                });
-                return currentPageIndex - 1;
+              return currentPageIndex + 1;
+            });
+          }}
+          style={({ pressed }) => [
+            styles.chevronPressable,
+            { right: 8 },
+            pressed && styles.chevronPressable_pressed,
+          ]}
+        >
+          <Ionicons
+            color={isDarkBackground ? "#F1F1F1" : "#514242"}
+            name="chevron-forward"
+            size={32}
+          />
+        </Pressable>
+      ) : null}
+      {!isFirstPage ? (
+        <Pressable
+          onPress={() => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+            setCurrentPageIndex((currentPageIndex) => {
+              scrollViewRef.current?.scrollTo({
+                animated: true,
+                x: pageWidth * (currentPageIndex - 1),
               });
-            }}
-            style={({ pressed }) => [
-              styles.chevronPressable,
-              { left: 8 },
-              pressed && styles.chevronPressable_pressed,
-            ]}
-          >
-            <Ionicons
-              color={isDarkBackground ? "#F1F1F1" : "#514242"}
-              name="chevron-back"
-              size={32}
-            />
-          </Pressable>
-        ) : null}
-      </>
-    );
-  }, [currentPageIndex, pageWidth]);
+              return currentPageIndex - 1;
+            });
+          }}
+          style={({ pressed }) => [
+            styles.chevronPressable,
+            { left: 8 },
+            pressed && styles.chevronPressable_pressed,
+          ]}
+        >
+          <Ionicons
+            color={isDarkBackground ? "#F1F1F1" : "#514242"}
+            name="chevron-back"
+            size={32}
+          />
+        </Pressable>
+      ) : null}
+    </>
+  );
 
   return (
     <View onLayout={onRootLayout} style={styles.root}>
@@ -365,6 +387,7 @@ export default function App() {
         {renderExample3}
         {renderExample4}
         {renderExample5}
+        {renderHourLimitTest}
       </ScrollView>
       {renderNavigationArrows}
     </View>
@@ -411,6 +434,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  liveValueBox: {
+    alignItems: "center",
+    backgroundColor: "#3A3A3A",
+    borderRadius: 8,
+    marginVertical: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+  },
+  liveValueLabel: {
+    color: "#A0A0A0",
+    fontSize: 12,
+  },
+  liveValueText: {
+    color: "#F1F1F1",
+    fontSize: 22,
+    fontWeight: "600",
+    marginTop: 4,
+  },
   page1Container: {
     backgroundColor: "#514242",
   },
@@ -423,8 +464,23 @@ const styles = StyleSheet.create({
   page5Container: {
     backgroundColor: "#F1F1F1",
   },
+  page6Container: {
+    backgroundColor: "#202020",
+    paddingHorizontal: 20,
+  },
   root: {
     flex: 1,
+  },
+  testInstructions: {
+    color: "#C2C2C2",
+    fontSize: 13,
+    marginTop: 8,
+    textAlign: "center",
+  },
+  testTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 4,
   },
   textDark: {
     color: "#F1F1F1",
