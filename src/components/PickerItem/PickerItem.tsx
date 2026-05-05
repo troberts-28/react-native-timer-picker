@@ -51,8 +51,8 @@ const PickerItem = React.memo<PickerItemProps>(
         intItem = NaN;
       }
     } else if (is12HourPicker && separateAmPmPicker) {
-      // Hour column in clock-face form (12, 1, 2, ..., 11). The "12" slot represents
-      // the noon/midnight cycle index 0; every other display value matches its index.
+      // Hour column in clock-face form (12, 1, 2, ..., 11). The "12" slot is hourSlot 0
+      // (noon/midnight); every other display value matches its slot index.
       const parsed = parseInt(item);
       intItem = isNaN(parsed) ? NaN : parsed === 12 ? 0 : parsed;
     } else if (is12HourPicker) {

@@ -11,34 +11,35 @@ const resolveLimit = (limit: Limit | undefined): { max: number; min: number } | 
 };
 
 /**
- * Returns the cycleIdx in the rendered hour column nearest to `rawCycleIdx` such that
- * `(cycleIdx, currentAmPm)` is within `hourLimit`. Iterates in `interval` steps to mirror
- * the values actually rendered by `generate12HourCycleNumbers`. If no value in the column
- * satisfies the limit, `rawCycleIdx` is returned unchanged.
+ * Returns the hour slot in the rendered 12-hour clock-face column nearest to
+ * `rawHourSlot` such that `(hourSlot, currentAmPm)` is within `hourLimit`. Iterates
+ * in `interval` steps to mirror the values actually rendered by
+ * `generate12HourCycleNumbers`. If no value in the column satisfies the limit,
+ * `rawHourSlot` is returned unchanged.
  */
-export const findNearestValidCycleIdx = (
-  rawCycleIdx: number,
+export const findNearestValidHourSlot = (
+  rawHourSlot: number,
   currentAmPm: number,
   hourLimit: Limit | undefined,
   interval = 1
 ): number => {
   const resolved = resolveLimit(hourLimit);
-  if (!resolved) return rawCycleIdx;
+  if (!resolved) return rawHourSlot;
 
-  if (isWithinLimit(combineToHour24(rawCycleIdx, currentAmPm), resolved.min, resolved.max)) {
-    return rawCycleIdx;
+  if (isWithinLimit(combineToHour24(rawHourSlot, currentAmPm), resolved.min, resolved.max)) {
+    return rawHourSlot;
   }
 
   let best: number | null = null;
   let bestDistance = Infinity;
   for (let i = 0; i < 12; i += interval) {
     if (!isWithinLimit(combineToHour24(i, currentAmPm), resolved.min, resolved.max)) continue;
-    const distance = Math.abs(i - rawCycleIdx);
+    const distance = Math.abs(i - rawHourSlot);
     if (distance < bestDistance) {
       bestDistance = distance;
       best = i;
     }
   }
 
-  return best ?? rawCycleIdx;
+  return best ?? rawHourSlot;
 };

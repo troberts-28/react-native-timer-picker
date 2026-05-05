@@ -12,7 +12,7 @@ import { View } from "react-native";
 import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
 import { isWithinLimit } from "../../utils/isWithinLimit";
 import { combineToHour24, splitHour24 } from "../../utils/separateAmPmHour";
-import { findNearestValidCycleIdx } from "../../utils/snapSeparateAmPmHour";
+import { findNearestValidHourSlot } from "../../utils/snapSeparateAmPmHour";
 import DurationScroll from "../DurationScroll";
 import type { DurationScrollRef } from "../DurationScroll";
 import { generateStyles } from "./styles";
@@ -170,7 +170,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
 
   const [selectedDays, setSelectedDays] = useState(safeInitialValue.days);
   const [selectedHours, setSelectedHours] = useState(
-    useSeparateAmPm ? initialHourSplit.cycleIdx : safeInitialValue.hours
+    useSeparateAmPm ? initialHourSplit.hourSlot : safeInitialValue.hours
   );
   const [selectedAmPm, setSelectedAmPm] = useState<number>(initialHourSplit.amPm);
   const [selectedMinutes, setSelectedMinutes] = useState(safeInitialValue.minutes);
@@ -197,15 +197,15 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
   // currently selected AM/PM. These callbacks fold the cross-column context in;
   // DurationScroll uses `getValidValue` for momentum-scroll snapping and `isItemDisabled`
   // for per-row greying via PickerItem.
-  const getValidHourCycleIdx = (rawCycleIdx: number) =>
-    findNearestValidCycleIdx(rawCycleIdx, selectedAmPm, hourLimit, hourInterval);
+  const getValidHourSlot = (rawHourSlot: number) =>
+    findNearestValidHourSlot(rawHourSlot, selectedAmPm, hourLimit, hourInterval);
 
-  const isHourCycleDisabled = (cycleIdx: number) => {
+  const isHourSlotDisabled = (hourSlot: number) => {
     if (!hourLimit || (hourLimit.min === undefined && hourLimit.max === undefined)) {
       return false;
     }
     return !isWithinLimit(
-      combineToHour24(cycleIdx, selectedAmPm),
+      combineToHour24(hourSlot, selectedAmPm),
       hourLimit.min ?? 0,
       hourLimit.max ?? 23
     );
@@ -216,9 +216,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
   const combinedHoursLatestDuration = useMemo<{ readonly current: number }>(
     () => ({
       get current() {
-        const cycleIdx = hoursDurationScrollRef.current?.latestDuration.current ?? 0;
+        const hourSlot = hoursDurationScrollRef.current?.latestDuration.current ?? 0;
         const amPm = amPmDurationScrollRef.current?.latestDuration.current ?? 0;
-        return combineToHour24(cycleIdx, amPm);
+        return combineToHour24(hourSlot, amPm);
       },
     }),
     []
@@ -236,7 +236,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
     reset: (options) => {
       setSelectedDays(safeInitialValue.days);
       if (useSeparateAmPm) {
-        setSelectedHours(initialHourSplit.cycleIdx);
+        setSelectedHours(initialHourSplit.hourSlot);
         setSelectedAmPm(initialHourSplit.amPm);
       } else {
         setSelectedHours(safeInitialValue.hours);
@@ -257,9 +257,9 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
       if (value.hours !== undefined) {
         if (useSeparateAmPm) {
           const split = splitHour24(value.hours);
-          setSelectedHours(split.cycleIdx);
+          setSelectedHours(split.hourSlot);
           setSelectedAmPm(split.amPm);
-          hoursDurationScrollRef.current?.setValue(split.cycleIdx, options);
+          hoursDurationScrollRef.current?.setValue(split.hourSlot, options);
           amPmDurationScrollRef.current?.setValue(split.amPm, options);
         } else {
           setSelectedHours(value.hours);
@@ -312,12 +312,12 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
           amLabel={amLabel}
           decelerationRate={decelerationRate}
           disableInfiniteScroll={disableInfiniteScroll}
-          getValidValue={useSeparateAmPm ? getValidHourCycleIdx : undefined}
-          initialValue={useSeparateAmPm ? initialHourSplit.cycleIdx : safeInitialValue.hours}
+          getValidValue={useSeparateAmPm ? getValidHourSlot : undefined}
+          initialValue={useSeparateAmPm ? initialHourSplit.hourSlot : safeInitialValue.hours}
           interval={hourInterval}
           is12HourPicker={use12HourPicker}
           isDisabled={hoursPickerIsDisabled}
-          isItemDisabled={useSeparateAmPm ? isHourCycleDisabled : undefined}
+          isItemDisabled={useSeparateAmPm ? isHourSlotDisabled : undefined}
           label={hourLabel ?? (!use12HourPicker ? "h" : undefined)}
           limit={useSeparateAmPm ? undefined : hourLimit}
           maximumValue={useSeparateAmPm ? 11 : maximumHours}

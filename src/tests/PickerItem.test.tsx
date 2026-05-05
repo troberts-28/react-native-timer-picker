@@ -236,7 +236,7 @@ describe("PickerItem", () => {
     });
 
     describe("greying via isItemDisabled callback", () => {
-      it("calls isItemDisabled with the parsed cycleIdx ('12' → 0)", () => {
+      it("calls isItemDisabled with the parsed hourSlot ('12' → 0)", () => {
         const isItemDisabled = jest.fn((value: number) => value === 0);
         const { getByText } = renderItem({
           adjustedLimitedMax: 11,
@@ -250,7 +250,7 @@ describe("PickerItem", () => {
         expect(isDisabledStyle(getByText("12"))).toBe(true);
       });
 
-      it("calls isItemDisabled with the parsed cycleIdx ('05' → 5)", () => {
+      it("calls isItemDisabled with the parsed hourSlot ('05' → 5)", () => {
         const isItemDisabled = jest.fn(() => false);
         const { getByText } = renderItem({
           adjustedLimitedMax: 11,
