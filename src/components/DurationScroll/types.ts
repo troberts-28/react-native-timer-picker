@@ -15,11 +15,25 @@ export interface DurationScrollProps {
   decelerationRate?: number | "normal" | "fast";
   disableInfiniteScroll?: boolean;
   FlatList?: any;
+  /**
+   * Optional override for the column's snap-to-valid logic. When provided,
+   * `onMomentumScrollEnd` runs the raw value through this function instead of
+   * the default `limit`-based clamp. Used by `TimerPicker` to inject cross-column
+   * context (e.g. AM/PM) into hour-column snapping.
+   */
+  getValidValue?: (rawValue: number) => number;
   Haptics?: any;
   initialValue?: number;
   interval: number;
   is12HourPicker?: boolean;
+  isAmPmPicker?: boolean;
   isDisabled?: boolean;
+  /**
+   * Optional override for per-row "is this disabled?" decision. When provided,
+   * `PickerItem` calls this with the parsed row value instead of comparing against
+   * the column-local `limit`. Used by `TimerPicker` for combined-hour greying.
+   */
+  isItemDisabled?: (value: number) => boolean;
   label?: string | React.ReactElement;
   limit?: Limit;
   LinearGradient?: any;
@@ -36,6 +50,7 @@ export interface DurationScrollProps {
   repeatNumbersNTimes?: number;
   repeatNumbersNTimesNotExplicitlySet: boolean;
   selectedValue?: number;
+  separateAmPmPicker?: boolean;
   styles: ReturnType<typeof generateStyles>;
   testID?: string;
 }

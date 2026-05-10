@@ -31,10 +31,13 @@ export default function App() {
   const [showPickerExample1, setShowPickerExample1] = useState(false);
   const [showPickerExample2, setShowPickerExample2] = useState(false);
   const [showPickerExample3, setShowPickerExample3] = useState(false);
+  const [showPickerSeparateAmPm, setShowPickerSeparateAmPm] = useState(false);
   const [alarmStringExample1, setAlarmStringExample1] = useState<string | null>(null);
   const [alarmStringExample2, setAlarmStringExample2] = useState<string | null>(null);
   const [alarmStringExample3, setAlarmStringExample3] = useState("00:00:00");
+  const [alarmStringSeparateAmPm, setAlarmStringSeparateAmPm] = useState<string | null>(null);
   const [hourLimitTestValue, setHourLimitTestValue] = useState(20);
+  const [hourLimitSeparateTestValue, setHourLimitSeparateTestValue] = useState(20);
 
   // N.B. Uncomment this to use audio (requires development build)
   // useEffect(() => {
@@ -166,6 +169,53 @@ export default function App() {
         }}
         use12HourPicker
         visible={showPickerExample2}
+      />
+    </View>
+  );
+
+  const renderExampleSeparateAmPm = (
+    <View style={[styles.container, styles.pageSeparateAmPmContainer, { width: pageWidth }]}>
+      <Text style={styles.textLight}>
+        {alarmStringSeparateAmPm !== null ? "Alarm set for" : "No alarm set"}
+      </Text>
+      <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerSeparateAmPm(true)}>
+        <View style={styles.touchableContainer}>
+          {alarmStringSeparateAmPm !== null ? (
+            <Text style={styles.alarmTextLight}>{alarmStringSeparateAmPm}</Text>
+          ) : null}
+          <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPickerSeparateAmPm(true)}>
+            <View style={styles.buttonContainer}>
+              <Text style={[styles.button, styles.buttonLight]}>{"Set Alarm 🔔"}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+      <Text style={styles.captionLight}>{"use12HourPicker + separateAmPmPicker"}</Text>
+      <TimerPickerModal
+        amLabel="AM"
+        closeOnOverlayPress
+        hideSeconds
+        hourLimit={{ max: 17, min: 9 }}
+        initialValue={{ hours: 9, minutes: 30 }}
+        LinearGradient={LinearGradient}
+        modalTitle="Set Alarm"
+        onCancel={() => setShowPickerSeparateAmPm(false)}
+        onConfirm={(pickedDuration) => {
+          setAlarmStringSeparateAmPm(formatTime(pickedDuration));
+          setShowPickerSeparateAmPm(false);
+        }}
+        padHoursWithZero={false}
+        pickerFeedback={pickerFeedback}
+        pmLabel="PM"
+        separateAmPmPicker
+        setIsVisible={setShowPickerSeparateAmPm}
+        styles={{
+          selectedSeparateAmPmItem: { color: "#1B6EF1" },
+          separateAmPmItem: { fontSize: 16, fontWeight: "600" },
+          theme: "light",
+        }}
+        use12HourPicker
+        visible={showPickerSeparateAmPm}
       />
     </View>
   );
@@ -313,9 +363,48 @@ export default function App() {
     </View>
   );
 
-  const pageIndicesWithDarkBackground = [0, 3, 5];
+  const renderHourLimitSeparateTest = (
+    <View style={[styles.container, styles.page6Container, { width: pageWidth }]}>
+      <Text style={[styles.textDark, styles.testTitle]}>
+        Cross-midnight hourLimit + separate AM/PM
+      </Text>
+      <Text style={styles.testInstructions}>
+        {"use12HourPicker + separateAmPmPicker\nhourLimit={ min: 20, max: 5 } (8 PM – 5 AM)"}
+      </Text>
+      <Text style={styles.testInstructions}>
+        {
+          "Hour rows grey based on current AM/PM.\nAM/PM rows grey based on current hour.\nMomentum-scroll snaps within each column."
+        }
+      </Text>
+      <View style={styles.liveValueBox}>
+        <Text style={styles.liveValueLabel}>Live reported hour value:</Text>
+        <Text style={styles.liveValueText}>{formatLiveValue(hourLimitSeparateTestValue)}</Text>
+      </View>
+      <TimerPicker
+        amLabel="AM"
+        hideSeconds
+        hourLimit={{ max: 5, min: 20 }}
+        initialValue={{ hours: 20, minutes: 0, seconds: 0 }}
+        LinearGradient={LinearGradient}
+        onDurationChange={(d) => setHourLimitSeparateTestValue(d.hours)}
+        padHoursWithZero={false}
+        padWithNItems={2}
+        pickerFeedback={pickerFeedback}
+        pmLabel="PM"
+        separateAmPmPicker
+        styles={{
+          pickerItem: { fontSize: 28 },
+          pickerLabel: { fontSize: 22 },
+          theme: "dark",
+        }}
+        use12HourPicker
+      />
+    </View>
+  );
+
+  const pageIndicesWithDarkBackground = [0, 4, 6, 7];
   const isDarkBackground = pageIndicesWithDarkBackground.includes(currentPageIndex);
-  const isFinalPage = currentPageIndex === 5;
+  const isFinalPage = currentPageIndex === 7;
   const isFirstPage = currentPageIndex === 0;
 
   const renderNavigationArrows = (
@@ -384,10 +473,12 @@ export default function App() {
       >
         {renderExample1}
         {renderExample2}
+        {renderExampleSeparateAmPm}
         {renderExample3}
         {renderExample4}
         {renderExample5}
         {renderHourLimitTest}
+        {renderHourLimitSeparateTest}
       </ScrollView>
       {renderNavigationArrows}
     </View>
@@ -419,6 +510,11 @@ const styles = StyleSheet.create({
     color: "#C2C2C2",
   },
   buttonLight: { borderColor: "#8C8C8C", color: "#8C8C8C" },
+  captionLight: {
+    color: "#8C8C8C",
+    fontSize: 13,
+    marginTop: 24,
+  },
   chevronPressable: {
     alignItems: "center",
     bottom: 0,
@@ -467,6 +563,9 @@ const styles = StyleSheet.create({
   page6Container: {
     backgroundColor: "#202020",
     paddingHorizontal: 20,
+  },
+  pageSeparateAmPmContainer: {
+    backgroundColor: "#F1F1F1",
   },
   root: {
     flex: 1,

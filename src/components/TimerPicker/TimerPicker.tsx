@@ -10,6 +10,9 @@ import React, {
 import { View } from "react-native";
 
 import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
+import { isWithinLimit } from "../../utils/isWithinLimit";
+import { combineToHour24, splitHour24 } from "../../utils/separateAmPmHour";
+import { findNearestValidHourSlot } from "../../utils/snapSeparateAmPmHour";
 import DurationScroll from "../DurationScroll";
 import type { DurationScrollRef } from "../DurationScroll";
 import { generateStyles } from "./styles";
@@ -75,10 +78,13 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
     secondLabel,
     secondLimit,
     secondsPickerIsDisabled = false,
+    separateAmPmPicker = false,
     styles: customStyles,
     use12HourPicker = false,
     ...otherProps
   } = props;
+
+  const useSeparateAmPm = use12HourPicker && separateAmPmPicker;
 
   useEffect(() => {
     if (otherProps.Audio) {
@@ -107,12 +113,20 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
         );
       }
     }
+    if (use12HourPicker && separateAmPmPicker && maximumHours !== 23) {
+      console.warn(
+        '"maximumHours" is currently ignored when "separateAmPmPicker" is enabled. The hours column always shows the full 12-hour clock cycle (12, 1–11).'
+      );
+    }
   }, [
     otherProps.Audio,
     otherProps.Haptics,
     otherProps.clickSoundAsset,
     customStyles?.labelOffsetPercentage,
     customStyles?.pickerLabelGap,
+    maximumHours,
+    separateAmPmPicker,
+    use12HourPicker,
   ]);
 
   const safePadWithNItems = useMemo(() => {
@@ -149,40 +163,89 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
     [customStyles]
   );
 
+  const initialHourSplit = useMemo(
+    () => splitHour24(safeInitialValue.hours),
+    [safeInitialValue.hours]
+  );
+
   const [selectedDays, setSelectedDays] = useState(safeInitialValue.days);
-  const [selectedHours, setSelectedHours] = useState(safeInitialValue.hours);
+  const [selectedHours, setSelectedHours] = useState(
+    useSeparateAmPm ? initialHourSplit.hourSlot : safeInitialValue.hours
+  );
+  const [selectedAmPm, setSelectedAmPm] = useState<number>(initialHourSplit.amPm);
   const [selectedMinutes, setSelectedMinutes] = useState(safeInitialValue.minutes);
   const [selectedSeconds, setSelectedSeconds] = useState(safeInitialValue.seconds);
 
   useEffect(() => {
+    const hours = useSeparateAmPm ? combineToHour24(selectedHours, selectedAmPm) : selectedHours;
     onDurationChange?.({
       days: selectedDays,
-      hours: selectedHours,
+      hours,
       minutes: selectedMinutes,
       seconds: selectedSeconds,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDays, selectedHours, selectedMinutes, selectedSeconds]);
+  }, [selectedDays, selectedHours, selectedAmPm, selectedMinutes, selectedSeconds]);
 
   const daysDurationScrollRef = useRef<DurationScrollRef>(null);
   const hoursDurationScrollRef = useRef<DurationScrollRef>(null);
+  const amPmDurationScrollRef = useRef<DurationScrollRef>(null);
   const minutesDurationScrollRef = useRef<DurationScrollRef>(null);
   const secondsDurationScrollRef = useRef<DurationScrollRef>(null);
+
+  // In separateAmPmPicker mode the hour column's snap and greying both depend on the
+  // currently selected AM/PM. These callbacks fold the cross-column context in;
+  // DurationScroll uses `getValidValue` for momentum-scroll snapping and `isItemDisabled`
+  // for per-row greying via PickerItem.
+  const getValidHourSlot = (rawHourSlot: number) =>
+    findNearestValidHourSlot(rawHourSlot, selectedAmPm, hourLimit, hourInterval);
+
+  const isHourSlotDisabled = (hourSlot: number) => {
+    if (!hourLimit || (hourLimit.min === undefined && hourLimit.max === undefined)) {
+      return false;
+    }
+    return !isWithinLimit(
+      combineToHour24(hourSlot, selectedAmPm),
+      hourLimit.min ?? 0,
+      hourLimit.max ?? 23
+    );
+  };
+
+  // In separateAmPmPicker mode the public `latestDuration.hours` must combine the cycle
+  // index and the AM/PM flag back into a 24-hour value.
+  const combinedHoursLatestDuration = useMemo<{ readonly current: number }>(
+    () => ({
+      get current() {
+        const hourSlot = hoursDurationScrollRef.current?.latestDuration.current ?? 0;
+        const amPm = amPmDurationScrollRef.current?.latestDuration.current ?? 0;
+        return combineToHour24(hourSlot, amPm);
+      },
+    }),
+    []
+  );
 
   useImperativeHandle(ref, () => ({
     latestDuration: {
       days: daysDurationScrollRef.current?.latestDuration,
-      hours: hoursDurationScrollRef.current?.latestDuration,
+      hours: useSeparateAmPm
+        ? combinedHoursLatestDuration
+        : hoursDurationScrollRef.current?.latestDuration,
       minutes: minutesDurationScrollRef.current?.latestDuration,
       seconds: secondsDurationScrollRef.current?.latestDuration,
     },
     reset: (options) => {
       setSelectedDays(safeInitialValue.days);
-      setSelectedHours(safeInitialValue.hours);
+      if (useSeparateAmPm) {
+        setSelectedHours(initialHourSplit.hourSlot);
+        setSelectedAmPm(initialHourSplit.amPm);
+      } else {
+        setSelectedHours(safeInitialValue.hours);
+      }
       setSelectedMinutes(safeInitialValue.minutes);
       setSelectedSeconds(safeInitialValue.seconds);
       daysDurationScrollRef.current?.reset(options);
       hoursDurationScrollRef.current?.reset(options);
+      amPmDurationScrollRef.current?.reset(options);
       minutesDurationScrollRef.current?.reset(options);
       secondsDurationScrollRef.current?.reset(options);
     },
@@ -192,8 +255,16 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
         daysDurationScrollRef.current?.setValue(value.days, options);
       }
       if (value.hours !== undefined) {
-        setSelectedHours(value.hours);
-        hoursDurationScrollRef.current?.setValue(value.hours, options);
+        if (useSeparateAmPm) {
+          const split = splitHour24(value.hours);
+          setSelectedHours(split.hourSlot);
+          setSelectedAmPm(split.amPm);
+          hoursDurationScrollRef.current?.setValue(split.hourSlot, options);
+          amPmDurationScrollRef.current?.setValue(split.amPm, options);
+        } else {
+          setSelectedHours(value.hours);
+          hoursDurationScrollRef.current?.setValue(value.hours, options);
+        }
       }
       if (value.minutes !== undefined) {
         setSelectedMinutes(value.minutes);
@@ -241,13 +312,15 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
           amLabel={amLabel}
           decelerationRate={decelerationRate}
           disableInfiniteScroll={disableInfiniteScroll}
-          initialValue={safeInitialValue.hours}
+          getValidValue={useSeparateAmPm ? getValidHourSlot : undefined}
+          initialValue={useSeparateAmPm ? initialHourSplit.hourSlot : safeInitialValue.hours}
           interval={hourInterval}
           is12HourPicker={use12HourPicker}
           isDisabled={hoursPickerIsDisabled}
+          isItemDisabled={useSeparateAmPm ? isHourSlotDisabled : undefined}
           label={hourLabel ?? (!use12HourPicker ? "h" : undefined)}
-          limit={hourLimit}
-          maximumValue={maximumHours}
+          limit={useSeparateAmPm ? undefined : hourLimit}
+          maximumValue={useSeparateAmPm ? 11 : maximumHours}
           onDurationChange={setSelectedHours}
           padNumbersWithZero={padHoursWithZero}
           padWithNItems={safePadWithNItems}
@@ -257,6 +330,7 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
           repeatNumbersNTimes={repeatHourNumbersNTimes}
           repeatNumbersNTimesNotExplicitlySet={props?.repeatHourNumbersNTimes === undefined}
           selectedValue={selectedHours}
+          separateAmPmPicker={separateAmPmPicker}
           styles={styles}
           testID="duration-scroll-hour"
           {...otherProps}
@@ -311,6 +385,31 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
           selectedValue={selectedSeconds}
           styles={styles}
           testID="duration-scroll-second"
+          {...otherProps}
+        />
+      ) : null}
+      {useSeparateAmPm ? (
+        <DurationScroll
+          ref={amPmDurationScrollRef}
+          aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
+          allowFontScaling={allowFontScaling}
+          amLabel={amLabel}
+          decelerationRate={decelerationRate}
+          disableInfiniteScroll
+          initialValue={initialHourSplit.amPm}
+          interval={1}
+          isAmPmPicker
+          isDisabled={hoursPickerIsDisabled}
+          maximumValue={1}
+          onDurationChange={setSelectedAmPm}
+          padWithNItems={safePadWithNItems}
+          pickerColumnWidth={resolvePerColumn(pickerColumnWidth, "amPm")}
+          pmLabel={pmLabel}
+          repeatNumbersNTimes={1}
+          repeatNumbersNTimesNotExplicitlySet={false}
+          selectedValue={selectedAmPm}
+          styles={styles}
+          testID="duration-scroll-am-pm"
           {...otherProps}
         />
       ) : null}
