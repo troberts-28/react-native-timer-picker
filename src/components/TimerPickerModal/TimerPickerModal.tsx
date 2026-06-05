@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, AccessibilityInfo } from "react-native";
 
 import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
 import Modal from "../Modal";
@@ -101,6 +101,13 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
     safeInitialValue.seconds,
   ]);
 
+  // announce the picker to screen readers when the modal opens
+  useEffect(() => {
+    if (visible) {
+      AccessibilityInfo.announceForAccessibility(modalTitle ?? "Time picker");
+    }
+  }, [visible, modalTitle]);
+
   const hideModalHandler = () => {
     setSelectedDuration({
       days: confirmedDuration.days,
@@ -170,7 +177,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
       <View {...containerProps} style={styles.container}>
         <View {...contentContainerProps} style={styles.contentContainer}>
           {modalTitle ? (
-            <Text {...modalTitleProps} style={styles.modalTitle}>
+            <Text accessibilityRole="header" {...modalTitleProps} style={styles.modalTitle}>
               {modalTitle}
             </Text>
           ) : null}
@@ -193,7 +200,12 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                   onPress: cancelHandler,
                 })
               ) : (
-                <TouchableOpacity {...buttonTouchableOpacityProps} onPress={cancelHandler}>
+                <TouchableOpacity
+                  accessibilityLabel={cancelButtonText}
+                  accessibilityRole="button"
+                  {...buttonTouchableOpacityProps}
+                  onPress={cancelHandler}
+                >
                   <Text style={[styles.button, styles.cancelButton]}>{cancelButtonText}</Text>
                 </TouchableOpacity>
               )
@@ -203,7 +215,12 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                 onPress: confirmHandler,
               })
             ) : (
-              <TouchableOpacity {...buttonTouchableOpacityProps} onPress={confirmHandler}>
+              <TouchableOpacity
+                accessibilityLabel={confirmButtonText}
+                accessibilityRole="button"
+                {...buttonTouchableOpacityProps}
+                onPress={confirmHandler}
+              >
                 <Text style={[styles.button, styles.confirmButton]}>{confirmButtonText}</Text>
               </TouchableOpacity>
             )}

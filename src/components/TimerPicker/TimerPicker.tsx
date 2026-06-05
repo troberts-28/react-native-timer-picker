@@ -1,5 +1,6 @@
 import React, {
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useMemo,
@@ -10,6 +11,7 @@ import React, {
 import { View } from "react-native";
 
 import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
+import { useScreenReaderEnabled } from "../../utils/useScreenReaderEnabled";
 import DurationScroll from "../DurationScroll";
 import type { DurationScrollRef } from "../DurationScroll";
 import { generateStyles } from "./styles";
@@ -31,8 +33,24 @@ const resolvePerColumn = (
   return value[column];
 };
 
+// Pure utility — defined outside the component so it is never recreated on
+// render and DurationScroll's memoization is not broken.
+const formatAccessibilityValue = (
+  value: number,
+  unitLabel: string,
+  options?: { is12HourPicker?: boolean; amLabel?: string; pmLabel?: string }
+): string => {
+  if (options?.is12HourPicker) {
+    const hour12 = value === 0 ? 12 : value > 12 ? value - 12 : value;
+    const period = value < 12 ? options.amLabel ?? "am" : options.pmLabel ?? "pm";
+    return `${hour12} ${period}`;
+  }
+  return `${value} ${unitLabel}`;
+};
+
 const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) => {
   const {
+    accessibilityLabels,
     aggressivelyGetLatestDuration = false,
     allowFontScaling = false,
     amLabel = "am",
@@ -79,6 +97,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
     use12HourPicker = false,
     ...otherProps
   } = props;
+
+  const isScreenReaderEnabled = useScreenReaderEnabled();
 
   useEffect(() => {
     if (otherProps.Audio) {
@@ -206,17 +226,54 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
     },
   }));
 
+  // Accessibility format functions — stable references via useCallback so they
+  // don't break DurationScroll's memoization. No zero-padding: screen readers
+  // announce "5 hours", not "05 hours".
+  const formatDayA11y = useCallback(
+    (value: number) => formatAccessibilityValue(value, accessibilityLabels?.days ?? "days"),
+    [accessibilityLabels?.days]
+  );
+
+  const formatHourA11y = useCallback(
+    (value: number) =>
+      formatAccessibilityValue(value, accessibilityLabels?.hours ?? "hours", {
+        is12HourPicker: use12HourPicker,
+        amLabel,
+        pmLabel,
+      }),
+    [accessibilityLabels?.hours, use12HourPicker, amLabel, pmLabel]
+  );
+
+  const formatMinuteA11y = useCallback(
+    (value: number) => formatAccessibilityValue(value, accessibilityLabels?.minutes ?? "minutes"),
+    [accessibilityLabels?.minutes]
+  );
+
+  const formatSecondA11y = useCallback(
+    (value: number) => formatAccessibilityValue(value, accessibilityLabels?.seconds ?? "seconds"),
+    [accessibilityLabels?.seconds]
+  );
+
   return (
-    <View {...pickerContainerProps} style={styles.pickerContainer} testID="timer-picker">
+    <View
+      {...pickerContainerProps}
+      accessible={isScreenReaderEnabled ? false : undefined}
+      style={styles.pickerContainer}
+      testID="timer-picker"
+    >
       {!hideDays ? (
         <DurationScroll
           ref={daysDurationScrollRef}
+          accessibilityHint={accessibilityLabels?.hint}
+          accessibilityLabel={accessibilityLabels?.days ?? "Days"}
           aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
           allowFontScaling={allowFontScaling}
           disableInfiniteScroll={disableInfiniteScroll}
+          formatValue={formatDayA11y}
           initialValue={safeInitialValue.days}
           interval={dayInterval}
           isDisabled={daysPickerIsDisabled}
+          isScreenReaderEnabled={isScreenReaderEnabled}
           label={dayLabel ?? "d"}
           limit={dayLimit}
           maximumValue={maximumDays}
@@ -236,15 +293,19 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
       {!hideHours ? (
         <DurationScroll
           ref={hoursDurationScrollRef}
+          accessibilityHint={accessibilityLabels?.hint}
+          accessibilityLabel={accessibilityLabels?.hours ?? "Hours"}
           aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
           allowFontScaling={allowFontScaling}
           amLabel={amLabel}
           decelerationRate={decelerationRate}
           disableInfiniteScroll={disableInfiniteScroll}
+          formatValue={formatHourA11y}
           initialValue={safeInitialValue.hours}
           interval={hourInterval}
           is12HourPicker={use12HourPicker}
           isDisabled={hoursPickerIsDisabled}
+          isScreenReaderEnabled={isScreenReaderEnabled}
           label={hourLabel ?? (!use12HourPicker ? "h" : undefined)}
           limit={hourLimit}
           maximumValue={maximumHours}
@@ -265,13 +326,17 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
       {!hideMinutes ? (
         <DurationScroll
           ref={minutesDurationScrollRef}
+          accessibilityHint={accessibilityLabels?.hint}
+          accessibilityLabel={accessibilityLabels?.minutes ?? "Minutes"}
           aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
           allowFontScaling={allowFontScaling}
           decelerationRate={decelerationRate}
           disableInfiniteScroll={disableInfiniteScroll}
+          formatValue={formatMinuteA11y}
           initialValue={safeInitialValue.minutes}
           interval={minuteInterval}
           isDisabled={minutesPickerIsDisabled}
+          isScreenReaderEnabled={isScreenReaderEnabled}
           label={minuteLabel ?? "m"}
           limit={minuteLimit}
           maximumValue={maximumMinutes}
@@ -291,13 +356,17 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
       {!hideSeconds ? (
         <DurationScroll
           ref={secondsDurationScrollRef}
+          accessibilityHint={accessibilityLabels?.hint}
+          accessibilityLabel={accessibilityLabels?.seconds ?? "Seconds"}
           aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
           allowFontScaling={allowFontScaling}
           decelerationRate={decelerationRate}
           disableInfiniteScroll={disableInfiniteScroll}
+          formatValue={formatSecondA11y}
           initialValue={safeInitialValue.seconds}
           interval={secondInterval}
           isDisabled={secondsPickerIsDisabled}
+          isScreenReaderEnabled={isScreenReaderEnabled}
           label={secondLabel ?? "s"}
           limit={secondLimit}
           maximumValue={maximumSeconds}

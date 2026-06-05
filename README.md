@@ -564,6 +564,7 @@ return (
 |      padSecondsWithZero       | Pad single-digit seconds in the picker with a zero                                                                                                                                                                       |                                                                                             Boolean                                                                                             |              true              |  false   |
 |         padWithNItems         | Number of items to pad the picker with on either side                                                                                                                                                                    |                                                                                             Number                                                                                              |               1                |  false   |
 | aggressivelyGetLatestDuration | Set to True to ask DurationScroll to aggressively update the latestDuration ref                                                                                                                                          |                                                                                             Boolean                                                                                             |             false              |  false   |
+| accessibilityLabels | Custom accessibility labels for each picker column. Supports `days`, `hours`, `minutes`, `seconds`, and `hint` keys | `{ days?: string, hours?: string, minutes?: string, seconds?: string, hint?: string }` | - | false |
 |       allowFontScaling        | Allow font in the picker to scale with accessibility settings                                                                                                                                                            |                                                                                             Boolean                                                                                             |             false              |  false   |
 |        use12HourPicker        | Switch the hour picker to 12-hour format with an AM / PM label                                                                                                                                                           |                                                                                             Boolean                                                                                             |             false              |  false   |
 |            amLabel            | Set the AM label if using the 12-hour picker                                                                                                                                                                             |                                                                                             String                                                                                              |               am               |  false   |
@@ -652,6 +653,42 @@ Please note that this solution does not work for all bottom-sheet components (e.
 
 **Important**:
 The custom component needs to have the same interface as React Native's `<FlatList />` in order for it to work as expected. A complete reference of the current usage can be found [here](/src/components/DurationScroll/index.tsx).
+
+#### Accessibility ♿
+
+The TimerPicker component supports VoiceOver (iOS) and TalkBack (Android) screen readers. When a screen reader is enabled, users can:
+
+- Navigate to each picker column (days, hours, minutes, seconds)
+- Swipe up to increment the value
+- Swipe down to decrement the value
+- Hear immediate announcements of the new value after each adjustment
+
+**Basic Usage:**
+
+The component automatically detects when a screen reader is active and adjusts its behaviour accordingly. No additional configuration is required for basic accessibility support.
+
+**Custom Labels:**
+
+You can customise the accessibility labels for each picker column using `accessibilityLabels`:
+
+```jsx
+<TimerPicker
+    accessibilityLabels={{
+        hours: "Hours",
+        minutes: "Minutes",
+        seconds: "Seconds",
+        hint: "Swipe up or down to adjust",
+    }}
+    // ... other props
+/>
+```
+
+**How it works:**
+
+- When a screen reader is **disabled**, users interact with the picker normally by scrolling
+- When a screen reader is **enabled**, each picker column becomes an "adjustable" element that responds to swipe gestures
+- Screen reader announcements include the unit label (e.g. "5 hours", "30 minutes")
+- 12-hour format announcements include the AM/PM period (e.g. "5 pm")
 
 ### TimerPickerModal ⏰
 

@@ -8,7 +8,7 @@ import React, {
   useMemo,
 } from "react";
 
-import { View, Text, FlatList as RNFlatList } from "react-native";
+import { View, Text, FlatList as RNFlatList, AccessibilityInfo } from "react-native";
 import type { ViewabilityConfigCallbackPairs, FlatListProps } from "react-native";
 
 import { colorToRgba } from "../../utils/colorToRgba";
@@ -25,6 +25,8 @@ const keyExtractor = (item: any, index: number) => index.toString();
 
 const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props, ref) => {
   const {
+    accessibilityHint,
+    accessibilityLabel,
     aggressivelyGetLatestDuration,
     allowFontScaling = false,
     amLabel,
@@ -33,11 +35,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     decelerationRate = 0.88,
     disableInfiniteScroll = false,
     FlatList = RNFlatList,
+    formatValue,
     Haptics,
     initialValue = 0,
     interval,
     is12HourPicker,
     isDisabled,
+    isScreenReaderEnabled = false,
     label,
     limit,
     LinearGradient,
@@ -175,6 +179,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
   const flatListRef = useRef<RNFlatList | null>(null);
 
   const [clickSound, setClickSound] = useState<ExpoAvAudioInstance | null>(null);
+
+  // Track the current value text for the accessibility value prop (state so it
+  // is always in sync — reading latestDuration.current inside a useMemo would
+  // be stale since refs don't trigger re-renders).
+  const [accessibilityValueText, setAccessibilityValueText] = useState<string>(() =>
+    formatValue ? formatValue(initialValue) : String(initialValue)
+  );
 
   useEffect(() => {
     // Audio prop deprecated in v2.2.0 (use pickerFeedback instead) - will be removed in a future version
@@ -474,6 +485,55 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     [styles.pickerItemContainer.height]
   );
 
+  const handleAccessibilityAction = useCallback(
+    (event: { nativeEvent: { actionName: string } }) => {
+      const { actionName } = event.nativeEvent;
+
+      let newValue: number;
+
+      if (actionName === "increment") {
+        newValue = latestDuration.current + interval;
+        if (newValue > adjustedLimited.max) {
+          newValue = adjustedLimited.min;
+        }
+      } else if (actionName === "decrement") {
+        newValue = latestDuration.current - interval;
+        if (newValue < adjustedLimited.min) {
+          newValue = adjustedLimited.max;
+        }
+      } else {
+        return;
+      }
+
+      flatListRef.current?.scrollToIndex({
+        animated: true,
+        index: getInitialScrollIndex({
+          disableInfiniteScroll,
+          interval,
+          numberOfItems,
+          padWithNItems,
+          repeatNumbersNTimes: safeRepeatNumbersNTimes,
+          value: newValue,
+        }),
+      });
+      latestDuration.current = newValue;
+
+      const announcement = formatValue ? formatValue(newValue) : String(newValue);
+      setAccessibilityValueText(announcement);
+      AccessibilityInfo.announceForAccessibilityWithOptions(announcement, { queue: false });
+    },
+    [
+      adjustedLimited.max,
+      adjustedLimited.min,
+      disableInfiniteScroll,
+      formatValue,
+      interval,
+      numberOfItems,
+      padWithNItems,
+      safeRepeatNumbersNTimes,
+    ]
+  );
+
   useImperativeHandle(ref, () => ({
     latestDuration: latestDuration,
     reset: (options) => {
@@ -507,6 +567,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
           data={numbersForFlatList}
           decelerationRate={decelerationRate}
           getItemLayout={getItemLayout}
+          importantForAccessibility={isScreenReaderEnabled ? "no-hide-descendants" : undefined}
           initialScrollIndex={initialScrollIndex}
           keyExtractor={keyExtractor}
           nestedScrollEnabled
@@ -526,7 +587,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
           viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs}
           windowSize={numberOfItemsToShow}
         />
-        <View pointerEvents="none" style={[styles.pickerLabelContainer, labelPositionStyle]}>
+        <View
+          accessible={false}
+          accessibilityElementsHidden={isScreenReaderEnabled}
+          importantForAccessibility={isScreenReaderEnabled ? "no-hide-descendants" : undefined}
+          pointerEvents="none"
+          style={[styles.pickerLabelContainer, labelPositionStyle]}
+        >
           {typeof label === "string" ? (
             <Text allowFontScaling={allowFontScaling} style={styles.pickerLabel}>
               {label}
@@ -545,6 +612,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     getItemLayout,
     initialScrollIndex,
     isDisabled,
+    isScreenReaderEnabled,
     label,
     labelPositionStyle,
     numberOfItemsToShow,
@@ -607,6 +675,14 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
 
   return (
     <View
+      accessible
+      accessibilityActions={[{ name: "increment" }, { name: "decrement" }]}
+      accessibilityHint={accessibilityHint}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="adjustable"
+      accessibilityState={{ disabled: isDisabled }}
+      accessibilityValue={{ text: accessibilityValueText }}
+      onAccessibilityAction={handleAccessibilityAction}
       pointerEvents={isDisabled ? "none" : undefined}
       style={[
         styles.durationScrollFlatListContainer,

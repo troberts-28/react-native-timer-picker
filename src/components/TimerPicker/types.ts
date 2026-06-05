@@ -26,6 +26,13 @@ export interface TimerPickerRef {
 }
 
 export interface TimerPickerProps {
+  accessibilityLabels?: {
+    days?: string;
+    hint?: string;
+    hours?: string;
+    minutes?: string;
+    seconds?: string;
+  };
   aggressivelyGetLatestDuration?: boolean;
   allowFontScaling?: boolean;
   amLabel?: string;
