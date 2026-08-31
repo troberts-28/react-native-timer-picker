@@ -1,4 +1,9 @@
-import { generateNumbers, generate12HourNumbers } from "../utils/generateNumbers";
+import {
+  generateNumbers,
+  generate12HourNumbers,
+  generate12HourCycleNumbers,
+  generateAmPmItems,
+} from "../utils/generateNumbers";
 
 describe("generateNumbers", () => {
   describe("basic functionality", () => {
@@ -373,5 +378,96 @@ describe("generate12HourNumbers", () => {
       expect(result[4]).toBe("12 AM");
       expect(result[7]).toBe("06 PM");
     });
+  });
+});
+
+describe("generate12HourCycleNumbers", () => {
+  it("generates 12 items in clock order with index 0 = 12", () => {
+    const result = generate12HourCycleNumbers({
+      disableInfiniteScroll: true,
+      interval: 1,
+      padNumbersWithZero: true,
+      padWithNItems: 0,
+      repeatNTimes: 1,
+    });
+    expect(result).toHaveLength(12);
+    expect(result[0]).toBe("12");
+    expect(result[1]).toBe("01");
+    expect(result[11]).toBe("11");
+  });
+
+  it("respects 2-hour interval (12, 02, 04, 06, 08, 10)", () => {
+    const result = generate12HourCycleNumbers({
+      disableInfiniteScroll: true,
+      interval: 2,
+      padNumbersWithZero: true,
+      padWithNItems: 0,
+      repeatNTimes: 1,
+    });
+    expect(result).toEqual(["12", "02", "04", "06", "08", "10"]);
+  });
+
+  it("pads with figure space when padNumbersWithZero is false", () => {
+    const result = generate12HourCycleNumbers({
+      disableInfiniteScroll: true,
+      interval: 1,
+      padWithNItems: 0,
+      repeatNTimes: 1,
+    });
+    expect(result[0]).toBe("12");
+    expect(result[1]).toBe(" 1");
+    expect(result[9]).toBe(" 9");
+    expect(result[10]).toBe("10");
+  });
+
+  it("adds padding rows when infinite scroll is disabled", () => {
+    const result = generate12HourCycleNumbers({
+      disableInfiniteScroll: true,
+      interval: 6,
+      padNumbersWithZero: true,
+      padWithNItems: 2,
+      repeatNTimes: 1,
+    });
+    expect(result).toEqual(["", "", "12", "06", "", ""]);
+  });
+
+  it("repeats the cycle when repeatNTimes is 2 with infinite scroll", () => {
+    const result = generate12HourCycleNumbers({
+      disableInfiniteScroll: false,
+      interval: 6,
+      padNumbersWithZero: true,
+      padWithNItems: 0,
+      repeatNTimes: 2,
+    });
+    expect(result).toEqual(["12", "06", "12", "06"]);
+  });
+});
+
+describe("generateAmPmItems", () => {
+  it("returns am and pm with no padding", () => {
+    expect(generateAmPmItems({ amLabel: "AM", padWithNItems: 0, pmLabel: "PM" })).toEqual([
+      "AM",
+      "PM",
+    ]);
+  });
+
+  it("pads symmetrically when padWithNItems is set", () => {
+    expect(generateAmPmItems({ amLabel: "AM", padWithNItems: 2, pmLabel: "PM" })).toEqual([
+      "",
+      "",
+      "AM",
+      "PM",
+      "",
+      "",
+    ]);
+  });
+
+  it("uses custom labels", () => {
+    expect(generateAmPmItems({ amLabel: "오전", padWithNItems: 1, pmLabel: "오후" })).toEqual([
+      "",
+      "오전",
+      "오후",
+      "",
+    ]);
   });
 });

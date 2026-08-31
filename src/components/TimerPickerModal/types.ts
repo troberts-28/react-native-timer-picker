@@ -1,18 +1,18 @@
 import type React from "react";
-import { type RefObject, type ReactElement } from "react";
+import { type ReactElement } from "react";
 
 import type { View, TouchableOpacity, Text } from "react-native";
 
 import type Modal from "../Modal";
-import type { TimerPickerProps } from "../TimerPicker/types";
+import type { LatestDurationRef, TimerPickerProps } from "../TimerPicker/types";
 import type { CustomTimerPickerModalStyles } from "./styles";
 
 export interface TimerPickerModalRef {
   latestDuration: {
-    days: RefObject<number> | undefined;
-    hours: RefObject<number> | undefined;
-    minutes: RefObject<number> | undefined;
-    seconds: RefObject<number> | undefined;
+    days: LatestDurationRef | undefined;
+    hours: LatestDurationRef | undefined;
+    minutes: LatestDurationRef | undefined;
+    seconds: LatestDurationRef | undefined;
   };
   reset: (options?: { animated?: boolean }) => void;
   setValue: (
