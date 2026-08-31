@@ -11,7 +11,7 @@
   "module": "dist/module/index.js",
   "types": "dist/typescript/index.d.ts",
   "typings": "dist/typescript/index.d.ts",
-  "packageManager": "yarn@4.12.0",
+  "packageManager": "yarn@4.18.0",
   "workspaces": {
     "packages": [
       "examples/*"
