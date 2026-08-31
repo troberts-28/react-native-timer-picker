@@ -7145,7 +7145,7 @@ __metadata:
     expo-splash-screen: "npm:~57.0.8"
     react: "npm:19.2.3"
     react-native: "npm:0.86.3"
-    react-native-audio-api: "npm:^0.12.1"
+    react-native-audio-api: "npm:^0.13.3"
     react-native-worklets: "npm:0.10.1"
   languageName: unknown
   linkType: soft
@@ -12090,9 +12090,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-audio-api@npm:^0.12.1":
-  version: 0.12.1
-  resolution: "react-native-audio-api@npm:0.12.1"
+"react-native-audio-api@npm:^0.13.3":
+  version: 0.13.3
+  resolution: "react-native-audio-api@npm:0.13.3"
   dependencies:
     semver: "npm:^7.7.3"
   peerDependencies:
@@ -12104,7 +12104,7 @@ __metadata:
       optional: true
   bin:
     setup-rn-audio-api-web: scripts/setup-rn-audio-api-web.js
-  checksum: 10c0/f9e23b474ba7115cc390e5383f778960e405ae7d1eb6c3f128e594f947bdfa33f68421d4b634b45eb2e3a9b15a0e29e1647c7c155156f9686bd7013232dc04e7
+  checksum: 10c0/a2bd1f7fd1f7cd2a8efc6706a89c7c5bf64a6a420e90193ae7224311cd626ecca61a340217485ce107bf159f3eec0606680d84ebf385bf2a2a32d538e2e26b1c
   languageName: node
   linkType: hard
 
