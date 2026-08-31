@@ -19,7 +19,6 @@ import type { NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { TimerPicker, TimerPickerModal } from "../../src";
 import { CustomButton } from "./components/CustomButton";
 import { formatTime } from "./utils/formatTime";
-// import { getClickSound } from "./utils/getClickSound";
 
 export default function App() {
   const scrollViewRef = useRef<ScrollView>(null);
@@ -44,8 +43,9 @@ export default function App() {
   //     const setupAudio = async () => {
   //         try {
   //             const context = new AudioContext();
-  //             const arrayBuffer = await getClickSound();
-  //             const buffer = await context.decodeAudioData(arrayBuffer);
+  //             const buffer = await context.decodeAudioData(
+  //                 require("./assets/select_click.mp3")
+  //             );
 
   //             audioContextRef.current = context;
   //             audioBufferRef.current = buffer;
