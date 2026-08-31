@@ -11,10 +11,13 @@ interface PickerItemProps {
   allowFontScaling: boolean;
   amLabel?: string;
   is12HourPicker?: boolean;
+  isAmPmPicker?: boolean;
+  isItemDisabled?: (value: number) => boolean;
   item: string;
   pickerAmPmPositionStyle?: { left: "50%"; marginLeft: number };
   pmLabel?: string;
   selectedValue?: number;
+  separateAmPmPicker?: boolean;
   styles: ReturnType<typeof generateStyles>;
 }
 
@@ -25,19 +28,34 @@ const PickerItem = React.memo<PickerItemProps>(
     allowFontScaling,
     amLabel,
     is12HourPicker,
+    isAmPmPicker,
+    isItemDisabled,
     item,
     pickerAmPmPositionStyle,
     pmLabel,
     selectedValue,
+    separateAmPmPicker,
     styles,
   }) => {
     let stringItem = item;
     let intItem: number;
     let isAm: boolean | undefined;
 
-    if (!is12HourPicker) {
-      intItem = parseInt(item);
-    } else {
+    if (isAmPmPicker) {
+      // Compare to the amLabel/pmLabel passed in; padding rows are empty strings.
+      if (item === amLabel) {
+        intItem = 0;
+      } else if (item === pmLabel) {
+        intItem = 1;
+      } else {
+        intItem = NaN;
+      }
+    } else if (is12HourPicker && separateAmPmPicker) {
+      // Hour column in clock-face form (12, 1, 2, ..., 11). The "12" slot is hourSlot 0
+      // (noon/midnight); every other display value matches its slot index.
+      const parsed = parseInt(item);
+      intItem = isNaN(parsed) ? NaN : parsed === 12 ? 0 : parsed;
+    } else if (is12HourPicker) {
       isAm = item.includes("AM");
       stringItem = item.replace(/\s[AP]M/g, "");
       intItem = parseInt(stringItem);
@@ -48,10 +66,21 @@ const PickerItem = React.memo<PickerItemProps>(
       } else if (isAm && intItem === 12) {
         intItem = 0;
       }
+    } else {
+      intItem = parseInt(item);
     }
 
-    const isSelected = intItem === selectedValue;
-    const isDisabled = !isWithinLimit(intItem, adjustedLimitedMin, adjustedLimitedMax);
+    const isSelected = !isNaN(intItem) && intItem === selectedValue;
+
+    let isDisabled: boolean;
+    if (isAmPmPicker) {
+      // AM/PM is always freely toggleable; the hour column does all limit enforcement.
+      isDisabled = false;
+    } else if (isItemDisabled) {
+      isDisabled = !isNaN(intItem) && isItemDisabled(intItem);
+    } else {
+      isDisabled = !isWithinLimit(intItem, adjustedLimitedMin, adjustedLimitedMax);
+    }
 
     return (
       <View key={item} style={styles.pickerItemContainer} testID="picker-item">
@@ -61,11 +90,13 @@ const PickerItem = React.memo<PickerItemProps>(
             styles.pickerItem,
             isSelected && styles.selectedPickerItem,
             isDisabled ? styles.disabledPickerItem : {},
+            isAmPmPicker && styles.separateAmPmItem,
+            isAmPmPicker && isSelected && styles.selectedSeparateAmPmItem,
           ]}
         >
           {stringItem}
         </Text>
-        {is12HourPicker && (
+        {is12HourPicker && !separateAmPmPicker && (
           <View style={[styles.pickerAmPmContainer, pickerAmPmPositionStyle]}>
             <Text allowFontScaling={allowFontScaling} style={styles.pickerAmPmLabel}>
               {isAm ? amLabel : pmLabel}
