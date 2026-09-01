@@ -100,12 +100,21 @@ export const Modal = (props: ModalProps) => {
       {...modalProps}
       testID={testID}
     >
-      <TouchableWithoutFeedback onPress={onOverlayPress} testID="modal-backdrop">
+      {/* the backdrop is hidden from screen readers: it renders first, so it would otherwise be
+      the first thing focused, and it announces nothing useful */}
+      <TouchableWithoutFeedback
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        onPress={onOverlayPress}
+        testID="modal-backdrop"
+      >
         <Animated.View style={[styles.backdrop, backdropAnimatedStyle, overlayStyle]} />
       </TouchableWithoutFeedback>
       <Animated.View
+        accessibilityViewIsModal
         pointerEvents="box-none"
         style={[styles.content, contentAnimatedStyle, contentStyle]}
+        testID="modal-content"
       >
         {children}
       </Animated.View>

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 
-import { act, render, within } from "@testing-library/react-native";
+import { act, fireEvent, render, within } from "@testing-library/react-native";
 import { FlatList } from "react-native";
 
 import TimerPicker from "../components/TimerPicker";
@@ -298,6 +298,154 @@ describe("TimerPicker", () => {
           expect.stringContaining('"maximumHours" is currently ignored')
         );
       });
+    });
+  });
+
+  describe("accessibility", () => {
+    const labelOf = (queries: ReturnType<typeof render>, testID: string) =>
+      queries.getByTestId(testID).props.accessibilityLabel;
+
+    const valueOf = (queries: ReturnType<typeof render>, testID: string) =>
+      queries.getByTestId(testID).props.accessibilityValue.text;
+
+    const adjust = (queries: ReturnType<typeof render>, testID: string, actionName: string) =>
+      fireEvent(queries.getByTestId(testID), "accessibilityAction", {
+        nativeEvent: { actionName },
+      });
+
+    it.each([
+      ["duration-scroll-day", "Days"],
+      ["duration-scroll-hour", "Hours"],
+      ["duration-scroll-minute", "Minutes"],
+      ["duration-scroll-second", "Seconds"],
+    ])("labels %s as %s by default", (testID, expected) => {
+      const queries = render(<TimerPicker hideDays={false} />);
+      expect(labelOf(queries, testID)).toBe(expected);
+    });
+
+    it("labels the am/pm column by default", () => {
+      const queries = render(<TimerPicker separateAmPmPicker use12HourPicker />);
+      expect(labelOf(queries, "duration-scroll-am-pm")).toBe("AM/PM");
+    });
+
+    it("applies custom labels, leaving the rest at their defaults", () => {
+      const queries = render(<TimerPicker accessibilityLabels={{ minutes: "Minuten" }} />);
+
+      expect(labelOf(queries, "duration-scroll-minute")).toBe("Minuten");
+      expect(labelOf(queries, "duration-scroll-hour")).toBe("Hours");
+    });
+
+    it("applies the hint to every column", () => {
+      const queries = render(<TimerPicker accessibilityLabels={{ hint: "Swipe to change" }} />);
+
+      expect(queries.getByTestId("duration-scroll-hour").props.accessibilityHint).toBe(
+        "Swipe to change"
+      );
+      expect(queries.getByTestId("duration-scroll-minute").props.accessibilityHint).toBe(
+        "Swipe to change"
+      );
+    });
+
+    it("announces plain columns as a bare number", () => {
+      const queries = render(<TimerPicker initialValue={{ minutes: 30, seconds: 45 }} />);
+
+      expect(valueOf(queries, "duration-scroll-minute")).toBe("30");
+      expect(valueOf(queries, "duration-scroll-second")).toBe("45");
+    });
+
+    it("does not zero-pad the announced value", () => {
+      // padding is a visual concern; "05" is read out as "oh five"
+      const queries = render(<TimerPicker initialValue={{ minutes: 5 }} padMinutesWithZero />);
+      expect(valueOf(queries, "duration-scroll-minute")).toBe("5");
+    });
+
+    describe("12-hour picker", () => {
+      it.each([
+        [0, "12 am"],
+        [5, "5 am"],
+        [12, "12 pm"],
+        [17, "5 pm"],
+        [23, "11 pm"],
+      ])("announces hour %i as %s", (hours, expected) => {
+        const queries = render(<TimerPicker initialValue={{ hours }} use12HourPicker />);
+        expect(valueOf(queries, "duration-scroll-hour")).toBe(expected);
+      });
+
+      it("uses the picker's am/pm labels", () => {
+        const queries = render(
+          <TimerPicker amLabel="AM" initialValue={{ hours: 17 }} pmLabel="PM" use12HourPicker />
+        );
+        expect(valueOf(queries, "duration-scroll-hour")).toBe("5 PM");
+      });
+    });
+
+    describe("separateAmPmPicker", () => {
+      it("announces the hour and the meridiem on their own columns", () => {
+        // the two columns are separately focusable, so the hour must not repeat the meridiem
+        const queries = render(
+          <TimerPicker initialValue={{ hours: 17 }} separateAmPmPicker use12HourPicker />
+        );
+
+        expect(valueOf(queries, "duration-scroll-hour")).toBe("5");
+        expect(valueOf(queries, "duration-scroll-am-pm")).toBe("pm");
+      });
+
+      it.each([
+        [0, "12", "am"],
+        [12, "12", "pm"],
+      ])("announces hour %i as %s / %s", (hours, hour, amPm) => {
+        const queries = render(
+          <TimerPicker initialValue={{ hours }} separateAmPmPicker use12HourPicker />
+        );
+
+        expect(valueOf(queries, "duration-scroll-hour")).toBe(hour);
+        expect(valueOf(queries, "duration-scroll-am-pm")).toBe(amPm);
+      });
+
+      it("adjusting the am/pm column moves the reported hour by twelve", () => {
+        const onDurationChange = jest.fn();
+        const queries = render(
+          <TimerPicker
+            initialValue={{ hours: 5 }}
+            onDurationChange={onDurationChange}
+            separateAmPmPicker
+            use12HourPicker
+          />
+        );
+        onDurationChange.mockClear();
+
+        adjust(queries, "duration-scroll-am-pm", "increment");
+
+        expect(onDurationChange).toHaveBeenLastCalledWith(expect.objectContaining({ hours: 17 }));
+      });
+    });
+
+    it("reports an adjusted value through onDurationChange", () => {
+      const onDurationChange = jest.fn();
+      const queries = render(
+        <TimerPicker initialValue={{ minutes: 30 }} onDurationChange={onDurationChange} />
+      );
+      onDurationChange.mockClear();
+
+      adjust(queries, "duration-scroll-minute", "increment");
+
+      expect(onDurationChange).toHaveBeenLastCalledWith(expect.objectContaining({ minutes: 31 }));
+    });
+
+    it("does not adjust a disabled column", () => {
+      const onDurationChange = jest.fn();
+      const queries = render(
+        <TimerPicker
+          initialValue={{ minutes: 30 }}
+          minutesPickerIsDisabled
+          onDurationChange={onDurationChange}
+        />
+      );
+      onDurationChange.mockClear();
+
+      adjust(queries, "duration-scroll-minute", "increment");
+
+      expect(onDurationChange).not.toHaveBeenCalled();
     });
   });
 });

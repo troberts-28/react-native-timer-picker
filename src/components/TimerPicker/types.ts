@@ -3,7 +3,7 @@ import type React from "react";
 import type { View } from "react-native";
 
 import type { LinearGradientProps, SoundAsset, Limit } from "../DurationScroll/types";
-import type { CustomTimerPickerStyles } from "./styles";
+import type { CustomTimerPickerStyles, PickerColumn } from "./styles";
 
 export type LatestDurationRef = { readonly current: number };
 
@@ -27,13 +27,16 @@ export interface TimerPickerRef {
 }
 
 export interface TimerPickerProps {
-  accessibilityLabels?: {
-    days?: string;
-    hint?: string;
-    hours?: string;
-    minutes?: string;
-    seconds?: string;
-  };
+  /**
+   * Screen reader labels for each picker column, announced before the column's current value,
+   * plus an optional `hint` announced after it. Distinct from the visual `dayLabel` /
+   * `hourLabel` / etc. props.
+   *
+   * Column labels default to "Days", "Hours", "Minutes", "Seconds" and "AM/PM"; `hint` defaults
+   * to undefined, in which case VoiceOver and TalkBack use their own hint for adjustable
+   * controls. All of these are English, so supply your own if your app is translated.
+   */
+  accessibilityLabels?: Partial<Record<PickerColumn, string>> & { hint?: string };
   aggressivelyGetLatestDuration?: boolean;
   allowFontScaling?: boolean;
   amLabel?: string;

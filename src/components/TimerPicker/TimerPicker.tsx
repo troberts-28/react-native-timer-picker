@@ -36,6 +36,7 @@ const resolvePerColumn = (
 
 const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) => {
   const {
+    accessibilityLabels,
     aggressivelyGetLatestDuration = false,
     allowFontScaling = false,
     amLabel = "am",
@@ -282,6 +283,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
       {!hideDays ? (
         <DurationScroll
           ref={daysDurationScrollRef}
+          accessibilityHint={accessibilityLabels?.hint}
+          accessibilityLabel={accessibilityLabels?.days ?? "Days"}
           aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
           allowFontScaling={allowFontScaling}
           disableInfiniteScroll={disableInfiniteScroll}
@@ -307,6 +310,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
       {!hideHours ? (
         <DurationScroll
           ref={hoursDurationScrollRef}
+          accessibilityHint={accessibilityLabels?.hint}
+          accessibilityLabel={accessibilityLabels?.hours ?? "Hours"}
           aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
           allowFontScaling={allowFontScaling}
           amLabel={amLabel}
@@ -339,6 +344,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
       {!hideMinutes ? (
         <DurationScroll
           ref={minutesDurationScrollRef}
+          accessibilityHint={accessibilityLabels?.hint}
+          accessibilityLabel={accessibilityLabels?.minutes ?? "Minutes"}
           aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
           allowFontScaling={allowFontScaling}
           decelerationRate={decelerationRate}
@@ -365,6 +372,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
       {!hideSeconds ? (
         <DurationScroll
           ref={secondsDurationScrollRef}
+          accessibilityHint={accessibilityLabels?.hint}
+          accessibilityLabel={accessibilityLabels?.seconds ?? "Seconds"}
           aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
           allowFontScaling={allowFontScaling}
           decelerationRate={decelerationRate}
@@ -391,6 +400,8 @@ const TimerPicker = forwardRef<TimerPickerRef, TimerPickerProps>((props, ref) =>
       {useSeparateAmPm ? (
         <DurationScroll
           ref={amPmDurationScrollRef}
+          accessibilityHint={accessibilityLabels?.hint}
+          accessibilityLabel={accessibilityLabels?.amPm ?? "AM/PM"}
           aggressivelyGetLatestDuration={aggressivelyGetLatestDuration}
           allowFontScaling={allowFontScaling}
           amLabel={amLabel}

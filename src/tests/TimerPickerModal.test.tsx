@@ -1,7 +1,7 @@
 import React from "react";
 
 import { render, fireEvent, cleanup } from "@testing-library/react-native";
-import { TouchableOpacity, Text } from "react-native";
+import { AccessibilityInfo, TouchableOpacity, Text } from "react-native";
 
 import TimerPickerModal from "../components/TimerPickerModal";
 
@@ -72,6 +72,23 @@ describe("TimerPickerModal", () => {
     const confirmButton = getByText("Confirm");
     fireEvent.press(confirmButton);
     expect(mockOnConfirm).toHaveBeenCalledWith(expect.objectContaining({}));
+  });
+
+  it("calls onConfirm with the initial value when nothing has been scrolled", () => {
+    // regression: the ref the confirm handler reads started at 0 rather than the initial value,
+    // and its `?? selectedDuration` fallback never fired because 0 is not nullish
+    const onConfirm = jest.fn();
+    const { getByText } = render(
+      <TimerPickerModal
+        {...defaultProps}
+        initialValue={{ hours: 5, minutes: 30, seconds: 15 }}
+        onConfirm={onConfirm}
+      />
+    );
+
+    fireEvent.press(getByText("Confirm"));
+
+    expect(onConfirm).toHaveBeenCalledWith({ days: 0, hours: 5, minutes: 30, seconds: 15 });
   });
 
   it("renders but is not visible when visible prop is false", () => {
@@ -242,5 +259,83 @@ describe("TimerPickerModal", () => {
     );
     expect(getByTestId("custom-cancel-button")).toBeDefined();
     expect(getByTestId("custom-confirm-button")).toBeDefined();
+  });
+
+  describe("accessibility", () => {
+    let announceSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      announceSpy = jest
+        .spyOn(AccessibilityInfo, "announceForAccessibility")
+        .mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      announceSpy.mockRestore();
+    });
+
+    it("marks the default buttons as buttons", () => {
+      const { getByLabelText } = render(<TimerPickerModal {...defaultProps} />);
+
+      expect(getByLabelText("Cancel").props.accessibilityRole).toBe("button");
+      expect(getByLabelText("Confirm").props.accessibilityRole).toBe("button");
+    });
+
+    it("labels the default buttons with their text", () => {
+      const { getByLabelText } = render(
+        <TimerPickerModal {...defaultProps} cancelButtonText="Dismiss" confirmButtonText="Set" />
+      );
+
+      expect(getByLabelText("Dismiss")).toBeDefined();
+      expect(getByLabelText("Set")).toBeDefined();
+    });
+
+    it("lets buttonTouchableOpacityProps override the accessibility props", () => {
+      const { getAllByLabelText } = render(
+        <TimerPickerModal
+          {...defaultProps}
+          buttonTouchableOpacityProps={{ accessibilityLabel: "Custom", accessibilityRole: "link" }}
+        />
+      );
+
+      // the prop is shared by both buttons
+      const buttons = getAllByLabelText("Custom");
+      expect(buttons).toHaveLength(2);
+      expect(buttons.every((button) => button.props.accessibilityRole === "link")).toBe(true);
+    });
+
+    it("marks the title as a heading", () => {
+      const { getByText } = render(<TimerPickerModal {...defaultProps} modalTitle="Set alarm" />);
+
+      expect(getByText("Set alarm").props.accessibilityRole).toBe("header");
+    });
+
+    it("announces the title when the modal opens", () => {
+      render(<TimerPickerModal {...defaultProps} modalTitle="Set alarm" />);
+      expect(announceSpy).toHaveBeenCalledWith("Set alarm");
+    });
+
+    it("announces nothing when there is no title", () => {
+      // the modal content is announced by the platform; there is no English string to fall back on
+      render(<TimerPickerModal {...defaultProps} />);
+      expect(announceSpy).not.toHaveBeenCalled();
+    });
+
+    it("does not re-announce when the title changes while open", () => {
+      const { rerender } = render(<TimerPickerModal {...defaultProps} modalTitle="Set alarm" />);
+      announceSpy.mockClear();
+
+      rerender(<TimerPickerModal {...defaultProps} modalTitle="Set timer" />);
+
+      expect(announceSpy).not.toHaveBeenCalled();
+    });
+
+    it("passes accessibility labels through to the picker columns", () => {
+      const { getByTestId } = render(
+        <TimerPickerModal {...defaultProps} accessibilityLabels={{ hours: "Heures" }} />
+      );
+
+      expect(getByTestId("duration-scroll-hour").props.accessibilityLabel).toBe("Heures");
+    });
   });
 });

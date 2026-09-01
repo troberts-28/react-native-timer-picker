@@ -105,12 +105,16 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
     safeInitialValue.seconds,
   ]);
 
-  // announce the picker to screen readers when the modal opens
+  const wasVisible = useRef(false);
+
   useEffect(() => {
-    if (visible) {
-      AccessibilityInfo.announceForAccessibility(modalTitle ?? "Time picker");
+    // only on the transition to visible, so editing the title while open doesn't re-announce
+    if (visible && !wasVisible.current && modalTitle) {
+      AccessibilityInfo.announceForAccessibility(modalTitle);
     }
-  }, [visible, modalTitle]);
+
+    wasVisible.current = visible;
+  }, [modalTitle, visible]);
 
   const hideModalHandler = () => {
     setSelectedDuration({
