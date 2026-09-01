@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "examples/*",
+    "dist/*",
+    "babel.config.js",
+    "jest.config.js",
+    "eslint.config.mjs",
+    "README.md",
+    "src/tests"
+  ]
+}

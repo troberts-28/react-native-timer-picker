@@ -1,6 +1,6 @@
 {
   "name": "react-native-timer-picker",
-  "description": "A simple, flexible, performant duration picker for React Native apps 🔥\n\nGreat for timers, alarms and duration inputs ⏰🕰️⏳\n\nIncludes iOS-style haptic and audio feedback 🍏",
+  "description": "A simple, flexible, performant duration picker for React Native apps \ud83d\udd25\n\nGreat for timers, alarms and duration inputs \u23f0\ud83d\udd70\ufe0f\u23f3\n\nIncludes iOS-style haptic and audio feedback \ud83c\udf4f",
   "author": {
     "name": "Tim Roberts",
     "url": "https://github.com/troberts-28"
@@ -47,6 +47,8 @@
   },
   "files": [
     "dist",
+    "src",
+    "!src/tests",
     "package.json",
     "README.md",
     "LICENSE"
@@ -124,8 +126,14 @@
     "targets": [
       "commonjs",
       "module",
-      "typescript"
-    ]
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ],
+    "exclude": "**/{__tests__,__fixtures__,__mocks__,tests}/**"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
