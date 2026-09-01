@@ -18,6 +18,8 @@ describe("DurationScroll", () => {
     pickerItemContainer: {},
     pickerLabel: {},
     pickerLabelContainer: {},
+    selectedSeparateAmPmItem: {},
+    separateAmPmItem: {},
   } as ReturnType<typeof generateStyles>;
 
   it("renders without crashing", () => {

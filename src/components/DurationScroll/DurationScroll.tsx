@@ -8,15 +8,20 @@ import React, {
   useMemo,
 } from "react";
 
-import { View, Text, FlatList as RNFlatList, AccessibilityInfo } from "react-native";
+import { View, Text, FlatList as RNFlatList } from "react-native";
 import type { ViewabilityConfigCallbackPairs, FlatListProps } from "react-native";
 
 import { colorToRgba } from "../../utils/colorToRgba";
-import { generate12HourNumbers, generateNumbers } from "../../utils/generateNumbers";
+import {
+  generate12HourCycleNumbers,
+  generate12HourNumbers,
+  generateAmPmItems,
+  generateNumbers,
+} from "../../utils/generateNumbers";
 import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
 import { getDurationAndIndexFromScrollOffset } from "../../utils/getDurationAndIndexFromScrollOffset";
 import { getInitialScrollIndex } from "../../utils/getInitialScrollIndex";
-import { isWithinLimit } from "../../utils/isWithinLimit";
+import { getNearestInRange } from "../../utils/getNearestInRange";
 import PickerItem from "../PickerItem";
 import type { DurationScrollProps, DurationScrollRef, ExpoAvAudioInstance } from "./types";
 
@@ -25,8 +30,6 @@ const keyExtractor = (item: any, index: number) => index.toString();
 
 const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props, ref) => {
   const {
-    accessibilityHint,
-    accessibilityLabel,
     aggressivelyGetLatestDuration,
     allowFontScaling = false,
     amLabel,
@@ -35,13 +38,14 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     decelerationRate = 0.88,
     disableInfiniteScroll = false,
     FlatList = RNFlatList,
-    formatValue,
+    getValidValue,
     Haptics,
     initialValue = 0,
     interval,
     is12HourPicker,
+    isAmPmPicker,
     isDisabled,
-    isScreenReaderEnabled = false,
+    isItemDisabled,
     label,
     limit,
     LinearGradient,
@@ -58,6 +62,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     repeatNumbersNTimes = 3,
     repeatNumbersNTimesNotExplicitlySet,
     selectedValue,
+    separateAmPmPicker,
     styles,
     testID,
   } = props;
@@ -117,7 +122,27 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
   ]);
 
   const numbersForFlatList = useMemo(() => {
+    if (isAmPmPicker) {
+      return generateAmPmItems({
+        amLabel: amLabel ?? "am",
+        padWithNItems,
+        pmLabel: pmLabel ?? "pm",
+      });
+    }
+
     if (is12HourPicker) {
+      // When AM/PM is rendered as a separate column, the hour column shows
+      // 12, 1, 2, ..., 11 (no AM/PM suffix).
+      if (separateAmPmPicker) {
+        return generate12HourCycleNumbers({
+          disableInfiniteScroll,
+          interval,
+          padNumbersWithZero,
+          padWithNItems,
+          repeatNTimes: safeRepeatNumbersNTimes,
+        });
+      }
+
       return generate12HourNumbers({
         disableInfiniteScroll,
         interval,
@@ -135,13 +160,17 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
       repeatNTimes: safeRepeatNumbersNTimes,
     });
   }, [
+    amLabel,
     disableInfiniteScroll,
     is12HourPicker,
+    isAmPmPicker,
     interval,
     numberOfItems,
     padNumbersWithZero,
     padWithNItems,
+    pmLabel,
     safeRepeatNumbersNTimes,
+    separateAmPmPicker,
   ]);
 
   const initialScrollIndex = useMemo(
@@ -179,13 +208,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
   const flatListRef = useRef<RNFlatList | null>(null);
 
   const [clickSound, setClickSound] = useState<ExpoAvAudioInstance | null>(null);
-
-  // Track the current value text for the accessibility value prop (state so it
-  // is always in sync — reading latestDuration.current inside a useMemo would
-  // be stale since refs don't trigger re-renders).
-  const [accessibilityValueText, setAccessibilityValueText] = useState<string>(() =>
-    formatValue ? formatValue(initialValue) : String(initialValue)
-  );
 
   useEffect(() => {
     // Audio prop deprecated in v2.2.0 (use pickerFeedback instead) - will be removed in a future version
@@ -241,10 +263,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
         allowFontScaling={allowFontScaling}
         amLabel={amLabel}
         is12HourPicker={is12HourPicker}
+        isAmPmPicker={isAmPmPicker}
+        isItemDisabled={isItemDisabled}
         item={item}
         pickerAmPmPositionStyle={labelPositionStyle}
         pmLabel={pmLabel}
         selectedValue={selectedValue}
+        separateAmPmPicker={separateAmPmPicker}
         styles={styles}
       />
     ),
@@ -254,30 +279,22 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
       allowFontScaling,
       amLabel,
       is12HourPicker,
+      isAmPmPicker,
+      isItemDisabled,
       labelPositionStyle,
       pmLabel,
       selectedValue,
+      separateAmPmPicker,
       styles,
     ]
   );
 
-  // returns the in-range value that's closest (in scroll distance) to `value`,
-  // honouring wraparound limits where max < min.
   const getNearestInRangeValue = useCallback(
-    (value: number) => {
-      const { max, min } = adjustedLimited;
-      if (isWithinLimit(value, min, max)) return value;
-
-      if (max < min) {
-        // wraparound: `value` lies in the gap between max and min
-        const distanceForwardToMin = min - value;
-        const distanceBackwardToMax = value - max;
-        return distanceForwardToMin <= distanceBackwardToMax ? min : max;
-      }
-
-      return value > max ? max : min;
-    },
-    [adjustedLimited]
+    (value: number) =>
+      getValidValue
+        ? getValidValue(value)
+        : getNearestInRange(value, adjustedLimited.min, adjustedLimited.max),
+    [adjustedLimited, getValidValue]
   );
 
   const onScroll = useCallback<NonNullable<FlatListProps<string>["onScroll"]>>(
@@ -485,55 +502,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     [styles.pickerItemContainer.height]
   );
 
-  const handleAccessibilityAction = useCallback(
-    (event: { nativeEvent: { actionName: string } }) => {
-      const { actionName } = event.nativeEvent;
-
-      let newValue: number;
-
-      if (actionName === "increment") {
-        newValue = latestDuration.current + interval;
-        if (newValue > adjustedLimited.max) {
-          newValue = adjustedLimited.min;
-        }
-      } else if (actionName === "decrement") {
-        newValue = latestDuration.current - interval;
-        if (newValue < adjustedLimited.min) {
-          newValue = adjustedLimited.max;
-        }
-      } else {
-        return;
-      }
-
-      flatListRef.current?.scrollToIndex({
-        animated: true,
-        index: getInitialScrollIndex({
-          disableInfiniteScroll,
-          interval,
-          numberOfItems,
-          padWithNItems,
-          repeatNumbersNTimes: safeRepeatNumbersNTimes,
-          value: newValue,
-        }),
-      });
-      latestDuration.current = newValue;
-
-      const announcement = formatValue ? formatValue(newValue) : String(newValue);
-      setAccessibilityValueText(announcement);
-      AccessibilityInfo.announceForAccessibilityWithOptions(announcement, { queue: false });
-    },
-    [
-      adjustedLimited.max,
-      adjustedLimited.min,
-      disableInfiniteScroll,
-      formatValue,
-      interval,
-      numberOfItems,
-      padWithNItems,
-      safeRepeatNumbersNTimes,
-    ]
-  );
-
   useImperativeHandle(ref, () => ({
     latestDuration: latestDuration,
     reset: (options) => {
@@ -567,7 +535,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
           data={numbersForFlatList}
           decelerationRate={decelerationRate}
           getItemLayout={getItemLayout}
-          importantForAccessibility={isScreenReaderEnabled ? "no-hide-descendants" : undefined}
           initialScrollIndex={initialScrollIndex}
           keyExtractor={keyExtractor}
           nestedScrollEnabled
@@ -587,13 +554,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
           viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs}
           windowSize={numberOfItemsToShow}
         />
-        <View
-          accessible={false}
-          accessibilityElementsHidden={isScreenReaderEnabled}
-          importantForAccessibility={isScreenReaderEnabled ? "no-hide-descendants" : undefined}
-          pointerEvents="none"
-          style={[styles.pickerLabelContainer, labelPositionStyle]}
-        >
+        <View pointerEvents="none" style={[styles.pickerLabelContainer, labelPositionStyle]}>
           {typeof label === "string" ? (
             <Text allowFontScaling={allowFontScaling} style={styles.pickerLabel}>
               {label}
@@ -612,7 +573,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     getItemLayout,
     initialScrollIndex,
     isDisabled,
-    isScreenReaderEnabled,
     label,
     labelPositionStyle,
     numberOfItemsToShow,
@@ -675,14 +635,6 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
 
   return (
     <View
-      accessible
-      accessibilityActions={[{ name: "increment" }, { name: "decrement" }]}
-      accessibilityHint={accessibilityHint}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="adjustable"
-      accessibilityState={{ disabled: isDisabled }}
-      accessibilityValue={{ text: accessibilityValueText }}
-      onAccessibilityAction={handleAccessibilityAction}
       pointerEvents={isDisabled ? "none" : undefined}
       style={[
         styles.durationScrollFlatListContainer,

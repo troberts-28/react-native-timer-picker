@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import type { TextStyle, ViewStyle } from "react-native";
 
-export type PickerColumn = "days" | "hours" | "minutes" | "seconds";
+export type PickerColumn = "amPm" | "days" | "hours" | "minutes" | "seconds";
 
 export type PerColumnValue = number | Partial<Record<PickerColumn, number>>;
 
@@ -25,6 +25,8 @@ export interface CustomTimerPickerStyles {
   pickerLabelContainer?: ViewStyle;
   pickerLabelGap?: PerColumnValue;
   selectedPickerItem?: TextStyle;
+  selectedSeparateAmPmItem?: TextStyle;
+  separateAmPmItem?: TextStyle;
   text?: TextStyle;
   theme?: "light" | "dark";
 }
@@ -166,6 +168,12 @@ export const generateStyles = (customStyles: CustomTimerPickerStyles | undefined
       ...customStyles?.text,
       ...customStyles?.pickerItem,
       ...customStyles?.selectedPickerItem,
+    },
+    selectedSeparateAmPmItem: {
+      ...customStyles?.selectedSeparateAmPmItem,
+    },
+    separateAmPmItem: {
+      ...customStyles?.separateAmPmItem,
     },
   });
 };
