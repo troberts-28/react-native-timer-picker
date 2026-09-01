@@ -1,6 +1,6 @@
 {
   "name": "react-native-timer-picker",
-  "description": "A simple, flexible, performant duration picker for React Native apps \ud83d\udd25\n\nGreat for timers, alarms and duration inputs \u23f0\ud83d\udd70\ufe0f\u23f3\n\nIncludes iOS-style haptic and audio feedback \ud83c\udf4f",
+  "description": "A simple, flexible, performant duration picker for React Native apps 🔥\n\nGreat for timers, alarms and duration inputs ⏰🕰️⏳\n\nIncludes iOS-style haptic and audio feedback 🍏",
   "author": {
     "name": "Tim Roberts",
     "url": "https://github.com/troberts-28"
@@ -109,7 +109,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "jest": "^30.5.0",
-    "lint-staged": "^16.4.0",
+    "lint-staged": "^17.4.1",
     "metro-react-native-babel-preset": "^0.71.1",
     "prettier": "^3.9.6",
     "react": "18.2.0",
