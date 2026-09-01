@@ -7,6 +7,8 @@ import type { View } from "react-native";
 import type { generateStyles } from "../TimerPicker/styles";
 
 export interface DurationScrollProps {
+  accessibilityHint?: string;
+  accessibilityLabel?: string;
   aggressivelyGetLatestDuration: boolean;
   allowFontScaling?: boolean;
   amLabel?: string;

@@ -74,4 +74,25 @@ describe("Modal", () => {
     fireEvent.press(overlay);
     expect(onOverlayPressMock).toHaveBeenCalledTimes(1);
   });
+
+  describe("accessibility", () => {
+    it("hides the backdrop from screen readers", () => {
+      // it renders first, so without this it would be the first thing focused, announcing nothing
+      const { getByTestId } = render(<Modal isVisible onOverlayPress={jest.fn()} />);
+      const overlay = getByTestId("modal-backdrop");
+
+      expect(overlay.props.accessibilityElementsHidden).toBe(true);
+      expect(overlay.props.importantForAccessibility).toBe("no-hide-descendants");
+    });
+
+    it("confines screen reader focus to the modal content", () => {
+      const { getByTestId } = render(
+        <Modal isVisible>
+          <Text>Content</Text>
+        </Modal>
+      );
+
+      expect(getByTestId("modal-content").props.accessibilityViewIsModal).toBe(true);
+    });
+  });
 });

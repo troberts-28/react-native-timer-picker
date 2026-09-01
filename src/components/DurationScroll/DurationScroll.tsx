@@ -8,10 +8,15 @@ import React, {
   useMemo,
 } from "react";
 
-import { View, Text, FlatList as RNFlatList } from "react-native";
+import { View, Text, AccessibilityInfo, FlatList as RNFlatList } from "react-native";
 import type { ViewabilityConfigCallbackPairs, FlatListProps } from "react-native";
 
 import { colorToRgba } from "../../utils/colorToRgba";
+import {
+  formatAmPmAccessibilityValue,
+  formatHour12AccessibilityValue,
+  formatHourSlotAccessibilityValue,
+} from "../../utils/formatAccessibilityValue";
 import {
   generate12HourCycleNumbers,
   generate12HourNumbers,
@@ -22,14 +27,19 @@ import { getAdjustedLimit } from "../../utils/getAdjustedLimit";
 import { getDurationAndIndexFromScrollOffset } from "../../utils/getDurationAndIndexFromScrollOffset";
 import { getInitialScrollIndex } from "../../utils/getInitialScrollIndex";
 import { getNearestInRange } from "../../utils/getNearestInRange";
+import { getSteppedPickerValue } from "../../utils/getSteppedPickerValue";
 import PickerItem from "../PickerItem";
 import type { DurationScrollProps, DurationScrollRef, ExpoAvAudioInstance } from "./types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const keyExtractor = (item: any, index: number) => index.toString();
 
+const accessibilityActions = [{ name: "increment" }, { name: "decrement" }];
+
 const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props, ref) => {
   const {
+    accessibilityHint,
+    accessibilityLabel,
     aggressivelyGetLatestDuration,
     allowFontScaling = false,
     amLabel,
@@ -201,9 +211,12 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
   const numberOfItemsToShow = 1 + padWithNItems * 2;
 
   // keep track of the latest duration as it scrolls
-  const latestDuration = useRef(0);
+  const latestDuration = useRef(initialValue);
   // keep track of the last index scrolled past for haptic/audio feedback
   const lastFeedbackIndex = useRef(0);
+  // keep track of the row the picker is resting on, so an accessibility action can move one row
+  // rather than jumping to another repetition of the same value
+  const currentIndex = useRef(Math.round(initialScrollIndex));
 
   const flatListRef = useRef<RNFlatList | null>(null);
 
@@ -299,6 +312,13 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
 
   const onScroll = useCallback<NonNullable<FlatListProps<string>["onScroll"]>>(
     (e) => {
+      // tracked before the guard below: the accessibility action needs the resting row even when
+      // the rest of this handler is inert, and onViewableItemsChanged re-centres the list without
+      // firing onMomentumScrollEnd
+      currentIndex.current = Math.round(
+        e.nativeEvent.contentOffset.y / styles.pickerItemContainer.height
+      );
+
       // this function is only used when the picker is in a modal and/or has Haptic/Audio feedback
       // it is used to ensure that the modal gets the latest duration on clicking
       // the confirm button, even if the scrollview is still scrolling
@@ -409,6 +429,9 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
 
       newValues.duration = snappedDuration;
 
+      currentIndex.current = newValues.index;
+      latestDuration.current = newValues.duration;
+
       onDurationChange(newValues.duration);
     },
     [
@@ -502,25 +525,131 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
     [styles.pickerItemContainer.height]
   );
 
+  const currentValue = selectedValue ?? initialValue;
+
+  useEffect(() => {
+    latestDuration.current = currentValue;
+  }, [currentValue]);
+
+  const formatAccessibilityValue = useCallback(
+    (value: number) => {
+      if (isAmPmPicker) {
+        return formatAmPmAccessibilityValue(value, amLabel ?? "am", pmLabel ?? "pm");
+      }
+
+      if (is12HourPicker) {
+        return separateAmPmPicker
+          ? formatHourSlotAccessibilityValue(value)
+          : formatHour12AccessibilityValue(value, amLabel ?? "am", pmLabel ?? "pm");
+      }
+
+      return String(value);
+    },
+    [amLabel, is12HourPicker, isAmPmPicker, pmLabel, separateAmPmPicker]
+  );
+
+  const accessibilityValue = useMemo(
+    () => ({ text: formatAccessibilityValue(currentValue) }),
+    [currentValue, formatAccessibilityValue]
+  );
+
+  const isValueValid = useCallback(
+    (value: number) => !isItemDisabled?.(value) && getNearestInRangeValue(value) === value,
+    [getNearestInRangeValue, isItemDisabled]
+  );
+
+  const onAccessibilityAction = useCallback(
+    (event: { nativeEvent: { actionName: string } }) => {
+      const { actionName } = event.nativeEvent;
+
+      if (isDisabled || !flatListRef.current) {
+        return;
+      }
+
+      if (actionName !== "increment" && actionName !== "decrement") {
+        return;
+      }
+
+      const stepped = getSteppedPickerValue({
+        currentValue: latestDuration.current,
+        direction: actionName === "increment" ? 1 : -1,
+        disableInfiniteScroll,
+        interval,
+        isValueValid,
+        numberOfItems,
+      });
+
+      if (!stepped || stepped.value === latestDuration.current) {
+        return;
+      }
+
+      // index + steps is the row `steps` further down the list, which is the right row even
+      // across a repetition boundary; fall back if the ref has drifted out of step with the list
+      const steppedIndex = currentIndex.current + stepped.steps;
+      const valueAtSteppedIndex =
+        (((disableInfiniteScroll ? steppedIndex : steppedIndex + padWithNItems) % numberOfItems) +
+          numberOfItems) %
+        numberOfItems;
+
+      const index =
+        steppedIndex >= 0 &&
+        steppedIndex < numbersForFlatList.length &&
+        valueAtSteppedIndex * interval === stepped.value
+          ? steppedIndex
+          : getInitialScrollIndex({
+              disableInfiniteScroll,
+              interval,
+              numberOfItems,
+              padWithNItems,
+              repeatNumbersNTimes: safeRepeatNumbersNTimes,
+              value: stepped.value,
+            });
+
+      flatListRef.current.scrollToIndex({ animated: false, index });
+
+      currentIndex.current = index;
+      latestDuration.current = stepped.value;
+
+      onDurationChange(stepped.value);
+      AccessibilityInfo.announceForAccessibility(formatAccessibilityValue(stepped.value));
+    },
+    [
+      disableInfiniteScroll,
+      formatAccessibilityValue,
+      interval,
+      isDisabled,
+      isValueValid,
+      numberOfItems,
+      numbersForFlatList.length,
+      onDurationChange,
+      padWithNItems,
+      safeRepeatNumbersNTimes,
+    ]
+  );
+
   useImperativeHandle(ref, () => ({
     latestDuration: latestDuration,
     reset: (options) => {
+      currentIndex.current = Math.round(initialScrollIndex);
       flatListRef.current?.scrollToIndex({
         animated: options?.animated ?? false,
         index: initialScrollIndex,
       });
     },
     setValue: (value, options) => {
+      const index = getInitialScrollIndex({
+        disableInfiniteScroll,
+        interval,
+        numberOfItems,
+        padWithNItems,
+        repeatNumbersNTimes: safeRepeatNumbersNTimes,
+        value: value,
+      });
+
+      currentIndex.current = Math.round(index);
       flatListRef.current?.scrollToIndex({
         animated: options?.animated ?? false,
-        index: getInitialScrollIndex({
-          disableInfiniteScroll,
-          interval,
-          numberOfItems,
-          padWithNItems,
-          repeatNumbersNTimes: safeRepeatNumbersNTimes,
-          value: value,
-        }),
+        index,
       });
     },
   }));
@@ -531,10 +660,12 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
         <FlatList
           key={flatListRenderKey}
           ref={flatListRef}
+          accessible={false}
           contentContainerStyle={styles.durationScrollFlatListContentContainer}
           data={numbersForFlatList}
           decelerationRate={decelerationRate}
           getItemLayout={getItemLayout}
+          importantForAccessibility="no-hide-descendants"
           initialScrollIndex={initialScrollIndex}
           keyExtractor={keyExtractor}
           nestedScrollEnabled
@@ -554,7 +685,12 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
           viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs}
           windowSize={numberOfItemsToShow}
         />
-        <View pointerEvents="none" style={[styles.pickerLabelContainer, labelPositionStyle]}>
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          pointerEvents="none"
+          style={[styles.pickerLabelContainer, labelPositionStyle]}
+        >
           {typeof label === "string" ? (
             <Text allowFontScaling={allowFontScaling} style={styles.pickerLabel}>
               {label}
@@ -635,6 +771,14 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
 
   return (
     <View
+      accessibilityActions={accessibilityActions}
+      accessibilityHint={accessibilityHint}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="adjustable"
+      accessibilityState={{ disabled: !!isDisabled }}
+      accessibilityValue={accessibilityValue}
+      accessible
+      onAccessibilityAction={onAccessibilityAction}
       pointerEvents={isDisabled ? "none" : undefined}
       style={[
         styles.durationScrollFlatListContainer,

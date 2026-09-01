@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, AccessibilityInfo } from "react-native";
 
 import { getSafeInitialValue } from "../../utils/getSafeInitialValue";
 import Modal from "../Modal";
@@ -105,6 +105,17 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
     safeInitialValue.seconds,
   ]);
 
+  const wasVisible = useRef(false);
+
+  useEffect(() => {
+    // only on the transition to visible, so editing the title while open doesn't re-announce
+    if (visible && !wasVisible.current && modalTitle) {
+      AccessibilityInfo.announceForAccessibility(modalTitle);
+    }
+
+    wasVisible.current = visible;
+  }, [modalTitle, visible]);
+
   const hideModalHandler = () => {
     setSelectedDuration({
       days: confirmedDuration.days,
@@ -174,7 +185,7 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
       <View {...containerProps} style={styles.container}>
         <View {...contentContainerProps} style={styles.contentContainer}>
           {modalTitle ? (
-            <Text {...modalTitleProps} style={styles.modalTitle}>
+            <Text accessibilityRole="header" {...modalTitleProps} style={styles.modalTitle}>
               {modalTitle}
             </Text>
           ) : null}
@@ -197,7 +208,12 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                   onPress: cancelHandler,
                 })
               ) : (
-                <TouchableOpacity {...buttonTouchableOpacityProps} onPress={cancelHandler}>
+                <TouchableOpacity
+                  accessibilityLabel={cancelButtonText}
+                  accessibilityRole="button"
+                  {...buttonTouchableOpacityProps}
+                  onPress={cancelHandler}
+                >
                   <Text style={[styles.button, styles.cancelButton]}>{cancelButtonText}</Text>
                 </TouchableOpacity>
               )
@@ -207,7 +223,12 @@ const TimerPickerModal = forwardRef<TimerPickerModalRef, TimerPickerModalProps>(
                 onPress: confirmHandler,
               })
             ) : (
-              <TouchableOpacity {...buttonTouchableOpacityProps} onPress={confirmHandler}>
+              <TouchableOpacity
+                accessibilityLabel={confirmButtonText}
+                accessibilityRole="button"
+                {...buttonTouchableOpacityProps}
+                onPress={confirmHandler}
+              >
                 <Text style={[styles.button, styles.confirmButton]}>{confirmButtonText}</Text>
               </TouchableOpacity>
             )}
