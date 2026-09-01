@@ -11,7 +11,7 @@
   "module": "dist/module/index.js",
   "types": "dist/typescript/index.d.ts",
   "typings": "dist/typescript/index.d.ts",
-  "packageManager": "yarn@4.12.0",
+  "packageManager": "yarn@4.18.0",
   "workspaces": {
     "packages": [
       "examples/*"
@@ -47,6 +47,8 @@
   },
   "files": [
     "dist",
+    "src",
+    "!src/tests",
     "package.json",
     "README.md",
     "LICENSE"
@@ -93,32 +95,30 @@
     "react-native": ">=0.72.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "@eslint/compat": "^1.4.0",
+    "@babel/core": "^7.29.7",
     "@eslint/js": "^9.38.0",
     "@testing-library/react-native": "^12.0.0",
-    "@types/jest": "^29.0.0",
-    "@types/react": ">=18.2.0",
-    "@types/react-native": "0.72.0",
+    "@types/jest": "^30.0.0",
+    "@types/react": "^19.2.18",
     "@types/react-test-renderer": ">=18.2.0",
-    "babel-jest": "^29.6.2",
+    "babel-jest": "^30.5.0",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-perfectionist": "^4.13.0",
-    "eslint-plugin-prettier": "^5.4.1",
+    "eslint-plugin-perfectionist": "^5.10.1",
+    "eslint-plugin-prettier": "^5.5.6",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "jest": "^29.0.0",
-    "lint-staged": "^16.2.7",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "jest": "^30.5.0",
+    "lint-staged": "^17.4.1",
     "metro-react-native-babel-preset": "^0.71.1",
-    "prettier": "2.8.8",
+    "prettier": "^3.9.6",
     "react": "18.2.0",
     "react-native": "0.72.0",
-    "react-native-builder-bob": "^0.18.3",
+    "react-native-builder-bob": "^0.43.0",
     "react-test-renderer": "18.2.0",
-    "simple-git-hooks": "^2.13.1",
-    "typescript": "~5.8.0",
-    "typescript-eslint": "^8.33.0"
+    "simple-git-hooks": "^2.14.0",
+    "typescript": "~5.9.0",
+    "typescript-eslint": "^8.68.0"
   },
   "react-native-builder-bob": {
     "source": "src",
@@ -126,8 +126,14 @@
     "targets": [
       "commonjs",
       "module",
-      "typescript"
-    ]
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ],
+    "exclude": "**/{__tests__,__fixtures__,__mocks__,tests}/**"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
@@ -137,7 +143,7 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{json}": [
+    "*.json": [
       "prettier --write"
     ]
   },
