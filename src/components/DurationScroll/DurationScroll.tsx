@@ -560,7 +560,7 @@ const DurationScroll = forwardRef<DurationScrollRef, DurationScrollProps>((props
               {label}
             </Text>
           ) : (
-            label ?? null
+            (label ?? null)
           )}
         </View>
       </>

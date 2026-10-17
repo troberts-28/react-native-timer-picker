@@ -1,4 +1,3 @@
-import { fixupPluginRules } from "@eslint/compat";
 import eslint from "@eslint/js";
 import perfectionistPlugin from "eslint-plugin-perfectionist";
 import prettierPlugin from "eslint-plugin-prettier";
@@ -45,7 +44,7 @@ export default defineConfig(
     },
     plugins: {
       react: reactPlugin,
-      "react-hooks": fixupPluginRules(reactHooksPlugin),
+      "react-hooks": reactHooksPlugin,
       "@typescript-eslint": tseslint.plugin,
       perfectionist: perfectionistPlugin,
       prettier: prettierPlugin,
@@ -119,7 +118,7 @@ export default defineConfig(
           specialCharacters: "keep",
           partitionByComment: false,
           partitionByNewLine: false,
-          newlinesBetween: "always",
+          newlinesBetween: 1,
           maxLineLength: undefined,
           groups: ["react", "builtin", "external"],
           customGroups: [
